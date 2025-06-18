@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { BookOpen, Plus, Search, Filter, Heart, Star, BookmarkPlus } from 'lucide-react';
+import { BookOpen, Plus, Search, Filter, Heart, Star, BookmarkPlus, User } from 'lucide-react';
 import BookCard from '../components/BookCard';
 import CollectionModal from '../components/CollectionModal';
 import SearchBar from '../components/SearchBar';
@@ -119,26 +119,26 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
       {/* Header */}
-      <header className="bg-white/10 backdrop-blur-md border-b border-white/20 sticky top-0 z-40">
+      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              <div className="p-2 bg-gradient-to-r from-blue-500 to-purple-600 rounded-xl">
+              <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
                 <BookOpen className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-white">BookVault</h1>
-                <p className="text-xs text-blue-200">AI-Powered Library</p>
+                <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
+                <p className="text-xs text-slate-600">Your Digital Library</p>
               </div>
             </div>
             <Button 
-              onClick={() => setIsCollectionModalOpen(true)}
-              className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0"
+              variant="outline"
+              className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
             >
-              <Plus className="h-4 w-4 mr-2" />
-              New Collection
+              <User className="h-4 w-4 mr-2" />
+              Account
             </Button>
           </div>
         </div>
@@ -150,6 +150,7 @@ const Index = () => {
           collections={collections}
           selectedCollection={selectedCollection}
           onSelectCollection={setSelectedCollection}
+          onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
         />
 
         {/* Main Content */}
@@ -167,11 +168,11 @@ const Index = () => {
                 <select 
                   value={filterGenre}
                   onChange={(e) => setFilterGenre(e.target.value)}
-                  className="px-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="px-4 py-2 bg-white/80 border border-slate-300 rounded-lg text-slate-700 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="">All Genres</option>
                   {genres.map(genre => (
-                    <option key={genre} value={genre} className="text-black">{genre}</option>
+                    <option key={genre} value={genre}>{genre}</option>
                   ))}
                 </select>
               </div>
@@ -179,31 +180,31 @@ const Index = () => {
 
             {/* Stats */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
-              <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
+              <div className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-blue-200 text-sm">Total Books</p>
-                    <p className="text-2xl font-bold text-white">{books.length}</p>
+                    <p className="text-slate-600 text-sm">Total Books</p>
+                    <p className="text-2xl font-bold text-slate-800">{books.length}</p>
                   </div>
-                  <BookOpen className="h-8 w-8 text-blue-400" />
+                  <BookOpen className="h-8 w-8 text-blue-500" />
                 </div>
               </div>
-              <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
+              <div className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-blue-200 text-sm">Collections</p>
-                    <p className="text-2xl font-bold text-white">{collections.length}</p>
+                    <p className="text-slate-600 text-sm">Collections</p>
+                    <p className="text-2xl font-bold text-slate-800">{collections.length}</p>
                   </div>
-                  <BookmarkPlus className="h-8 w-8 text-purple-400" />
+                  <BookmarkPlus className="h-8 w-8 text-indigo-500" />
                 </div>
               </div>
-              <div className="bg-white/10 backdrop-blur-md rounded-xl p-4 border border-white/20">
+              <div className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-blue-200 text-sm">Favorites</p>
-                    <p className="text-2xl font-bold text-white">{books.filter(b => b.isFavorite).length}</p>
+                    <p className="text-slate-600 text-sm">Favorites</p>
+                    <p className="text-2xl font-bold text-slate-800">{books.filter(b => b.isFavorite).length}</p>
                   </div>
-                  <Heart className="h-8 w-8 text-red-400" />
+                  <Heart className="h-8 w-8 text-red-500" />
                 </div>
               </div>
             </div>
@@ -212,10 +213,10 @@ const Index = () => {
           {/* Books Grid */}
           <div>
             <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-white">
+              <h2 className="text-2xl font-bold text-slate-800">
                 {selectedCollection ? selectedCollection.name : "Discover Books"}
               </h2>
-              <p className="text-blue-200">
+              <p className="text-slate-600">
                 {filteredBooks.length} book{filteredBooks.length !== 1 ? 's' : ''} found
               </p>
             </div>
@@ -232,9 +233,9 @@ const Index = () => {
 
             {filteredBooks.length === 0 && (
               <div className="text-center py-12">
-                <BookOpen className="h-16 w-16 text-blue-300 mx-auto mb-4 opacity-50" />
-                <h3 className="text-xl font-semibold text-white mb-2">No books found</h3>
-                <p className="text-blue-200">Try adjusting your search or filters</p>
+                <BookOpen className="h-16 w-16 text-slate-400 mx-auto mb-4 opacity-50" />
+                <h3 className="text-xl font-semibold text-slate-700 mb-2">No books found</h3>
+                <p className="text-slate-500">Try adjusting your search or filters</p>
               </div>
             )}
           </div>
