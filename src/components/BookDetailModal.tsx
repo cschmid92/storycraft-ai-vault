@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { X, Star, Heart, BookmarkPlus } from 'lucide-react';
+import { X, Star, Heart, BookmarkPlus, DollarSign } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/Book';
 
@@ -9,9 +9,11 @@ interface BookDetailModalProps {
   isOpen: boolean;
   onClose: () => void;
   onToggleFavorite: (bookId: number) => void;
+  onAddToCollection: (bookId: number) => void;
+  onToggleOwnedForSale: (bookId: number) => void;
 }
 
-const BookDetailModal = ({ book, isOpen, onClose, onToggleFavorite }: BookDetailModalProps) => {
+const BookDetailModal = ({ book, isOpen, onClose, onToggleFavorite, onAddToCollection, onToggleOwnedForSale }: BookDetailModalProps) => {
   if (!isOpen || !book) return null;
 
   return (
@@ -38,7 +40,7 @@ const BookDetailModal = ({ book, isOpen, onClose, onToggleFavorite }: BookDetail
                 alt={book.title}
                 className="w-full max-w-sm mx-auto rounded-lg shadow-lg"
               />
-              <div className="flex gap-2 mt-4 justify-center">
+              <div className="flex flex-col gap-2 mt-4">
                 <Button
                   size="sm"
                   variant="outline"
@@ -50,9 +52,23 @@ const BookDetailModal = ({ book, isOpen, onClose, onToggleFavorite }: BookDetail
                   />
                   {book.isFavorite ? 'Favorited' : 'Add to Favorites'}
                 </Button>
-                <Button size="sm" variant="outline">
-                  <BookmarkPlus className="h-4 w-4 mr-2" />
+                <Button 
+                  size="sm" 
+                  variant="outline"
+                  onClick={() => onAddToCollection(book.id)}
+                  className="flex items-center gap-2"
+                >
+                  <BookmarkPlus className="h-4 w-4" />
                   Add to Collection
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  onClick={() => onToggleOwnedForSale(book.id)}
+                  className={`flex items-center gap-2 ${book.isOwnedForSale ? 'bg-green-50 text-green-700 border-green-300' : ''}`}
+                >
+                  <DollarSign className="h-4 w-4" />
+                  {book.isOwnedForSale ? 'Listed for Sale' : 'Mark as Owned for Sale'}
                 </Button>
               </div>
             </div>

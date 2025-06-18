@@ -9,6 +9,7 @@ export interface Book {
   year: number;
   description: string;
   isFavorite: boolean;
+  isOwnedForSale?: boolean;
   isbn10?: string;
   isbn13?: string;
   publicationDate?: string;

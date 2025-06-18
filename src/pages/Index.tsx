@@ -25,6 +25,7 @@ const mockBooks: Book[] = [
     year: 1925,
     description: "A classic American novel set in the Jazz Age, exploring themes of wealth, love, and the American Dream.",
     isFavorite: false,
+    isOwnedForSale: false,
     isbn10: "0743273567",
     isbn13: "978-0743273565",
     publisher: "Scribner",
@@ -46,6 +47,7 @@ const mockBooks: Book[] = [
     year: 1960,
     description: "A powerful story of racial injustice and childhood innocence in the American South.",
     isFavorite: true,
+    isOwnedForSale: false,
     isbn10: "0061120081",
     isbn13: "978-0061120084",
     publisher: "Harper Perennial Modern Classics",
@@ -62,6 +64,7 @@ const mockBooks: Book[] = [
     year: 1949,
     description: "A dystopian social science fiction novel about totalitarian control and surveillance.",
     isFavorite: false,
+    isOwnedForSale: true,
     isbn10: "0452284236",
     isbn13: "978-0452284234",
     publisher: "Plume",
@@ -78,6 +81,7 @@ const mockBooks: Book[] = [
     year: 1813,
     description: "A romantic novel dealing with issues of marriage, money, and social status in 19th century England.",
     isFavorite: true,
+    isOwnedForSale: false,
     isbn10: "0141439513",
     isbn13: "978-0141439518",
     publisher: "Penguin Classics",
@@ -94,6 +98,7 @@ const mockBooks: Book[] = [
     year: 1951,
     description: "A controversial novel about teenage rebellion and alienation in post-war America.",
     isFavorite: false,
+    isOwnedForSale: false,
     isbn10: "0316769177",
     isbn13: "978-0316769174",
     publisher: "Little, Brown and Company",
@@ -110,6 +115,7 @@ const mockBooks: Book[] = [
     year: 1997,
     description: "The first book in the beloved Harry Potter series about a young wizard's adventures.",
     isFavorite: true,
+    isOwnedForSale: false,
     isbn10: "0439708184",
     isbn13: "978-0439708180",
     publisher: "Scholastic",
@@ -160,6 +166,12 @@ const Index = () => {
   const toggleFavorite = (bookId: number) => {
     setBooks(books.map(book => 
       book.id === bookId ? { ...book, isFavorite: !book.isFavorite } : book
+    ));
+  };
+
+  const toggleOwnedForSale = (bookId: number) => {
+    setBooks(books.map(book => 
+      book.id === bookId ? { ...book, isOwnedForSale: !book.isOwnedForSale } : book
     ));
   };
 
@@ -343,6 +355,8 @@ const Index = () => {
         isOpen={isBookDetailOpen}
         onClose={() => setIsBookDetailOpen(false)}
         onToggleFavorite={toggleFavorite}
+        onAddToCollection={handleAddToCollection}
+        onToggleOwnedForSale={toggleOwnedForSale}
       />
     </div>
   );
