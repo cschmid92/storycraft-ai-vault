@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { BookOpen, User } from 'lucide-react';
 import BookCard from '../components/BookCard';
 import CollectionModal from '../components/CollectionModal';
+import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import SearchBar from '../components/SearchBar';
 import CollectionSidebar from '../components/CollectionSidebar';
 import BookDetailModal from '../components/BookDetailModal';
@@ -129,6 +130,8 @@ const Index = () => {
   const [collections, setCollections] = useState(mockCollections);
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
+  const [isCollectionSelectionOpen, setIsCollectionSelectionOpen] = useState(false);
+  const [selectedBookForCollection, setSelectedBookForCollection] = useState<number | null>(null);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [isBookDetailOpen, setIsBookDetailOpen] = useState(false);
@@ -164,6 +167,21 @@ const Index = () => {
     setSelectedBook(book);
     setIsBookDetailOpen(true);
   };
+
+  const handleAddToCollection = (bookId: number) => {
+    setSelectedBookForCollection(bookId);
+    setIsCollectionSelectionOpen(true);
+  };
+
+  const handleSelectCollection = (collectionId: number) => {
+    // Here you would add the book to the selected collection
+    console.log(`Adding book ${selectedBookForCollection} to collection ${collectionId}`);
+    // You can implement the actual logic to add the book to the collection
+  };
+
+  const selectedBookTitle = selectedBookForCollection 
+    ? books.find(book => book.id === selectedBookForCollection)?.title || ""
+    : "";
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
@@ -204,7 +222,12 @@ const Index = () => {
         {/* Main Content */}
         <main className="flex-1 p-6">
           {/* Popular Reads */}
-          <PopularReads books={books} />
+          <PopularReads 
+            books={books} 
+            onBookClick={handleBookClick}
+            onToggleFavorite={toggleFavorite}
+            onAddToCollection={handleAddToCollection}
+          />
 
           {/* Search and Filters */}
           <div className="mb-8">
@@ -279,6 +302,7 @@ const Index = () => {
                   book={book}
                   onToggleFavorite={toggleFavorite}
                   onBookClick={handleBookClick}
+                  onAddToCollection={handleAddToCollection}
                 />
               ))}
             </div>
@@ -299,6 +323,14 @@ const Index = () => {
         isOpen={isCollectionModalOpen}
         onClose={() => setIsCollectionModalOpen(false)}
         onCreateCollection={handleCreateCollection}
+      />
+      
+      <CollectionSelectionModal
+        isOpen={isCollectionSelectionOpen}
+        onClose={() => setIsCollectionSelectionOpen(false)}
+        collections={collections}
+        onSelectCollection={handleSelectCollection}
+        bookTitle={selectedBookTitle}
       />
       
       <AccountModal 

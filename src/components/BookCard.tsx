@@ -8,9 +8,10 @@ interface BookCardProps {
   book: Book;
   onToggleFavorite: (bookId: number) => void;
   onBookClick: (book: Book) => void;
+  onAddToCollection: (bookId: number) => void;
 }
 
-const BookCard = ({ book, onToggleFavorite, onBookClick }: BookCardProps) => {
+const BookCard = ({ book, onToggleFavorite, onBookClick, onAddToCollection }: BookCardProps) => {
   return (
     <div 
       className="group relative bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
@@ -44,7 +45,10 @@ const BookCard = ({ book, onToggleFavorite, onBookClick }: BookCardProps) => {
             size="sm"
             variant="outline"
             className="w-8 h-8 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
-            onClick={(e) => e.stopPropagation()}
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCollection(book.id);
+            }}
           >
             <BookmarkPlus className="h-4 w-4 text-slate-600" />
           </Button>
