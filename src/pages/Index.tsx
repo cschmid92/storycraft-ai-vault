@@ -1,15 +1,19 @@
-
 import React, { useState } from 'react';
-import { BookOpen, Plus, Search, Filter, Heart, Star, BookmarkPlus, User } from 'lucide-react';
+import { BookOpen, User } from 'lucide-react';
 import BookCard from '../components/BookCard';
 import CollectionModal from '../components/CollectionModal';
 import SearchBar from '../components/SearchBar';
 import CollectionSidebar from '../components/CollectionSidebar';
+import BookDetailModal from '../components/BookDetailModal';
+import AccountModal from '../components/AccountModal';
+import PopularReads from '../components/PopularReads';
 import { Button } from "@/components/ui/button";
+import { Book } from '../types/Book';
+import { Plus, Search, Filter, Heart, Star, BookmarkPlus } from 'lucide-react';
 import { Input } from "@/components/ui/input";
 
-// Mock data for demonstration
-const mockBooks = [
+// Updated mock data with detailed book information
+const mockBooks: Book[] = [
   {
     id: 1,
     title: "The Great Gatsby",
@@ -19,7 +23,17 @@ const mockBooks = [
     genre: "Classic Literature",
     year: 1925,
     description: "A classic American novel set in the Jazz Age, exploring themes of wealth, love, and the American Dream.",
-    isFavorite: false
+    isFavorite: false,
+    isbn10: "0743273567",
+    isbn13: "978-0743273565",
+    publisher: "Scribner",
+    publicationDate: "April 10, 2004",
+    pages: 180,
+    language: "English",
+    binding: "Paperback",
+    listPrice: 15.95,
+    synopsis: "The Great Gatsby is a 1925 novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on prosperous Long Island and in New York City during the summer of 1922, the novel follows the tragic story of Jay Gatsby and his pursuit of the American Dream.",
+    subject: "American Literature, Jazz Age"
   },
   {
     id: 2,
@@ -30,7 +44,12 @@ const mockBooks = [
     genre: "Fiction",
     year: 1960,
     description: "A powerful story of racial injustice and childhood innocence in the American South.",
-    isFavorite: true
+    isFavorite: true,
+    isbn10: "0061120081",
+    isbn13: "978-0061120084",
+    publisher: "Harper Perennial Modern Classics",
+    pages: 376,
+    language: "English"
   },
   {
     id: 3,
@@ -41,7 +60,12 @@ const mockBooks = [
     genre: "Dystopian Fiction",
     year: 1949,
     description: "A dystopian social science fiction novel about totalitarian control and surveillance.",
-    isFavorite: false
+    isFavorite: false,
+    isbn10: "0452284236",
+    isbn13: "978-0452284234",
+    publisher: "Plume",
+    pages: 328,
+    language: "English"
   },
   {
     id: 4,
@@ -52,7 +76,12 @@ const mockBooks = [
     genre: "Romance",
     year: 1813,
     description: "A romantic novel dealing with issues of marriage, money, and social status in 19th century England.",
-    isFavorite: true
+    isFavorite: true,
+    isbn10: "0141439513",
+    isbn13: "978-0141439518",
+    publisher: "Penguin Classics",
+    pages: 480,
+    language: "English"
   },
   {
     id: 5,
@@ -63,7 +92,12 @@ const mockBooks = [
     genre: "Coming of Age",
     year: 1951,
     description: "A controversial novel about teenage rebellion and alienation in post-war America.",
-    isFavorite: false
+    isFavorite: false,
+    isbn10: "0316769177",
+    isbn13: "978-0316769174",
+    publisher: "Little, Brown and Company",
+    pages: 234,
+    language: "English"
   },
   {
     id: 6,
@@ -74,7 +108,12 @@ const mockBooks = [
     genre: "Fantasy",
     year: 1997,
     description: "The first book in the beloved Harry Potter series about a young wizard's adventures.",
-    isFavorite: true
+    isFavorite: true,
+    isbn10: "0439708184",
+    isbn13: "978-0439708180",
+    publisher: "Scholastic",
+    pages: 309,
+    language: "English"
   }
 ];
 
@@ -90,6 +129,9 @@ const Index = () => {
   const [collections, setCollections] = useState(mockCollections);
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [isBookDetailOpen, setIsBookDetailOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterGenre, setFilterGenre] = useState("");
 
@@ -118,6 +160,11 @@ const Index = () => {
     ));
   };
 
+  const handleBookClick = (book: Book) => {
+    setSelectedBook(book);
+    setIsBookDetailOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
       {/* Header */}
@@ -136,6 +183,7 @@ const Index = () => {
             <Button 
               variant="outline"
               className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
+              onClick={() => setIsAccountModalOpen(true)}
             >
               <User className="h-4 w-4 mr-2" />
               Account
@@ -155,6 +203,9 @@ const Index = () => {
 
         {/* Main Content */}
         <main className="flex-1 p-6">
+          {/* Popular Reads */}
+          <PopularReads books={books} />
+
           {/* Search and Filters */}
           <div className="mb-8">
             <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -227,6 +278,7 @@ const Index = () => {
                   key={book.id}
                   book={book}
                   onToggleFavorite={toggleFavorite}
+                  onBookClick={handleBookClick}
                 />
               ))}
             </div>
@@ -242,11 +294,23 @@ const Index = () => {
         </main>
       </div>
 
-      {/* Collection Modal */}
+      {/* Modals */}
       <CollectionModal 
         isOpen={isCollectionModalOpen}
         onClose={() => setIsCollectionModalOpen(false)}
         onCreateCollection={handleCreateCollection}
+      />
+      
+      <AccountModal 
+        isOpen={isAccountModalOpen}
+        onClose={() => setIsAccountModalOpen(false)}
+      />
+      
+      <BookDetailModal 
+        book={selectedBook}
+        isOpen={isBookDetailOpen}
+        onClose={() => setIsBookDetailOpen(false)}
+        onToggleFavorite={toggleFavorite}
       />
     </div>
   );

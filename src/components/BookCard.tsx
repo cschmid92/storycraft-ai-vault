@@ -2,27 +2,20 @@
 import React from 'react';
 import { Star, Heart, BookmarkPlus, MoreVertical } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-
-interface Book {
-  id: number;
-  title: string;
-  author: string;
-  cover: string;
-  rating: number;
-  genre: string;
-  year: number;
-  description: string;
-  isFavorite: boolean;
-}
+import { Book } from '../types/Book';
 
 interface BookCardProps {
   book: Book;
   onToggleFavorite: (bookId: number) => void;
+  onBookClick: (book: Book) => void;
 }
 
-const BookCard = ({ book, onToggleFavorite }: BookCardProps) => {
+const BookCard = ({ book, onToggleFavorite, onBookClick }: BookCardProps) => {
   return (
-    <div className="group relative bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-lg">
+    <div 
+      className="group relative bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
+      onClick={() => onBookClick(book)}
+    >
       {/* Book Cover */}
       <div className="relative aspect-[3/4] overflow-hidden">
         <img 
@@ -38,7 +31,10 @@ const BookCard = ({ book, onToggleFavorite }: BookCardProps) => {
             size="sm"
             variant="outline"
             className="w-8 h-8 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
-            onClick={() => onToggleFavorite(book.id)}
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleFavorite(book.id);
+            }}
           >
             <Heart 
               className={`h-4 w-4 ${book.isFavorite ? 'text-red-500 fill-red-500' : 'text-slate-600'}`} 
@@ -48,6 +44,7 @@ const BookCard = ({ book, onToggleFavorite }: BookCardProps) => {
             size="sm"
             variant="outline"
             className="w-8 h-8 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
+            onClick={(e) => e.stopPropagation()}
           >
             <BookmarkPlus className="h-4 w-4 text-slate-600" />
           </Button>
@@ -55,6 +52,7 @@ const BookCard = ({ book, onToggleFavorite }: BookCardProps) => {
             size="sm"
             variant="outline"
             className="w-8 h-8 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
+            onClick={(e) => e.stopPropagation()}
           >
             <MoreVertical className="h-4 w-4 text-slate-600" />
           </Button>

@@ -21,15 +21,6 @@ const CollectionSidebar = ({ collections, selectedCollection, onSelectCollection
   return (
     <aside className="w-64 bg-white/60 backdrop-blur-md border-r border-slate-200 p-4 h-screen sticky top-16">
       <div className="space-y-6">
-        {/* New Collection Button */}
-        <Button 
-          onClick={onOpenCollectionModal}
-          className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white border-0"
-        >
-          <Plus className="h-4 w-4 mr-2" />
-          New Collection
-        </Button>
-
         {/* Quick Access */}
         <div>
           <h3 className="text-sm font-semibold text-slate-700 uppercase tracking-wide mb-3">
@@ -75,6 +66,16 @@ const CollectionSidebar = ({ collections, selectedCollection, onSelectCollection
                 <span className="text-xs text-slate-500">{collection.count}</span>
               </button>
             ))}
+            
+            {/* New Collection Button */}
+            <Button 
+              onClick={onOpenCollectionModal}
+              variant="outline"
+              className="w-full justify-start text-slate-600 border-dashed border-slate-300 hover:bg-slate-50 mt-2"
+            >
+              <Plus className="h-4 w-4 mr-2" />
+              New Collection
+            </Button>
           </div>
         </div>
 
