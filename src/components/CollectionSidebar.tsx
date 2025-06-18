@@ -81,7 +81,7 @@ const CollectionSidebar = ({ collections, selectedCollection, onSelectCollection
           </button>
         </div>
       </div>
-    </div>
+    </aside>
   );
 };
 
