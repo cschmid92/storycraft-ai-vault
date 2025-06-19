@@ -259,14 +259,6 @@ const Index = () => {
 
         {/* Main Content */}
         <main className="flex-1 p-6">
-          {/* Popular Reads */}
-          <PopularReads 
-            books={books} 
-            onBookClick={handleBookClick}
-            onToggleFavorite={toggleFavorite}
-            onAddToCollection={handleAddToCollection}
-          />
-
           {/* Search and Filters */}
           <div className="mb-8">
             <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -322,6 +314,14 @@ const Index = () => {
             </div>
           </div>
 
+          {/* Popular Reads - Moved here after search bar */}
+          <PopularReads 
+            books={books} 
+            onBookClick={handleBookClick}
+            onToggleFavorite={toggleFavorite}
+            onAddToCollection={handleAddToCollection}
+          />
+
           {/* Books Grid */}
           <div>
             <div className="flex items-center justify-between mb-6">
@@ -356,24 +356,11 @@ const Index = () => {
         </main>
       </div>
 
-      {/* Modals */}
+      {/* Modals with proper z-index ordering */}
       <CollectionModal 
         isOpen={isCollectionModalOpen}
         onClose={() => setIsCollectionModalOpen(false)}
         onCreateCollection={handleCreateCollection}
-      />
-      
-      <CollectionSelectionModal
-        isOpen={isCollectionSelectionOpen}
-        onClose={() => setIsCollectionSelectionOpen(false)}
-        collections={collections}
-        onSelectCollection={handleSelectCollection}
-        bookTitle={selectedBookTitle}
-      />
-      
-      <AccountModal 
-        isOpen={isAccountModalOpen}
-        onClose={() => setIsAccountModalOpen(false)}
       />
       
       <BookDetailModal 
@@ -385,6 +372,14 @@ const Index = () => {
         onToggleOwnedForSale={toggleOwnedForSale}
       />
       
+      <CollectionSelectionModal
+        isOpen={isCollectionSelectionOpen}
+        onClose={() => setIsCollectionSelectionOpen(false)}
+        collections={collections}
+        onSelectCollection={handleSelectCollection}
+        bookTitle={selectedBookTitle}
+      />
+      
       <PriceInputModal 
         isOpen={isPriceModalOpen}
         onClose={() => {
@@ -393,6 +388,11 @@ const Index = () => {
         }}
         onConfirm={handleSetSalePrice}
         bookTitle={selectedBookForSaleTitle}
+      />
+      
+      <AccountModal 
+        isOpen={isAccountModalOpen}
+        onClose={() => setIsAccountModalOpen(false)}
       />
     </div>
   );
