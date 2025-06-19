@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { BookOpen, User } from 'lucide-react';
 import BookCard from '../components/BookCard';
 import CollectionModal from '../components/CollectionModal';
@@ -146,6 +146,7 @@ const Index = () => {
   const [filterGenre, setFilterGenre] = useState("");
   const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
   const [selectedBookForSale, setSelectedBookForSale] = useState<number | null>(null);
+  const collectionSectionRef = useRef<HTMLDivElement>(null);
 
   const filteredBooks = books.filter(book => {
     const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -213,6 +214,17 @@ const Index = () => {
     // You can implement the actual logic to add the book to the collection
   };
 
+  const handleCollectionSelect = (collection: any) => {
+    setSelectedCollection(collection);
+    // Focus to collection section when a collection is selected
+    if (collection && collectionSectionRef.current) {
+      collectionSectionRef.current.scrollIntoView({ 
+        behavior: 'smooth', 
+        block: 'start' 
+      });
+    }
+  };
+
   const handleRateBook = (bookId: number, rating: number) => {
     setBooks(books.map(book => 
       book.id === bookId ? { ...book, userRating: rating } : book
@@ -259,7 +271,7 @@ const Index = () => {
         <CollectionSidebar 
           collections={collections}
           selectedCollection={selectedCollection}
-          onSelectCollection={setSelectedCollection}
+          onSelectCollection={handleCollectionSelect}
           onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
           books={books}
           onBookClick={handleBookClick}
@@ -331,7 +343,7 @@ const Index = () => {
           />
 
           {/* Books Grid */}
-          <div>
+          <div ref={collectionSectionRef}>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-bold text-slate-800">
                 {selectedCollection ? selectedCollection.name : "Discover Books"}
