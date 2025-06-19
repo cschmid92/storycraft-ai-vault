@@ -10,6 +10,7 @@ export interface Book {
   description: string;
   isFavorite: boolean;
   isOwnedForSale?: boolean;
+  salePrice?: number;
   isbn10?: string;
   isbn13?: string;
   publicationDate?: string;

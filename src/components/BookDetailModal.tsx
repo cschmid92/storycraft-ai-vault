@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { X, Star, Heart, BookmarkPlus, DollarSign } from 'lucide-react';
+import { X, Star, Heart, BookmarkPlus, DollarSign, Tag } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/Book';
 
@@ -10,7 +10,7 @@ interface BookDetailModalProps {
   onClose: () => void;
   onToggleFavorite: (bookId: number) => void;
   onAddToCollection: (bookId: number) => void;
-  onToggleOwnedForSale: (bookId: number) => void;
+  onToggleOwnedForSale: (bookId: number, price?: number) => void;
 }
 
 const BookDetailModal = ({ book, isOpen, onClose, onToggleFavorite, onAddToCollection, onToggleOwnedForSale }: BookDetailModalProps) => {
@@ -40,6 +40,18 @@ const BookDetailModal = ({ book, isOpen, onClose, onToggleFavorite, onAddToColle
                 alt={book.title}
                 className="w-full max-w-sm mx-auto rounded-lg shadow-lg"
               />
+              
+              {/* Resale Availability Badge */}
+              {book.isOwnedForSale && book.salePrice && (
+                <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
+                  <div className="flex items-center gap-2 text-green-700">
+                    <Tag className="h-4 w-4" />
+                    <span className="font-medium text-sm">Available for Sale</span>
+                  </div>
+                  <p className="text-green-600 text-lg font-bold mt-1">${book.salePrice}</p>
+                </div>
+              )}
+              
               <div className="flex flex-col gap-2 mt-4">
                 <Button
                   size="sm"

@@ -8,6 +8,7 @@ import CollectionSidebar from '../components/CollectionSidebar';
 import BookDetailModal from '../components/BookDetailModal';
 import AccountModal from '../components/AccountModal';
 import PopularReads from '../components/PopularReads';
+import PriceInputModal from '../components/PriceInputModal';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/Book';
 import { Plus, Search, Filter, Heart, Star, BookmarkPlus } from 'lucide-react';
@@ -143,6 +144,8 @@ const Index = () => {
   const [isBookDetailOpen, setIsBookDetailOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterGenre, setFilterGenre] = useState("");
+  const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
+  const [selectedBookForSale, setSelectedBookForSale] = useState<number | null>(null);
 
   const filteredBooks = books.filter(book => {
     const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -169,10 +172,29 @@ const Index = () => {
     ));
   };
 
-  const toggleOwnedForSale = (bookId: number) => {
-    setBooks(books.map(book => 
-      book.id === bookId ? { ...book, isOwnedForSale: !book.isOwnedForSale } : book
-    ));
+  const toggleOwnedForSale = (bookId: number, price?: number) => {
+    const book = books.find(b => b.id === bookId);
+    if (!book) return;
+
+    if (!book.isOwnedForSale) {
+      // If not currently for sale, open price modal
+      setSelectedBookForSale(bookId);
+      setIsPriceModalOpen(true);
+    } else {
+      // If currently for sale, remove from sale
+      setBooks(books.map(book => 
+        book.id === bookId ? { ...book, isOwnedForSale: false, salePrice: undefined } : book
+      ));
+    }
+  };
+
+  const handleSetSalePrice = (price: number) => {
+    if (selectedBookForSale) {
+      setBooks(books.map(book => 
+        book.id === selectedBookForSale ? { ...book, isOwnedForSale: true, salePrice: price } : book
+      ));
+      setSelectedBookForSale(null);
+    }
   };
 
   const handleBookClick = (book: Book) => {
@@ -193,6 +215,10 @@ const Index = () => {
 
   const selectedBookTitle = selectedBookForCollection 
     ? books.find(book => book.id === selectedBookForCollection)?.title || ""
+    : "";
+
+  const selectedBookForSaleTitle = selectedBookForSale 
+    ? books.find(book => book.id === selectedBookForSale)?.title || ""
     : "";
 
   return (
@@ -357,6 +383,16 @@ const Index = () => {
         onToggleFavorite={toggleFavorite}
         onAddToCollection={handleAddToCollection}
         onToggleOwnedForSale={toggleOwnedForSale}
+      />
+      
+      <PriceInputModal 
+        isOpen={isPriceModalOpen}
+        onClose={() => {
+          setIsPriceModalOpen(false);
+          setSelectedBookForSale(null);
+        }}
+        onConfirm={handleSetSalePrice}
+        bookTitle={selectedBookForSaleTitle}
       />
     </div>
   );
