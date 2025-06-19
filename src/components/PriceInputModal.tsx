@@ -26,7 +26,7 @@ const PriceInputModal = ({ isOpen, onClose, onConfirm, bookTitle }: PriceInputMo
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-70 flex items-center justify-center p-4">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[80] flex items-center justify-center p-4">
       <div className="bg-white rounded-xl max-w-md w-full p-6">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-xl font-bold text-slate-800">Set Sale Price</h2>
