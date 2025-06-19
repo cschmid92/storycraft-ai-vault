@@ -213,6 +213,12 @@ const Index = () => {
     // You can implement the actual logic to add the book to the collection
   };
 
+  const handleRateBook = (bookId: number, rating: number) => {
+    setBooks(books.map(book => 
+      book.id === bookId ? { ...book, userRating: rating } : book
+    ));
+  };
+
   const selectedBookTitle = selectedBookForCollection 
     ? books.find(book => book.id === selectedBookForCollection)?.title || ""
     : "";
@@ -255,6 +261,8 @@ const Index = () => {
           selectedCollection={selectedCollection}
           onSelectCollection={setSelectedCollection}
           onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
+          books={books}
+          onBookClick={handleBookClick}
         />
 
         {/* Main Content */}
@@ -370,6 +378,7 @@ const Index = () => {
         onToggleFavorite={toggleFavorite}
         onAddToCollection={handleAddToCollection}
         onToggleOwnedForSale={toggleOwnedForSale}
+        onRateBook={handleRateBook}
       />
       
       <CollectionSelectionModal

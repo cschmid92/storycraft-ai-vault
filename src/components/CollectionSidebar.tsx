@@ -1,7 +1,9 @@
 
-import React from 'react';
-import { Library, Heart, BookOpen, Plus } from 'lucide-react';
+import React, { useState } from 'react';
+import { Library, Heart, BookOpen, Plus, DollarSign, ChevronDown, ChevronRight } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import BooksForSale from './BooksForSale';
+import { Book } from '../types/Book';
 
 interface Collection {
   id: number;
@@ -15,11 +17,23 @@ interface CollectionSidebarProps {
   selectedCollection: Collection | null;
   onSelectCollection: (collection: Collection | null) => void;
   onOpenCollectionModal: () => void;
+  books: Book[];
+  onBookClick: (book: Book) => void;
 }
 
-const CollectionSidebar = ({ collections, selectedCollection, onSelectCollection, onOpenCollectionModal }: CollectionSidebarProps) => {
+const CollectionSidebar = ({ 
+  collections, 
+  selectedCollection, 
+  onSelectCollection, 
+  onOpenCollectionModal,
+  books,
+  onBookClick
+}: CollectionSidebarProps) => {
+  const [showBooksForSale, setShowBooksForSale] = useState(false);
+  const booksForSaleCount = books.filter(book => book.isOwnedForSale && book.salePrice).length;
+
   return (
-    <aside className="w-64 bg-white/60 backdrop-blur-md border-r border-slate-200 p-4 h-screen sticky top-16">
+    <aside className="w-64 bg-white/60 backdrop-blur-md border-r border-slate-200 p-4 h-screen sticky top-16 overflow-y-auto">
       <div className="space-y-6">
         {/* Quick Access */}
         <div>
@@ -43,6 +57,34 @@ const CollectionSidebar = ({ collections, selectedCollection, onSelectCollection
               <span className="text-sm">Favorites</span>
             </button>
           </div>
+        </div>
+
+        {/* Books for Sale */}
+        <div>
+          <button
+            onClick={() => setShowBooksForSale(!showBooksForSale)}
+            className="w-full flex items-center justify-between px-3 py-2 rounded-lg text-left text-slate-600 hover:bg-slate-100 transition-colors mb-2"
+          >
+            <div className="flex items-center space-x-3">
+              <DollarSign className="h-4 w-4" />
+              <span className="text-sm font-semibold">Books for Sale</span>
+              {booksForSaleCount > 0 && (
+                <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
+                  {booksForSaleCount}
+                </span>
+              )}
+            </div>
+            {showBooksForSale ? (
+              <ChevronDown className="h-4 w-4" />
+            ) : (
+              <ChevronRight className="h-4 w-4" />
+            )}
+          </button>
+          {showBooksForSale && (
+            <div className="ml-2">
+              <BooksForSale books={books} onBookClick={onBookClick} />
+            </div>
+          )}
         </div>
 
         {/* Collections */}

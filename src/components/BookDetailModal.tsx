@@ -3,6 +3,7 @@ import React from 'react';
 import { X, Star, Heart, BookmarkPlus, DollarSign, Tag } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/Book';
+import StarRating from './StarRating';
 
 interface BookDetailModalProps {
   book: Book | null;
@@ -11,9 +12,18 @@ interface BookDetailModalProps {
   onToggleFavorite: (bookId: number) => void;
   onAddToCollection: (bookId: number) => void;
   onToggleOwnedForSale: (bookId: number, price?: number) => void;
+  onRateBook: (bookId: number, rating: number) => void;
 }
 
-const BookDetailModal = ({ book, isOpen, onClose, onToggleFavorite, onAddToCollection, onToggleOwnedForSale }: BookDetailModalProps) => {
+const BookDetailModal = ({ 
+  book, 
+  isOpen, 
+  onClose, 
+  onToggleFavorite, 
+  onAddToCollection, 
+  onToggleOwnedForSale,
+  onRateBook 
+}: BookDetailModalProps) => {
   if (!isOpen || !book) return null;
 
   return (
@@ -91,10 +101,21 @@ const BookDetailModal = ({ book, isOpen, onClose, onToggleFavorite, onAddToColle
                 <div>
                   <h1 className="text-3xl font-bold text-slate-800 mb-2">{book.title}</h1>
                   <p className="text-xl text-slate-600 mb-2">by {book.author}</p>
-                  <div className="flex items-center gap-2 mb-4">
-                    <div className="flex items-center">
-                      <Star className="h-5 w-5 text-yellow-500 fill-yellow-500 mr-1" />
-                      <span className="font-medium">{book.rating}</span>
+                  <div className="flex items-center gap-4 mb-4">
+                    <div className="flex items-center gap-2">
+                      <div className="flex items-center">
+                        <Star className="h-5 w-5 text-yellow-500 fill-yellow-500 mr-1" />
+                        <span className="font-medium">{book.rating}</span>
+                      </div>
+                      <span className="text-slate-500 text-sm">(Average)</span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm text-slate-600">Your rating:</span>
+                      <StarRating 
+                        rating={book.userRating || 0}
+                        onRatingChange={(rating) => onRateBook(book.id, rating)}
+                        size="md"
+                      />
                     </div>
                     <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
                       {book.genre}

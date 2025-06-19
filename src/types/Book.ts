@@ -5,6 +5,7 @@ export interface Book {
   author: string;
   cover: string;
   rating: number;
+  userRating?: number; // User's personal rating
   genre: string;
   year: number;
   description: string;
