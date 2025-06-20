@@ -5,25 +5,22 @@ export interface Book {
   author: string;
   cover: string;
   rating: number;
-  userRating?: number; // User's personal rating
   genre: string;
   year: number;
   description: string;
   isFavorite: boolean;
-  isOwnedForSale?: boolean;
+  isOwnedForSale: boolean;
   salePrice?: number;
+  userRating?: number;
   isbn10?: string;
   isbn13?: string;
-  publicationDate?: string;
   publisher?: string;
-  binding?: string;
+  publicationDate?: string;
   pages?: number;
-  listPrice?: number;
   language?: string;
-  edition?: string;
-  format?: string;
+  binding?: string;
+  listPrice?: number;
   synopsis?: string;
   subject?: string;
-  weight?: string;
-  dimensions?: string;
+  condition?: string;
 }

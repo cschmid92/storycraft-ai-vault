@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Library, Heart, BookOpen, Plus, DollarSign, ChevronDown, ChevronRight, Edit, Trash2 } from 'lucide-react';
+import { Library, Heart, BookOpen, Plus, DollarSign, ChevronDown, ChevronRight, Edit, Trash2, ShoppingCart } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import BooksForSale from './BooksForSale';
@@ -70,7 +70,7 @@ const CollectionSidebar = ({
           </div>
         </div>
 
-        {/* Books for Sale */}
+        {/* My Books for Sale */}
         <div>
           <button
             onClick={() => setShowBooksForSale(!showBooksForSale)}
@@ -78,7 +78,7 @@ const CollectionSidebar = ({
           >
             <div className="flex items-center space-x-3">
               <DollarSign className="h-4 w-4" />
-              <span className="text-sm font-semibold">Books for Sale</span>
+              <span className="text-sm font-semibold">My Books for Sale</span>
               {booksForSaleCount > 0 && (
                 <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full">
                   {booksForSaleCount}
@@ -97,6 +97,12 @@ const CollectionSidebar = ({
               <Link to="/books-for-sale">
                 <Button variant="outline" size="sm" className="w-full mt-2 text-xs">
                   View All
+                </Button>
+              </Link>
+              <Link to="/buy-used-books">
+                <Button variant="outline" size="sm" className="w-full mt-1 text-xs flex items-center justify-center gap-2">
+                  <ShoppingCart className="h-3 w-3" />
+                  Buy Used Books
                 </Button>
               </Link>
             </div>

@@ -45,7 +45,7 @@ const BooksForSale = () => {
                 <DollarSign className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-800">Books for Sale</h1>
+                <h1 className="text-xl font-bold text-slate-800">My Books for Sale</h1>
                 <p className="text-xs text-slate-600">Browse available books</p>
               </div>
             </div>

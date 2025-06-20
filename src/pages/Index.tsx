@@ -267,11 +267,6 @@ const Index = () => {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <Link to="/buy-used-books">
-                <Button variant="outline" className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100">
-                  Buy Used Books
-                </Button>
-              </Link>
               <Button 
                 variant="outline"
                 className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
@@ -301,11 +296,13 @@ const Index = () => {
           {/* Search and Filters */}
           <div className="mb-8">
             <div className="flex flex-col sm:flex-row gap-4 mb-6">
-              <div className="flex-1 flex gap-2">
-                <SearchBar 
-                  searchTerm={searchTerm}
-                  onSearchChange={setSearchTerm}
-                />
+              <div className="flex-1 flex gap-2 max-w-2xl">
+                <div className="flex-1">
+                  <SearchBar 
+                    searchTerm={searchTerm}
+                    onSearchChange={setSearchTerm}
+                  />
+                </div>
                 <Button 
                   onClick={handleSearch}
                   className="bg-blue-600 hover:bg-blue-700"
