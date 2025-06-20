@@ -1,9 +1,9 @@
 
 import React from 'react';
-import { X, Star, Heart, BookmarkPlus, DollarSign, Tag } from 'lucide-react';
+import { X, Heart, Star, DollarSign, BookmarkPlus, Calendar, Building2, Globe, Hash, FileText, Bookmark } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { Book } from '../types/Book';
 import StarRating from './StarRating';
+import { Book } from '../types/Book';
 
 interface BookDetailModalProps {
   book: Book | null;
@@ -20,177 +20,203 @@ const BookDetailModal = ({
   isOpen, 
   onClose, 
   onToggleFavorite, 
-  onAddToCollection, 
+  onAddToCollection,
   onToggleOwnedForSale,
-  onRateBook 
+  onRateBook
 }: BookDetailModalProps) => {
   if (!isOpen || !book) return null;
 
+  const handleBackdropClick = (e: React.MouseEvent) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  const handleRatingChange = (rating: number) => {
+    onRateBook(book.id, rating);
+  };
+
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center p-6 border-b">
-          <h2 className="text-2xl font-bold text-slate-800">Book Details</h2>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onClose}
-            className="p-2"
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-        
-        <div className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Book Cover */}
-            <div className="md:col-span-1">
-              <img 
-                src={book.cover} 
-                alt={book.title}
-                className="w-full max-w-sm mx-auto rounded-lg shadow-lg"
-              />
-              
-              {/* Resale Availability Badge */}
-              {book.isOwnedForSale && book.salePrice && (
-                <div className="mt-3 p-3 bg-green-50 border border-green-200 rounded-lg">
-                  <div className="flex items-center gap-2 text-green-700">
-                    <Tag className="h-4 w-4" />
-                    <span className="font-medium text-sm">Available for Sale</span>
-                  </div>
-                  <p className="text-green-600 text-lg font-bold mt-1">${book.salePrice}</p>
-                </div>
-              )}
-              
-              <div className="flex flex-col gap-2 mt-4">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => onToggleFavorite(book.id)}
-                  className="flex items-center gap-2"
-                >
-                  <Heart 
-                    className={`h-4 w-4 ${book.isFavorite ? 'text-red-500 fill-red-500' : 'text-slate-600'}`} 
+    <div 
+      className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+      onClick={handleBackdropClick}
+    >
+      <div className="bg-white rounded-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto shadow-2xl">
+        <div className="relative">
+          {/* Header */}
+          <div className="flex items-center justify-between p-6 border-b border-slate-200">
+            <h2 className="text-xl font-bold text-slate-800">Book Details</h2>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onClose}
+              className="h-8 w-8 p-0"
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+
+          {/* Content */}
+          <div className="p-6">
+            <div className="flex flex-col lg:flex-row gap-8">
+              {/* Book Cover */}
+              <div className="flex-shrink-0">
+                <div className="relative w-64 h-96 mx-auto lg:mx-0">
+                  <img 
+                    src={book.cover} 
+                    alt={book.title}
+                    className="w-full h-full object-cover rounded-lg shadow-lg"
                   />
-                  {book.isFavorite ? 'Favorited' : 'Add to Favorites'}
-                </Button>
-                <Button 
-                  size="sm" 
-                  variant="outline"
-                  onClick={() => onAddToCollection(book.id)}
-                  className="flex items-center gap-2"
-                >
-                  <BookmarkPlus className="h-4 w-4" />
-                  Add to Collection
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => onToggleOwnedForSale(book.id)}
-                  className={`flex items-center gap-2 ${book.isOwnedForSale ? 'bg-green-50 text-green-700 border-green-300' : ''}`}
-                >
-                  <DollarSign className="h-4 w-4" />
-                  {book.isOwnedForSale ? 'Listed for Sale' : 'Mark as Owned for Sale'}
-                </Button>
+                  {book.isOwnedForSale && book.salePrice && (
+                    <div className="absolute top-2 left-2 bg-green-500 text-white text-sm font-bold px-3 py-1 rounded-full">
+                      ${book.salePrice}
+                    </div>
+                  )}
+                </div>
               </div>
-            </div>
-            
-            {/* Book Details */}
-            <div className="md:col-span-2">
-              <div className="space-y-4">
+
+              {/* Book Info */}
+              <div className="flex-1 space-y-6">
+                {/* Title and Author */}
                 <div>
                   <h1 className="text-3xl font-bold text-slate-800 mb-2">{book.title}</h1>
-                  <p className="text-xl text-slate-600 mb-2">by {book.author}</p>
-                  <div className="flex items-center gap-4 mb-4">
-                    <div className="flex items-center gap-2">
-                      <div className="flex items-center">
-                        <Star className="h-5 w-5 text-yellow-500 fill-yellow-500 mr-1" />
-                        <span className="font-medium">{book.rating}</span>
-                      </div>
-                      <span className="text-slate-500 text-sm">(Average)</span>
+                  <p className="text-xl text-slate-600 mb-4">by {book.author}</p>
+                  
+                  {/* Rating */}
+                  <div className="flex items-center space-x-4 mb-4">
+                    <div className="flex items-center space-x-2">
+                      <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
+                      <span className="text-lg font-medium text-slate-700">{book.rating}</span>
+                      <span className="text-slate-500">({book.genre})</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-slate-600">Your rating:</span>
-                      <StarRating 
-                        rating={book.userRating || 0}
-                        onRatingChange={(rating) => onRateBook(book.id, rating)}
-                        size="md"
-                      />
-                    </div>
-                    <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm">
-                      {book.genre}
-                    </span>
+                  </div>
+
+                  {/* User Rating */}
+                  <div className="mb-4">
+                    <p className="text-sm font-medium text-slate-700 mb-2">Your Rating:</p>
+                    <StarRating
+                      rating={book.userRating || 0}
+                      onRatingChange={handleRatingChange}
+                      interactive={true}
+                    />
                   </div>
                 </div>
-                
-                {/* Publication Details */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
-                  <div>
-                    <span className="font-semibold text-slate-700">ISBN-10:</span>
-                    <p className="text-slate-600">{book.isbn10 || 'N/A'}</p>
-                  </div>
-                  <div>
-                    <span className="font-semibold text-slate-700">ISBN-13:</span>
-                    <p className="text-slate-600">{book.isbn13 || 'N/A'}</p>
-                  </div>
-                  <div>
-                    <span className="font-semibold text-slate-700">Publisher:</span>
-                    <p className="text-slate-600">{book.publisher || 'N/A'}</p>
-                  </div>
-                  <div>
-                    <span className="font-semibold text-slate-700">Publication Date:</span>
-                    <p className="text-slate-600">{book.publicationDate || book.year}</p>
-                  </div>
-                  <div>
-                    <span className="font-semibold text-slate-700">Pages:</span>
-                    <p className="text-slate-600">{book.pages || 'N/A'}</p>
-                  </div>
-                  <div>
-                    <span className="font-semibold text-slate-700">Language:</span>
-                    <p className="text-slate-600">{book.language || 'English'}</p>
-                  </div>
-                  <div>
-                    <span className="font-semibold text-slate-700">Binding:</span>
-                    <p className="text-slate-600">{book.binding || 'N/A'}</p>
-                  </div>
-                  <div>
-                    <span className="font-semibold text-slate-700">Format:</span>
-                    <p className="text-slate-600">{book.format || 'N/A'}</p>
-                  </div>
-                  {book.listPrice && (
-                    <div>
-                      <span className="font-semibold text-slate-700">List Price:</span>
-                      <p className="text-slate-600">${book.listPrice}</p>
-                    </div>
-                  )}
-                  {book.weight && (
-                    <div>
-                      <span className="font-semibold text-slate-700">Weight:</span>
-                      <p className="text-slate-600">{book.weight}</p>
-                    </div>
-                  )}
-                  {book.dimensions && (
-                    <div>
-                      <span className="font-semibold text-slate-700">Dimensions:</span>
-                      <p className="text-slate-600">{book.dimensions}</p>
-                    </div>
-                  )}
+
+                {/* Action Buttons */}
+                <div className="flex flex-wrap gap-3">
+                  <Button
+                    onClick={() => onToggleFavorite(book.id)}
+                    variant={book.isFavorite ? "default" : "outline"}
+                    className={book.isFavorite ? "bg-red-500 hover:bg-red-600" : ""}
+                  >
+                    <Heart className={`h-4 w-4 mr-2 ${book.isFavorite ? 'fill-white' : ''}`} />
+                    {book.isFavorite ? 'Remove from Favorites' : 'Add to Favorites'}
+                  </Button>
+                  
+                  <Button
+                    onClick={() => onAddToCollection(book.id)}
+                    variant="outline"
+                  >
+                    <BookmarkPlus className="h-4 w-4 mr-2" />
+                    Add to Collection
+                  </Button>
+
+                  <Button
+                    onClick={() => onToggleOwnedForSale(book.id)}
+                    variant={book.isOwnedForSale ? "default" : "outline"}
+                    className={book.isOwnedForSale ? "bg-green-500 hover:bg-green-600" : ""}
+                  >
+                    <DollarSign className="h-4 w-4 mr-2" />
+                    {book.isOwnedForSale ? 'Remove from Sale' : 'Mark for Sale'}
+                  </Button>
                 </div>
-                
-                {/* Synopsis */}
+
+                {/* Description */}
                 <div>
-                  <h3 className="font-semibold text-slate-700 mb-2">Synopsis</h3>
-                  <p className="text-slate-600 leading-relaxed">
-                    {book.synopsis || book.description}
-                  </p>
+                  <h3 className="text-lg font-semibold text-slate-800 mb-2">Description</h3>
+                  <p className="text-slate-600 leading-relaxed">{book.description}</p>
+                  {book.synopsis && (
+                    <>
+                      <h4 className="text-md font-semibold text-slate-800 mt-4 mb-2">Synopsis</h4>
+                      <p className="text-slate-600 leading-relaxed">{book.synopsis}</p>
+                    </>
+                  )}
                 </div>
-                
-                {book.subject && (
-                  <div>
-                    <h3 className="font-semibold text-slate-700 mb-2">Subject</h3>
-                    <p className="text-slate-600">{book.subject}</p>
+
+                {/* Book Details Grid */}
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-800 mb-4">Book Information</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div className="flex items-center space-x-2">
+                      <Calendar className="h-4 w-4 text-slate-500" />
+                      <span className="font-medium text-slate-700">Year:</span>
+                      <span className="text-slate-600">{book.year}</span>
+                    </div>
+                    
+                    {book.publisher && (
+                      <div className="flex items-center space-x-2">
+                        <Building2 className="h-4 w-4 text-slate-500" />
+                        <span className="font-medium text-slate-700">Publisher:</span>
+                        <span className="text-slate-600">{book.publisher}</span>
+                      </div>
+                    )}
+                    
+                    {book.pages && (
+                      <div className="flex items-center space-x-2">
+                        <FileText className="h-4 w-4 text-slate-500" />
+                        <span className="font-medium text-slate-700">Pages:</span>
+                        <span className="text-slate-600">{book.pages}</span>
+                      </div>
+                    )}
+                    
+                    {book.language && (
+                      <div className="flex items-center space-x-2">
+                        <Globe className="h-4 w-4 text-slate-500" />
+                        <span className="font-medium text-slate-700">Language:</span>
+                        <span className="text-slate-600">{book.language}</span>
+                      </div>
+                    )}
+                    
+                    {book.isbn10 && (
+                      <div className="flex items-center space-x-2">
+                        <Hash className="h-4 w-4 text-slate-500" />
+                        <span className="font-medium text-slate-700">ISBN-10:</span>
+                        <span className="text-slate-600">{book.isbn10}</span>
+                      </div>
+                    )}
+                    
+                    {book.isbn13 && (
+                      <div className="flex items-center space-x-2">
+                        <Hash className="h-4 w-4 text-slate-500" />
+                        <span className="font-medium text-slate-700">ISBN-13:</span>
+                        <span className="text-slate-600">{book.isbn13}</span>
+                      </div>
+                    )}
+                    
+                    {book.binding && (
+                      <div className="flex items-center space-x-2">
+                        <Bookmark className="h-4 w-4 text-slate-500" />
+                        <span className="font-medium text-slate-700">Binding:</span>
+                        <span className="text-slate-600">{book.binding}</span>
+                      </div>
+                    )}
+                    
+                    {book.listPrice && (
+                      <div className="flex items-center space-x-2">
+                        <DollarSign className="h-4 w-4 text-slate-500" />
+                        <span className="font-medium text-slate-700">List Price:</span>
+                        <span className="text-slate-600">${book.listPrice}</span>
+                      </div>
+                    )}
+                    
+                    {book.subject && (
+                      <div className="flex items-center space-x-2 md:col-span-2">
+                        <span className="font-medium text-slate-700">Subject:</span>
+                        <span className="text-slate-600">{book.subject}</span>
+                      </div>
+                    )}
                   </div>
-                )}
+                </div>
               </div>
             </div>
           </div>
