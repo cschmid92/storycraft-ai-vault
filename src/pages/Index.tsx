@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { BookOpen, User } from 'lucide-react';
+import { BookOpen, User, Search as SearchIcon } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import BookCard from '../components/BookCard';
 import CollectionModal from '../components/CollectionModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
@@ -8,11 +9,11 @@ import CollectionSidebar from '../components/CollectionSidebar';
 import BookDetailModal from '../components/BookDetailModal';
 import AccountModal from '../components/AccountModal';
 import PopularReads from '../components/PopularReads';
+import Recommendations from '../components/Recommendations';
 import PriceInputModal from '../components/PriceInputModal';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/Book';
-import { Plus, Search, Filter, Heart, Star, BookmarkPlus } from 'lucide-react';
-import { Input } from "@/components/ui/input";
+import { Plus, Filter, Heart, Star, BookmarkPlus } from 'lucide-react';
 
 // Updated mock data with detailed book information
 const mockBooks: Book[] = [
@@ -147,6 +148,7 @@ const Index = () => {
   const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
   const [selectedBookForSale, setSelectedBookForSale] = useState<number | null>(null);
   const collectionSectionRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
   const filteredBooks = books.filter(book => {
     const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -216,12 +218,16 @@ const Index = () => {
 
   const handleCollectionSelect = (collection: any) => {
     setSelectedCollection(collection);
-    // Focus to collection section when a collection is selected
-    if (collection && collectionSectionRef.current) {
-      collectionSectionRef.current.scrollIntoView({ 
-        behavior: 'smooth', 
-        block: 'start' 
-      });
+    if (collection) {
+      navigate(`/collections/${collection.id}`);
+    } else {
+      // Focus to collection section when "All Books" is selected
+      if (collectionSectionRef.current) {
+        collectionSectionRef.current.scrollIntoView({ 
+          behavior: 'smooth', 
+          block: 'start' 
+        });
+      }
     }
   };
 
@@ -239,6 +245,12 @@ const Index = () => {
     ? books.find(book => book.id === selectedBookForSale)?.title || ""
     : "";
 
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
       {/* Header */}
@@ -254,14 +266,21 @@ const Index = () => {
                 <p className="text-xs text-slate-600">Your Digital Library</p>
               </div>
             </div>
-            <Button 
-              variant="outline"
-              className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
-              onClick={() => setIsAccountModalOpen(true)}
-            >
-              <User className="h-4 w-4 mr-2" />
-              Account
-            </Button>
+            <div className="flex items-center gap-3">
+              <Link to="/buy-used-books">
+                <Button variant="outline" className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100">
+                  Buy Used Books
+                </Button>
+              </Link>
+              <Button 
+                variant="outline"
+                className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
+                onClick={() => setIsAccountModalOpen(true)}
+              >
+                <User className="h-4 w-4 mr-2" />
+                Account
+              </Button>
+            </div>
           </div>
         </div>
       </header>
@@ -282,11 +301,17 @@ const Index = () => {
           {/* Search and Filters */}
           <div className="mb-8">
             <div className="flex flex-col sm:flex-row gap-4 mb-6">
-              <div className="flex-1">
+              <div className="flex-1 flex gap-2">
                 <SearchBar 
                   searchTerm={searchTerm}
                   onSearchChange={setSearchTerm}
                 />
+                <Button 
+                  onClick={handleSearch}
+                  className="bg-blue-600 hover:bg-blue-700"
+                >
+                  <SearchIcon className="h-4 w-4" />
+                </Button>
               </div>
               <div className="flex gap-2">
                 <select 
@@ -299,6 +324,12 @@ const Index = () => {
                     <option key={genre} value={genre}>{genre}</option>
                   ))}
                 </select>
+                <Link to="/advanced-search">
+                  <Button variant="outline" className="bg-white/80 border-slate-300">
+                    <Filter className="h-4 w-4 mr-2" />
+                    Advanced
+                  </Button>
+                </Link>
               </div>
             </div>
 
@@ -334,8 +365,16 @@ const Index = () => {
             </div>
           </div>
 
-          {/* Popular Reads - Moved here after search bar */}
+          {/* Popular Reads */}
           <PopularReads 
+            books={books} 
+            onBookClick={handleBookClick}
+            onToggleFavorite={toggleFavorite}
+            onAddToCollection={handleAddToCollection}
+          />
+
+          {/* Recommendations */}
+          <Recommendations 
             books={books} 
             onBookClick={handleBookClick}
             onToggleFavorite={toggleFavorite}
@@ -348,9 +387,6 @@ const Index = () => {
               <h2 className="text-2xl font-bold text-slate-800">
                 {selectedCollection ? selectedCollection.name : "Discover Books"}
               </h2>
-              <p className="text-slate-600">
-                {filteredBooks.length} book{filteredBooks.length !== 1 ? 's' : ''} found
-              </p>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

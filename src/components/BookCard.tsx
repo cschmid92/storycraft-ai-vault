@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Star, Heart, BookmarkPlus, MoreVertical } from 'lucide-react';
+import { Star, Heart, BookmarkPlus } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/Book';
 
@@ -51,14 +51,6 @@ const BookCard = ({ book, onToggleFavorite, onBookClick, onAddToCollection }: Bo
             }}
           >
             <BookmarkPlus className="h-4 w-4 text-slate-600" />
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            className="w-8 h-8 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <MoreVertical className="h-4 w-4 text-slate-600" />
           </Button>
         </div>
 
