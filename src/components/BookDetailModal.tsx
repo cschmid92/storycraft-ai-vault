@@ -97,7 +97,7 @@ const BookDetailModal = ({
                     <StarRating
                       rating={book.userRating || 0}
                       onRatingChange={handleRatingChange}
-                      interactive={true}
+                      readonly={false}
                     />
                   </div>
                 </div>
