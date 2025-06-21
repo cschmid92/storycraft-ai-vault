@@ -9,10 +9,11 @@ interface BookCardProps {
   onToggleFavorite: (bookId: number) => void;
   onBookClick: (book: Book) => void;
   onAddToCollection: (bookId: number) => void;
-  onAddToBooksRead?: (bookId: number) => void;
+  onAddToBooksRead: (bookId: number) => void;
+  isInBooksRead?: boolean;
 }
 
-const BookCard = ({ book, onToggleFavorite, onBookClick, onAddToCollection, onAddToBooksRead }: BookCardProps) => {
+const BookCard = ({ book, onToggleFavorite, onBookClick, onAddToCollection, onAddToBooksRead, isInBooksRead = false }: BookCardProps) => {
   return (
     <div 
       className="group relative bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
@@ -53,19 +54,17 @@ const BookCard = ({ book, onToggleFavorite, onBookClick, onAddToCollection, onAd
           >
             <BookmarkPlus className="h-4 w-4 text-slate-600" />
           </Button>
-          {onAddToBooksRead && (
-            <Button
-              size="sm"
-              variant="outline"
-              className="w-8 h-8 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
-              onClick={(e) => {
-                e.stopPropagation();
-                onAddToBooksRead(book.id);
-              }}
-            >
-              <BookOpen className="h-4 w-4 text-green-600" />
-            </Button>
-          )}
+          <Button
+            size="sm"
+            variant="outline"
+            className="w-8 h-8 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToBooksRead(book.id);
+            }}
+          >
+            <BookOpen className={`h-4 w-4 ${isInBooksRead ? 'text-green-600 fill-green-600' : 'text-green-600'}`} />
+          </Button>
         </div>
 
         {/* Rating Badge */}

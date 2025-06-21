@@ -20,6 +20,7 @@ interface CollectionSidebarProps {
   onOpenCollectionModal: () => void;
   books: Book[];
   onBookClick: (book: Book) => void;
+  booksReadCount: number;
 }
 
 const CollectionSidebar = ({ 
@@ -28,7 +29,8 @@ const CollectionSidebar = ({
   onSelectCollection, 
   onOpenCollectionModal,
   books,
-  onBookClick
+  onBookClick,
+  booksReadCount
 }: CollectionSidebarProps) => {
   const [showBooksForSale, setShowBooksForSale] = useState(false);
   const booksForSaleCount = books.filter(book => book.isOwnedForSale && book.salePrice).length;
@@ -46,7 +48,7 @@ const CollectionSidebar = ({
   // Standard collections that appear before user collections
   const standardCollections = [
     { id: 'favorites', name: "Favorites ❤️", count: books.filter(book => book.isFavorite).length, color: "bg-red-500" },
-    { id: 'books-read', name: "Books read 📖", count: 5, color: "bg-green-500" },
+    { id: 'books-read', name: "Books read 📖", count: booksReadCount, color: "bg-green-500" },
   ];
 
   return (

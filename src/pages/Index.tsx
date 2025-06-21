@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { BookOpen, User, Search as SearchIcon } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -127,7 +128,6 @@ const mockBooks: Book[] = [
 ];
 
 const mockCollections = [
-  { id: 1, name: "Favorites ❤️", count: 3, color: "bg-red-500" },
   { id: 2, name: "To Read 📚", count: 8, color: "bg-blue-500" },
   { id: 3, name: "Classics", count: 12, color: "bg-amber-500" },
   { id: 4, name: "Sci-Fi Adventures", count: 6, color: "bg-purple-500" }
@@ -147,11 +147,12 @@ const Index = () => {
   const [filterGenre, setFilterGenre] = useState("");
   const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
   const [selectedBookForSale, setSelectedBookForSale] = useState<number | null>(null);
+  const [booksReadList, setBooksReadList] = useState<number[]>([1, 2, 3, 4, 5]); // Mock books read
   const collectionSectionRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
-  // Books read collection count (hardcoded for now, but can be dynamic)
-  const booksReadCount = 5;
+  // Books read collection count
+  const booksReadCount = booksReadList.length;
 
   const filteredBooks = books.filter(book => {
     const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -227,11 +228,20 @@ const Index = () => {
 
   const handleAddToBooksRead = (bookId: number) => {
     console.log(`Adding book ${bookId} to Books read collection`);
-    // Here you would implement the logic to add the book to the Books read collection
+    setBooksReadList(prev => {
+      if (prev.includes(bookId)) {
+        return prev; // Book already in list
+      }
+      return [...prev, bookId];
+    });
   };
 
   const handleCollectionSelect = (collection: any) => {
     setSelectedCollection(collection);
+    // Navigate to collection page if it's not a standard collection
+    if (collection && typeof collection.id === 'number') {
+      navigate(`/collections/${collection.id}`);
+    }
   };
 
   const selectedBookTitle = selectedBookForCollection 
@@ -286,6 +296,7 @@ const Index = () => {
           onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
           books={books}
           onBookClick={handleBookClick}
+          booksReadCount={booksReadCount}
         />
 
         {/* Main Content */}
@@ -392,6 +403,7 @@ const Index = () => {
                   onBookClick={handleBookClick}
                   onAddToCollection={handleAddToCollection}
                   onAddToBooksRead={handleAddToBooksRead}
+                  isInBooksRead={booksReadList.includes(book.id)}
                 />
               ))}
             </div>
