@@ -43,6 +43,11 @@ const CollectionSidebar = ({
     console.log('Delete collection:', collectionId);
   };
 
+  // Standard collections that appear before user collections
+  const standardCollections = [
+    { id: 'books-read', name: "Books read 📖", count: 5, color: "bg-green-500" },
+  ];
+
   return (
     <aside className="w-64 bg-white/60 backdrop-blur-md border-r border-slate-200 p-4 h-screen sticky top-16 overflow-y-auto flex flex-col">
       <div className="space-y-6 flex-1">
@@ -52,31 +57,16 @@ const CollectionSidebar = ({
             Quick Access
           </h3>
           <div className="space-y-1">
-            <button
-              onClick={() => onSelectCollection(null)}
-              className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left transition-colors ${
-                !selectedCollection 
-                  ? 'bg-blue-100 text-blue-800 border border-blue-200' 
-                  : 'text-slate-600 hover:bg-slate-100'
-              }`}
-            >
-              <Library className="h-4 w-4" />
-              <span className="text-sm">All Books</span>
-            </button>
-            <button className="w-full flex items-center space-x-3 px-3 py-2 rounded-lg text-left text-slate-600 hover:bg-slate-100 transition-colors">
-              <Heart className="h-4 w-4" />
-              <span className="text-sm">Favorites</span>
-            </button>
-            <Link to="/buy-used-books">
-              <Button variant="ghost" className="w-full justify-start text-slate-600 hover:bg-slate-100 px-3 py-2 h-auto">
-                <ShoppingCart className="h-4 w-4 mr-3" />
-                <span className="text-sm">Buy Used Books</span>
-              </Button>
-            </Link>
             <Link to="/about">
               <Button variant="ghost" className="w-full justify-start text-slate-600 hover:bg-slate-100 px-3 py-2 h-auto">
                 <Info className="h-4 w-4 mr-3" />
                 <span className="text-sm">About Bacondo</span>
+              </Button>
+            </Link>
+            <Link to="/buy-used-books">
+              <Button variant="ghost" className="w-full justify-start text-slate-600 hover:bg-slate-100 px-3 py-2 h-auto">
+                <ShoppingCart className="h-4 w-4 mr-3" />
+                <span className="text-sm">Buy Used Books</span>
               </Button>
             </Link>
           </div>
@@ -121,6 +111,28 @@ const CollectionSidebar = ({
             My Collections
           </h3>
           <div className="space-y-1">
+            {/* Standard Collections */}
+            {standardCollections.map((collection) => (
+              <div
+                key={collection.id}
+                className={`group relative flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                  selectedCollection?.id === collection.id 
+                    ? 'bg-blue-100 text-blue-800 border border-blue-200' 
+                    : 'text-slate-600 hover:bg-slate-100'
+                }`}
+              >
+                <button
+                  onClick={() => onSelectCollection(collection as any)}
+                  className="flex items-center space-x-3 flex-1 text-left"
+                >
+                  <div className={`w-3 h-3 rounded-full ${collection.color}`} />
+                  <span className="text-sm flex-1 truncate">{collection.name}</span>
+                  <span className="text-xs text-slate-500">{collection.count}</span>
+                </button>
+              </div>
+            ))}
+
+            {/* User Collections */}
             {collections.map((collection) => (
               <div
                 key={collection.id}

@@ -150,6 +150,9 @@ const Index = () => {
   const collectionSectionRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
+  // Books read collection count (hardcoded for now, but can be dynamic)
+  const booksReadCount = 5;
+
   const filteredBooks = books.filter(book => {
     const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          book.author.toLowerCase().includes(searchTerm.toLowerCase());
@@ -335,8 +338,8 @@ const Index = () => {
               <div className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-slate-600 text-sm">Total Books</p>
-                    <p className="text-2xl font-bold text-slate-800">{books.length}</p>
+                    <p className="text-slate-600 text-sm">Total books read</p>
+                    <p className="text-2xl font-bold text-slate-800">{booksReadCount}</p>
                   </div>
                   <BookOpen className="h-8 w-8 text-blue-500" />
                 </div>
