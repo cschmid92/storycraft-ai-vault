@@ -219,25 +219,15 @@ const Index = () => {
     // You can implement the actual logic to add the book to the collection
   };
 
-  const handleCollectionSelect = (collection: any) => {
-    setSelectedCollection(collection);
-    if (collection) {
-      navigate(`/collections/${collection.id}`);
-    } else {
-      // Focus to collection section when "All Books" is selected
-      if (collectionSectionRef.current) {
-        collectionSectionRef.current.scrollIntoView({ 
-          behavior: 'smooth', 
-          block: 'start' 
-        });
-      }
-    }
-  };
-
   const handleRateBook = (bookId: number, rating: number) => {
     setBooks(books.map(book => 
       book.id === bookId ? { ...book, userRating: rating } : book
     ));
+  };
+
+  const handleAddToBooksRead = (bookId: number) => {
+    console.log(`Adding book ${bookId} to Books read collection`);
+    // Here you would implement the logic to add the book to the Books read collection
   };
 
   const selectedBookTitle = selectedBookForCollection 
@@ -397,6 +387,7 @@ const Index = () => {
                   onToggleFavorite={toggleFavorite}
                   onBookClick={handleBookClick}
                   onAddToCollection={handleAddToCollection}
+                  onAddToBooksRead={handleAddToBooksRead}
                 />
               ))}
             </div>

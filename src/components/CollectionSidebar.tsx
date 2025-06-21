@@ -7,7 +7,7 @@ import BooksForSale from './BooksForSale';
 import { Book } from '../types/Book';
 
 interface Collection {
-  id: number;
+  id: number | string;
   name: string;
   count: number;
   color: string;
@@ -45,6 +45,7 @@ const CollectionSidebar = ({
 
   // Standard collections that appear before user collections
   const standardCollections = [
+    { id: 'favorites', name: "Favorites ❤️", count: books.filter(book => book.isFavorite).length, color: "bg-red-500" },
     { id: 'books-read', name: "Books read 📖", count: 5, color: "bg-green-500" },
   ];
 
@@ -157,7 +158,7 @@ const CollectionSidebar = ({
                     variant="ghost"
                     size="sm"
                     className="h-6 w-6 p-0 hover:bg-slate-200"
-                    onClick={(e) => handleEditCollection(e, collection.id)}
+                    onClick={(e) => handleEditCollection(e, collection.id as number)}
                   >
                     <Edit className="h-3 w-3" />
                   </Button>
@@ -165,7 +166,7 @@ const CollectionSidebar = ({
                     variant="ghost"
                     size="sm"
                     className="h-6 w-6 p-0 hover:bg-red-100 hover:text-red-600"
-                    onClick={(e) => handleDeleteCollection(e, collection.id)}
+                    onClick={(e) => handleDeleteCollection(e, collection.id as number)}
                   >
                     <Trash2 className="h-3 w-3" />
                   </Button>

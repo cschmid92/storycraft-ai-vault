@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Star, Heart, BookmarkPlus } from 'lucide-react';
+import { Star, Heart, BookmarkPlus, BookOpen } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/Book';
 
@@ -9,9 +9,10 @@ interface BookCardProps {
   onToggleFavorite: (bookId: number) => void;
   onBookClick: (book: Book) => void;
   onAddToCollection: (bookId: number) => void;
+  onAddToBooksRead?: (bookId: number) => void;
 }
 
-const BookCard = ({ book, onToggleFavorite, onBookClick, onAddToCollection }: BookCardProps) => {
+const BookCard = ({ book, onToggleFavorite, onBookClick, onAddToCollection, onAddToBooksRead }: BookCardProps) => {
   return (
     <div 
       className="group relative bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
@@ -52,6 +53,19 @@ const BookCard = ({ book, onToggleFavorite, onBookClick, onAddToCollection }: Bo
           >
             <BookmarkPlus className="h-4 w-4 text-slate-600" />
           </Button>
+          {onAddToBooksRead && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-8 h-8 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
+              onClick={(e) => {
+                e.stopPropagation();
+                onAddToBooksRead(book.id);
+              }}
+            >
+              <BookOpen className="h-4 w-4 text-green-600" />
+            </Button>
+          )}
         </div>
 
         {/* Rating Badge */}
