@@ -11,6 +11,7 @@ import SearchResults from "./pages/SearchResults";
 import Collections from "./pages/Collections";
 import BuyUsedBooks from "./pages/BuyUsedBooks";
 import AdvancedSearch from "./pages/AdvancedSearch";
+import About from "./pages/About";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +28,7 @@ const App = () => (
           <Route path="/collections/:id" element={<Collections />} />
           <Route path="/buy-used-books" element={<BuyUsedBooks />} />
           <Route path="/advanced-search" element={<AdvancedSearch />} />
+          <Route path="/about" element={<About />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

@@ -4,7 +4,9 @@ import { Link, useParams } from 'react-router-dom';
 import { ArrowLeft, BookmarkPlus, Edit, Trash2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import BookCard from '../components/BookCard';
+import CollectionSidebar from '../components/CollectionSidebar';
 import { Book } from '../types/Book';
+import { BookOpen, User } from 'lucide-react';
 
 // Mock data
 const mockCollections = [
@@ -37,6 +39,8 @@ const mockBooks: Book[] = [
 const Collections = () => {
   const { id } = useParams();
   const [collections, setCollections] = useState(mockCollections);
+  const [books] = useState(mockBooks);
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   
   const selectedCollection = collections.find(c => c.id === parseInt(id || ''));
   const collectionBooks = mockBooks; // In real app, filter by collection
@@ -47,6 +51,14 @@ const Collections = () => {
 
   const handleDeleteCollection = (collectionId: number) => {
     setCollections(collections.filter(c => c.id !== collectionId));
+  };
+
+  const handleCollectionSelect = (collection: any) => {
+    // Handle collection selection
+  };
+
+  const handleBookClick = (book: Book) => {
+    // Handle book click
   };
 
   if (!selectedCollection) {
@@ -72,69 +84,103 @@ const Collections = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              <Link to="/">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back
-                </Button>
-              </Link>
-              <div className={`p-2 rounded-xl ${selectedCollection.color}`}>
-                <BookmarkPlus className="h-6 w-6 text-white" />
+              <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
+                <BookOpen className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-800">{selectedCollection.name}</h1>
-                <p className="text-xs text-slate-600">{selectedCollection.count} books in collection</p>
+                <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
+                <p className="text-xs text-slate-600">Your Digital Library</p>
               </div>
             </div>
-            <div className="flex gap-2">
+            <div className="flex items-center gap-3">
               <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => handleEditCollection(selectedCollection.id)}
+                variant="outline"
+                className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
+                onClick={() => setIsAccountModalOpen(true)}
               >
-                <Edit className="h-4 w-4 mr-2" />
-                Edit
-              </Button>
-              <Button 
-                variant="outline" 
-                size="sm"
-                onClick={() => handleDeleteCollection(selectedCollection.id)}
-                className="text-red-600 hover:text-red-700 hover:bg-red-50"
-              >
-                <Trash2 className="h-4 w-4 mr-2" />
-                Delete
+                <User className="h-4 w-4 mr-2" />
+                Account
               </Button>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto p-6">
-        <div className="mb-8">
-          <h2 className="text-2xl font-bold text-slate-800 mb-2">Books in Collection</h2>
-        </div>
+      <div className="flex">
+        {/* Sidebar */}
+        <CollectionSidebar 
+          collections={collections}
+          selectedCollection={selectedCollection}
+          onSelectCollection={handleCollectionSelect}
+          onOpenCollectionModal={() => {}}
+          books={books}
+          onBookClick={handleBookClick}
+        />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {collectionBooks.map(book => (
-            <BookCard 
-              key={book.id}
-              book={book}
-              onToggleFavorite={() => {}}
-              onBookClick={() => {}}
-              onAddToCollection={() => {}}
-            />
-          ))}
-        </div>
+        {/* Main Content */}
+        <main className="flex-1 p-6">
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-6">
+              <div className="flex items-center space-x-3">
+                <Link to="/">
+                  <Button variant="ghost" size="sm">
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    Back
+                  </Button>
+                </Link>
+                <div className={`p-2 rounded-xl ${selectedCollection.color}`}>
+                  <BookmarkPlus className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold text-slate-800">{selectedCollection.name}</h1>
+                  <p className="text-xs text-slate-600">{selectedCollection.count} books in collection</p>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => handleEditCollection(selectedCollection.id)}
+                >
+                  <Edit className="h-4 w-4 mr-2" />
+                  Edit
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => handleDeleteCollection(selectedCollection.id)}
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                >
+                  <Trash2 className="h-4 w-4 mr-2" />
+                  Delete
+                </Button>
+              </div>
+            </div>
 
-        {collectionBooks.length === 0 && (
-          <div className="text-center py-12">
-            <BookmarkPlus className="h-16 w-16 text-slate-400 mx-auto mb-4 opacity-50" />
-            <h3 className="text-xl font-semibold text-slate-700 mb-2">No books in this collection</h3>
-            <p className="text-slate-500">Start adding books to build your collection</p>
+            <h2 className="text-2xl font-bold text-slate-800 mb-6">Books in Collection</h2>
           </div>
-        )}
-      </main>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {collectionBooks.map(book => (
+              <BookCard 
+                key={book.id}
+                book={book}
+                onToggleFavorite={() => {}}
+                onBookClick={() => {}}
+                onAddToCollection={() => {}}
+              />
+            ))}
+          </div>
+
+          {collectionBooks.length === 0 && (
+            <div className="text-center py-12">
+              <BookmarkPlus className="h-16 w-16 text-slate-400 mx-auto mb-4 opacity-50" />
+              <h3 className="text-xl font-semibold text-slate-700 mb-2">No books in this collection</h3>
+              <p className="text-slate-500">Start adding books to build your collection</p>
+            </div>
+          )}
+        </main>
+      </div>
     </div>
   );
 };
