@@ -230,6 +230,10 @@ const Index = () => {
     // Here you would implement the logic to add the book to the Books read collection
   };
 
+  const handleCollectionSelect = (collection: any) => {
+    setSelectedCollection(collection);
+  };
+
   const selectedBookTitle = selectedBookForCollection 
     ? books.find(book => book.id === selectedBookForCollection)?.title || ""
     : "";
