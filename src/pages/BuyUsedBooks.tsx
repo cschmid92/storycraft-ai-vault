@@ -54,6 +54,7 @@ const BuyUsedBooks = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterGenre, setFilterGenre] = useState("");
   const [priceRange, setPriceRange] = useState("all");
+  const [booksReadList, setBooksReadList] = useState<number[]>([]);
 
   const genres = [...new Set(mockUsedBooks.map(book => book.genre))];
 
@@ -80,6 +81,15 @@ const BuyUsedBooks = () => {
 
   const handleAddToCollection = (bookId: number) => {
     console.log('Add to collection:', bookId);
+  };
+
+  const handleAddToBooksRead = (bookId: number) => {
+    setBooksReadList(prev => {
+      if (prev.includes(bookId)) {
+        return prev.filter(id => id !== bookId);
+      }
+      return [...prev, bookId];
+    });
   };
 
   return (
@@ -119,6 +129,7 @@ const BuyUsedBooks = () => {
           onOpenCollectionModal={() => {}}
           books={mockUsedBooks}
           onBookClick={handleBookClick}
+          booksReadCount={booksReadList.length}
         />
 
         {/* Main Content */}
@@ -190,6 +201,8 @@ const BuyUsedBooks = () => {
                 onToggleFavorite={handleToggleFavorite}
                 onBookClick={handleBookClick}
                 onAddToCollection={handleAddToCollection}
+                onAddToBooksRead={handleAddToBooksRead}
+                isInBooksRead={booksReadList.includes(book.id)}
               />
             ))}
           </div>

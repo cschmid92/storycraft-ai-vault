@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Lightbulb, Star, Heart, BookmarkPlus } from 'lucide-react';
+import { Lightbulb, Star, Heart, BookmarkPlus, BookOpen } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/Book';
 
@@ -9,9 +9,11 @@ interface RecommendationsProps {
   onBookClick: (book: Book) => void;
   onToggleFavorite: (bookId: number) => void;
   onAddToCollection: (bookId: number) => void;
+  onAddToBooksRead: (bookId: number) => void;
+  isInBooksRead?: (bookId: number) => boolean;
 }
 
-const Recommendations = ({ books, onBookClick, onToggleFavorite, onAddToCollection }: RecommendationsProps) => {
+const Recommendations = ({ books, onBookClick, onToggleFavorite, onAddToCollection, onAddToBooksRead, isInBooksRead }: RecommendationsProps) => {
   const recommendedBooks = books.slice(2, 7); // Show different books than popular reads
 
   return (
@@ -65,6 +67,17 @@ const Recommendations = ({ books, onBookClick, onToggleFavorite, onAddToCollecti
                   }}
                 >
                   <BookmarkPlus className="h-3 w-3 text-slate-600" />
+                </Button>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="w-7 h-7 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onAddToBooksRead(book.id);
+                  }}
+                >
+                  <BookOpen className={`h-3 w-3 ${isInBooksRead && isInBooksRead(book.id) ? 'text-green-600 fill-green-600' : 'text-green-600'}`} />
                 </Button>
               </div>
             </div>

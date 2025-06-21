@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
-import { ArrowLeft, BookmarkPlus, Edit, Trash2 } from 'lucide-react';
+import { Link, useParams, useNavigate } from 'react-router-dom';
+import { ArrowLeft, BookmarkPlus, Edit, Trash2, Heart } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import BookCard from '../components/BookCard';
 import CollectionSidebar from '../components/CollectionSidebar';
@@ -10,7 +10,6 @@ import { BookOpen, User } from 'lucide-react';
 
 // Mock data
 const mockCollections = [
-  { id: 1, name: "Favorites ❤️", count: 3, color: "bg-red-500" },
   { id: 2, name: "To Read 📚", count: 8, color: "bg-blue-500" },
   { id: 3, name: "Classics", count: 12, color: "bg-amber-500" },
   { id: 4, name: "Sci-Fi Adventures", count: 6, color: "bg-purple-500" }
@@ -26,24 +25,55 @@ const mockBooks: Book[] = [
     genre: "Classic Literature",
     year: 1925,
     description: "A classic American novel set in the Jazz Age, exploring themes of wealth, love, and the American Dream.",
-    isFavorite: false,
+    isFavorite: true,
     isOwnedForSale: false,
     isbn10: "0743273567",
     isbn13: "978-0743273565",
     publisher: "Scribner",
     pages: 180,
     language: "English"
+  },
+  {
+    id: 2,
+    title: "To Kill a Mockingbird",
+    author: "Harper Lee",
+    cover: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=450&fit=crop",
+    rating: 4.5,
+    genre: "Fiction",
+    year: 1960,
+    description: "A powerful story of racial injustice and childhood innocence in the American South.",
+    isFavorite: true,
+    isOwnedForSale: false,
+    isbn10: "0061120081",
+    isbn13: "978-0061120084",
+    publisher: "Harper Perennial Modern Classics",
+    pages: 376,
+    language: "English"
   }
 ];
 
 const Collections = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [collections, setCollections] = useState(mockCollections);
   const [books] = useState(mockBooks);
+  const [booksReadList, setBooksReadList] = useState<number[]>([1, 2]);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   
-  const selectedCollection = collections.find(c => c.id === parseInt(id || ''));
-  const collectionBooks = mockBooks; // In real app, filter by collection
+  // Handle both standard and user collections
+  let selectedCollection: any = null;
+  let collectionBooks: Book[] = [];
+
+  if (id === 'favorites') {
+    selectedCollection = { id: 'favorites', name: "Favorites ❤️", count: books.filter(book => book.isFavorite).length, color: "bg-red-500" };
+    collectionBooks = books.filter(book => book.isFavorite);
+  } else if (id === 'books-read') {
+    selectedCollection = { id: 'books-read', name: "Books read 📖", count: booksReadList.length, color: "bg-green-500" };
+    collectionBooks = books.filter(book => booksReadList.includes(book.id));
+  } else {
+    selectedCollection = collections.find(c => c.id === parseInt(id || ''));
+    collectionBooks = mockBooks; // In real app, filter by collection
+  }
 
   const handleEditCollection = (collectionId: number) => {
     console.log('Edit collection:', collectionId);
@@ -51,14 +81,38 @@ const Collections = () => {
 
   const handleDeleteCollection = (collectionId: number) => {
     setCollections(collections.filter(c => c.id !== collectionId));
+    navigate('/');
   };
 
   const handleCollectionSelect = (collection: any) => {
-    // Handle collection selection
+    if (collection?.id === 'favorites') {
+      navigate('/collections/favorites');
+    } else if (collection?.id === 'books-read') {
+      navigate('/collections/books-read');
+    } else if (collection && typeof collection.id === 'number') {
+      navigate(`/collections/${collection.id}`);
+    }
   };
 
   const handleBookClick = (book: Book) => {
-    // Handle book click
+    console.log('Book clicked:', book);
+  };
+
+  const handleToggleFavorite = (bookId: number) => {
+    console.log('Toggle favorite:', bookId);
+  };
+
+  const handleAddToCollection = (bookId: number) => {
+    console.log('Add to collection:', bookId);
+  };
+
+  const handleAddToBooksRead = (bookId: number) => {
+    setBooksReadList(prev => {
+      if (prev.includes(bookId)) {
+        return prev.filter(id => id !== bookId);
+      }
+      return [...prev, bookId];
+    });
   };
 
   if (!selectedCollection) {
@@ -76,6 +130,8 @@ const Collections = () => {
       </div>
     );
   }
+
+  const canEdit = typeof selectedCollection.id === 'number';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
@@ -115,6 +171,7 @@ const Collections = () => {
           onOpenCollectionModal={() => {}}
           books={books}
           onBookClick={handleBookClick}
+          booksReadCount={booksReadList.length}
         />
 
         {/* Main Content */}
@@ -129,32 +186,38 @@ const Collections = () => {
                   </Button>
                 </Link>
                 <div className={`p-2 rounded-xl ${selectedCollection.color}`}>
-                  <BookmarkPlus className="h-6 w-6 text-white" />
+                  {selectedCollection.id === 'favorites' ? (
+                    <Heart className="h-6 w-6 text-white" />
+                  ) : (
+                    <BookmarkPlus className="h-6 w-6 text-white" />
+                  )}
                 </div>
                 <div>
                   <h1 className="text-xl font-bold text-slate-800">{selectedCollection.name}</h1>
                   <p className="text-xs text-slate-600">{selectedCollection.count} books in collection</p>
                 </div>
               </div>
-              <div className="flex gap-2">
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => handleEditCollection(selectedCollection.id)}
-                >
-                  <Edit className="h-4 w-4 mr-2" />
-                  Edit
-                </Button>
-                <Button 
-                  variant="outline" 
-                  size="sm"
-                  onClick={() => handleDeleteCollection(selectedCollection.id)}
-                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                >
-                  <Trash2 className="h-4 w-4 mr-2" />
-                  Delete
-                </Button>
-              </div>
+              {canEdit && (
+                <div className="flex gap-2">
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleEditCollection(selectedCollection.id)}
+                  >
+                    <Edit className="h-4 w-4 mr-2" />
+                    Edit
+                  </Button>
+                  <Button 
+                    variant="outline" 
+                    size="sm"
+                    onClick={() => handleDeleteCollection(selectedCollection.id)}
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete
+                  </Button>
+                </div>
+              )}
             </div>
 
             <h2 className="text-2xl font-bold text-slate-800 mb-6">Books in Collection</h2>
@@ -165,9 +228,11 @@ const Collections = () => {
               <BookCard 
                 key={book.id}
                 book={book}
-                onToggleFavorite={() => {}}
-                onBookClick={() => {}}
-                onAddToCollection={() => {}}
+                onToggleFavorite={handleToggleFavorite}
+                onBookClick={handleBookClick}
+                onAddToCollection={handleAddToCollection}
+                onAddToBooksRead={handleAddToBooksRead}
+                isInBooksRead={booksReadList.includes(book.id)}
               />
             ))}
           </div>

@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { BookOpen, User, Search as SearchIcon } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -154,6 +153,9 @@ const Index = () => {
   // Books read collection count
   const booksReadCount = booksReadList.length;
 
+  // Total collections including default ones (Favorites and Books read)
+  const totalCollections = collections.length + 2;
+
   const filteredBooks = books.filter(book => {
     const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          book.author.toLowerCase().includes(searchTerm.toLowerCase());
@@ -214,10 +216,16 @@ const Index = () => {
     setIsCollectionSelectionOpen(true);
   };
 
-  const handleSelectCollection = (collectionId: number) => {
-    // Here you would add the book to the selected collection
-    console.log(`Adding book ${selectedBookForCollection} to collection ${collectionId}`);
-    // You can implement the actual logic to add the book to the collection
+  const handleSelectCollection = (collection: any) => {
+    setSelectedCollection(collection);
+    // Navigate to collection page for all collections including default ones
+    if (collection?.id === 'favorites') {
+      navigate('/collections/favorites');
+    } else if (collection?.id === 'books-read') {
+      navigate('/collections/books-read');
+    } else if (collection && typeof collection.id === 'number') {
+      navigate(`/collections/${collection.id}`);
+    }
   };
 
   const handleRateBook = (bookId: number, rating: number) => {
@@ -234,14 +242,6 @@ const Index = () => {
       }
       return [...prev, bookId];
     });
-  };
-
-  const handleCollectionSelect = (collection: any) => {
-    setSelectedCollection(collection);
-    // Navigate to collection page if it's not a standard collection
-    if (collection && typeof collection.id === 'number') {
-      navigate(`/collections/${collection.id}`);
-    }
   };
 
   const selectedBookTitle = selectedBookForCollection 
@@ -353,7 +353,7 @@ const Index = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-slate-600 text-sm">Collections</p>
-                    <p className="text-2xl font-bold text-slate-800">{collections.length}</p>
+                    <p className="text-2xl font-bold text-slate-800">{totalCollections}</p>
                   </div>
                   <BookmarkPlus className="h-8 w-8 text-indigo-500" />
                 </div>
@@ -376,6 +376,8 @@ const Index = () => {
             onBookClick={handleBookClick}
             onToggleFavorite={toggleFavorite}
             onAddToCollection={handleAddToCollection}
+            onAddToBooksRead={handleAddToBooksRead}
+            isInBooksRead={(bookId) => booksReadList.includes(bookId)}
           />
 
           {/* Recommendations */}
@@ -384,6 +386,8 @@ const Index = () => {
             onBookClick={handleBookClick}
             onToggleFavorite={toggleFavorite}
             onAddToCollection={handleAddToCollection}
+            onAddToBooksRead={handleAddToBooksRead}
+            isInBooksRead={(bookId) => booksReadList.includes(bookId)}
           />
 
           {/* Books Grid */}
