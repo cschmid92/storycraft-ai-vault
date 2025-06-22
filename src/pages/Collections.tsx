@@ -1,9 +1,11 @@
+
 import React, { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, BookmarkPlus, Edit, Trash2, Heart } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import BookCard from '../components/BookCard';
 import CollectionSidebar from '../components/CollectionSidebar';
+import CollectionModal from '../components/CollectionModal';
 import { Book } from '../types/Book';
 import { BookOpen, User } from 'lucide-react';
 
@@ -99,6 +101,7 @@ const Collections = () => {
   const [books] = useState(mockBooks);
   const [booksReadList, setBooksReadList] = useState<number[]>([1, 2]);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+  const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   
   // Handle both standard and user collections
   let selectedCollection: any = null;
@@ -158,6 +161,16 @@ const Collections = () => {
     });
   };
 
+  const handleCreateCollection = (name: string, color: string) => {
+    const newCollection = {
+      id: Date.now(),
+      name,
+      count: 0,
+      color
+    };
+    setCollections([...collections, newCollection]);
+  };
+
   if (!selectedCollection) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
@@ -211,7 +224,7 @@ const Collections = () => {
           collections={collections}
           selectedCollection={selectedCollection}
           onSelectCollection={handleCollectionSelect}
-          onOpenCollectionModal={() => {}}
+          onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
           books={books}
           onBookClick={handleBookClick}
           booksReadCount={booksReadList.length}
@@ -289,6 +302,13 @@ const Collections = () => {
           )}
         </main>
       </div>
+
+      {/* Collection Modal */}
+      <CollectionModal 
+        isOpen={isCollectionModalOpen}
+        onClose={() => setIsCollectionModalOpen(false)}
+        onCreateCollection={handleCreateCollection}
+      />
     </div>
   );
 };

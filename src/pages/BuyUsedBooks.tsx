@@ -1,11 +1,12 @@
 
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Search, BookOpen, User, MapPin } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import BookCard from '../components/BookCard';
 import CollectionSidebar from '../components/CollectionSidebar';
+import CollectionModal from '../components/CollectionModal';
 import { Book } from '../types/Book';
 
 // Extended Book interface for used books with distance
@@ -76,16 +77,26 @@ const mockUsedBooks: UsedBook[] = [
   }
 ];
 
+const mockCollections = [
+  { id: 2, name: "To Read 📚", count: 8, color: "bg-blue-500" },
+  { id: 3, name: "Classics", count: 12, color: "bg-amber-500" },
+  { id: 4, name: "Sci-Fi Adventures", count: 6, color: "bg-purple-500" }
+];
+
 const BuyUsedBooks = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterGenre, setFilterGenre] = useState("");
   const [priceRange, setPriceRange] = useState("all");
   const [distanceRange, setDistanceRange] = useState("all");
+  const [books, setBooks] = useState(mockUsedBooks);
+  const [collections, setCollections] = useState(mockCollections);
   const [booksReadList, setBooksReadList] = useState<number[]>([]);
+  const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
+  const navigate = useNavigate();
 
-  const genres = [...new Set(mockUsedBooks.map(book => book.genre))];
+  const genres = [...new Set(books.map(book => book.genre))];
 
-  const filteredBooks = mockUsedBooks.filter(book => {
+  const filteredBooks = books.filter(book => {
     const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          book.author.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesGenre = !filterGenre || book.genre === filterGenre;
@@ -108,7 +119,9 @@ const BuyUsedBooks = () => {
   };
 
   const handleToggleFavorite = (bookId: number) => {
-    console.log('Toggle favorite:', bookId);
+    setBooks(books.map(book => 
+      book.id === bookId ? { ...book, isFavorite: !book.isFavorite } : book
+    ));
   };
 
   const handleAddToCollection = (bookId: number) => {
@@ -122,6 +135,26 @@ const BuyUsedBooks = () => {
       }
       return [...prev, bookId];
     });
+  };
+
+  const handleCollectionSelect = (collection: any) => {
+    if (collection?.id === 'favorites') {
+      navigate('/collections/favorites');
+    } else if (collection?.id === 'books-read') {
+      navigate('/collections/books-read');
+    } else if (collection && typeof collection.id === 'number') {
+      navigate(`/collections/${collection.id}`);
+    }
+  };
+
+  const handleCreateCollection = (name: string, color: string) => {
+    const newCollection = {
+      id: Date.now(),
+      name,
+      count: 0,
+      color
+    };
+    setCollections([...collections, newCollection]);
   };
 
   return (
@@ -155,11 +188,11 @@ const BuyUsedBooks = () => {
       <div className="flex">
         {/* Sidebar */}
         <CollectionSidebar 
-          collections={[]}
+          collections={collections}
           selectedCollection={null}
-          onSelectCollection={() => {}}
-          onOpenCollectionModal={() => {}}
-          books={mockUsedBooks}
+          onSelectCollection={handleCollectionSelect}
+          onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
+          books={books}
           onBookClick={handleBookClick}
           booksReadCount={booksReadList.length}
         />
@@ -251,7 +284,7 @@ const BuyUsedBooks = () => {
                   {book.distance && (
                     <div className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
                       <MapPin className="h-3 w-3" />
-                      {(book.distance * 1.60934).toFixed(1)} km
+                      {book.distance.toFixed(1)} km
                     </div>
                   )}
                   {book.condition && (
@@ -273,6 +306,13 @@ const BuyUsedBooks = () => {
           )}
         </main>
       </div>
+
+      {/* Collection Modal */}
+      <CollectionModal 
+        isOpen={isCollectionModalOpen}
+        onClose={() => setIsCollectionModalOpen(false)}
+        onCreateCollection={handleCreateCollection}
+      />
     </div>
   );
 };

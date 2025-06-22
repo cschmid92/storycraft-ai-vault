@@ -1,9 +1,9 @@
-
-import React from 'react';
-import { Link } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, BookOpen, User, Heart, Library, Users, Sparkles } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import CollectionSidebar from '../components/CollectionSidebar';
+import CollectionModal from '../components/CollectionModal';
 
 // Mock data for sidebar - same as other pages
 const mockCollections = [
@@ -50,6 +50,34 @@ const mockBooks = [
 ];
 
 const About = () => {
+  const [collections, setCollections] = useState(mockCollections);
+  const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
+  const navigate = useNavigate();
+
+  const handleCollectionSelect = (collection: any) => {
+    if (collection?.id === 'favorites') {
+      navigate('/collections/favorites');
+    } else if (collection?.id === 'books-read') {
+      navigate('/collections/books-read');
+    } else if (collection && typeof collection.id === 'number') {
+      navigate(`/collections/${collection.id}`);
+    }
+  };
+
+  const handleBookClick = (book: any) => {
+    console.log('Book clicked:', book);
+  };
+
+  const handleCreateCollection = (name: string, color: string) => {
+    const newCollection = {
+      id: Date.now(),
+      name,
+      count: 0,
+      color
+    };
+    setCollections([...collections, newCollection]);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
       {/* Header */}
@@ -81,12 +109,12 @@ const About = () => {
       <div className="flex">
         {/* Sidebar */}
         <CollectionSidebar 
-          collections={mockCollections}
+          collections={collections}
           selectedCollection={null}
-          onSelectCollection={() => {}}
-          onOpenCollectionModal={() => {}}
+          onSelectCollection={handleCollectionSelect}
+          onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
           books={mockBooks}
-          onBookClick={() => {}}
+          onBookClick={handleBookClick}
           booksReadCount={2}
         />
 
@@ -177,6 +205,13 @@ const About = () => {
           </div>
         </main>
       </div>
+
+      {/* Collection Modal */}
+      <CollectionModal 
+        isOpen={isCollectionModalOpen}
+        onClose={() => setIsCollectionModalOpen(false)}
+        onCreateCollection={handleCreateCollection}
+      />
     </div>
   );
 };
