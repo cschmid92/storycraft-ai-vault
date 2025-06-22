@@ -1,15 +1,21 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Search, BookOpen, User } from 'lucide-react';
+import { ArrowLeft, Search, BookOpen, User, MapPin } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import BookCard from '../components/BookCard';
 import CollectionSidebar from '../components/CollectionSidebar';
 import { Book } from '../types/Book';
 
-// Mock data for used books marketplace
-const mockUsedBooks: Book[] = [
+// Extended Book interface for used books with distance
+interface UsedBook extends Book {
+  distance?: number; // in miles
+  location?: string;
+}
+
+// Mock data for used books marketplace with distance information
+const mockUsedBooks: UsedBook[] = [
   {
     id: 7,
     title: "The Hobbit",
@@ -27,7 +33,9 @@ const mockUsedBooks: Book[] = [
     publisher: "Mariner Books",
     pages: 366,
     language: "English",
-    condition: "Good"
+    condition: "Good",
+    distance: 2.3,
+    location: "Downtown Library District"
   },
   {
     id: 8,
@@ -46,7 +54,25 @@ const mockUsedBooks: Book[] = [
     publisher: "Ace",
     pages: 688,
     language: "English",
-    condition: "Very Good"
+    condition: "Very Good",
+    distance: 5.7,
+    location: "University District"
+  },
+  {
+    id: 9,
+    title: "The Lord of the Rings",
+    author: "J.R.R. Tolkien",
+    cover: "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=300&h=450&fit=crop",
+    rating: 4.8,
+    genre: "Fantasy",
+    year: 1954,
+    description: "Epic fantasy trilogy about the quest to destroy the One Ring.",
+    isFavorite: false,
+    isOwnedForSale: true,
+    salePrice: 25.00,
+    condition: "Like New",
+    distance: 12.1,
+    location: "Suburb East"
   }
 ];
 
@@ -54,6 +80,7 @@ const BuyUsedBooks = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [filterGenre, setFilterGenre] = useState("");
   const [priceRange, setPriceRange] = useState("all");
+  const [distanceRange, setDistanceRange] = useState("all");
   const [booksReadList, setBooksReadList] = useState<number[]>([]);
 
   const genres = [...new Set(mockUsedBooks.map(book => book.genre))];
@@ -68,7 +95,12 @@ const BuyUsedBooks = () => {
     if (priceRange === "10to20" && book.salePrice && (book.salePrice < 10 || book.salePrice > 20)) matchesPrice = false;
     if (priceRange === "over20" && book.salePrice && book.salePrice <= 20) matchesPrice = false;
     
-    return matchesSearch && matchesGenre && matchesPrice;
+    let matchesDistance = true;
+    if (distanceRange === "under5" && book.distance && book.distance >= 5) matchesDistance = false;
+    if (distanceRange === "5to10" && book.distance && (book.distance < 5 || book.distance > 10)) matchesDistance = false;
+    if (distanceRange === "over10" && book.distance && book.distance <= 10) matchesDistance = false;
+    
+    return matchesSearch && matchesGenre && matchesPrice && matchesDistance;
   });
 
   const handleBookClick = (book: Book) => {
@@ -181,6 +213,16 @@ const BuyUsedBooks = () => {
                   <option value="10to20">$10 - $20</option>
                   <option value="over20">Over $20</option>
                 </select>
+                <select 
+                  value={distanceRange}
+                  onChange={(e) => setDistanceRange(e.target.value)}
+                  className="px-4 py-2 bg-white/80 border border-slate-300 rounded-lg text-slate-700 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="all">All Distances</option>
+                  <option value="under5">Under 5 miles</option>
+                  <option value="5to10">5 - 10 miles</option>
+                  <option value="over10">Over 10 miles</option>
+                </select>
               </div>
             </div>
 
@@ -195,15 +237,23 @@ const BuyUsedBooks = () => {
           {/* Books Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
             {filteredBooks.map(book => (
-              <BookCard 
-                key={book.id}
-                book={book}
-                onToggleFavorite={handleToggleFavorite}
-                onBookClick={handleBookClick}
-                onAddToCollection={handleAddToCollection}
-                onAddToBooksRead={handleAddToBooksRead}
-                isInBooksRead={booksReadList.includes(book.id)}
-              />
+              <div key={book.id} className="relative">
+                <BookCard 
+                  book={book}
+                  onToggleFavorite={handleToggleFavorite}
+                  onBookClick={handleBookClick}
+                  onAddToCollection={handleAddToCollection}
+                  onAddToBooksRead={handleAddToBooksRead}
+                  isInBooksRead={booksReadList.includes(book.id)}
+                />
+                {/* Distance Badge */}
+                {book.distance && (
+                  <div className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                    <MapPin className="h-3 w-3" />
+                    {book.distance} mi
+                  </div>
+                )}
+              </div>
             ))}
           </div>
 

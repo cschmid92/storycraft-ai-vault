@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { BookOpen, User, Search as SearchIcon } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -197,10 +198,10 @@ const Index = () => {
     }
   };
 
-  const handleSetSalePrice = (price: number) => {
+  const handleSetSalePrice = (price: number, condition: string) => {
     if (selectedBookForSale) {
       setBooks(books.map(book => 
-        book.id === selectedBookForSale ? { ...book, isOwnedForSale: true, salePrice: price } : book
+        book.id === selectedBookForSale ? { ...book, isOwnedForSale: true, salePrice: price, condition } : book
       ));
       setSelectedBookForSale(null);
     }
@@ -343,8 +344,17 @@ const Index = () => {
               </div>
             </div>
 
-            {/* Stats */}
+            {/* Stats - Reordered */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+              <div className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-slate-600 text-sm">Favorites</p>
+                    <p className="text-2xl font-bold text-slate-800">{books.filter(b => b.isFavorite).length}</p>
+                  </div>
+                  <Heart className="h-8 w-8 text-red-500" />
+                </div>
+              </div>
               <div className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200">
                 <div className="flex items-center justify-between">
                   <div>
@@ -361,15 +371,6 @@ const Index = () => {
                     <p className="text-2xl font-bold text-slate-800">{totalCollections}</p>
                   </div>
                   <BookmarkPlus className="h-8 w-8 text-indigo-500" />
-                </div>
-              </div>
-              <div className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-slate-600 text-sm">Favorites</p>
-                    <p className="text-2xl font-bold text-slate-800">{books.filter(b => b.isFavorite).length}</p>
-                  </div>
-                  <Heart className="h-8 w-8 text-red-500" />
                 </div>
               </div>
             </div>
@@ -394,37 +395,6 @@ const Index = () => {
             onAddToBooksRead={handleAddToBooksRead}
             isInBooksRead={(bookId) => booksReadList.includes(bookId)}
           />
-
-          {/* Books Grid */}
-          <div ref={collectionSectionRef}>
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-2xl font-bold text-slate-800">
-                {selectedCollection ? selectedCollection.name : "Discover Books"}
-              </h2>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredBooks.map(book => (
-                <BookCard 
-                  key={book.id}
-                  book={book}
-                  onToggleFavorite={toggleFavorite}
-                  onBookClick={handleBookClick}
-                  onAddToCollection={handleAddToCollection}
-                  onAddToBooksRead={handleAddToBooksRead}
-                  isInBooksRead={booksReadList.includes(book.id)}
-                />
-              ))}
-            </div>
-
-            {filteredBooks.length === 0 && (
-              <div className="text-center py-12">
-                <BookOpen className="h-16 w-16 text-slate-400 mx-auto mb-4 opacity-50" />
-                <h3 className="text-xl font-semibold text-slate-700 mb-2">No books found</h3>
-                <p className="text-slate-500">Try adjusting your search or filters</p>
-              </div>
-            )}
-          </div>
         </main>
       </div>
 

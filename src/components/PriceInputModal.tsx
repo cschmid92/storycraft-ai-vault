@@ -3,24 +3,27 @@ import React, { useState } from 'react';
 import { X, DollarSign } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface PriceInputModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onConfirm: (price: number) => void;
+  onConfirm: (price: number, condition: string) => void;
   bookTitle: string;
 }
 
 const PriceInputModal = ({ isOpen, onClose, onConfirm, bookTitle }: PriceInputModalProps) => {
   const [price, setPrice] = useState('');
+  const [condition, setCondition] = useState('');
 
   if (!isOpen) return null;
 
   const handleConfirm = () => {
     const numPrice = parseFloat(price);
-    if (numPrice > 0) {
-      onConfirm(numPrice);
+    if (numPrice > 0 && condition) {
+      onConfirm(numPrice, condition);
       setPrice('');
+      setCondition('');
       onClose();
     }
   };
@@ -60,6 +63,21 @@ const PriceInputModal = ({ isOpen, onClose, onConfirm, bookTitle }: PriceInputMo
             />
           </div>
           
+          <div>
+            <Select value={condition} onValueChange={setCondition}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select book condition" />
+              </SelectTrigger>
+              <SelectContent className="bg-white border border-slate-300 z-[90]">
+                <SelectItem value="new">New</SelectItem>
+                <SelectItem value="like-new">Like New</SelectItem>
+                <SelectItem value="very-good">Very Good</SelectItem>
+                <SelectItem value="good">Good</SelectItem>
+                <SelectItem value="acceptable">Acceptable</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
           <div className="flex gap-2">
             <Button variant="outline" onClick={onClose} className="flex-1">
               Cancel
@@ -67,7 +85,7 @@ const PriceInputModal = ({ isOpen, onClose, onConfirm, bookTitle }: PriceInputMo
             <Button 
               onClick={handleConfirm} 
               className="flex-1"
-              disabled={!price || parseFloat(price) <= 0}
+              disabled={!price || parseFloat(price) <= 0 || !condition}
             >
               Set Price
             </Button>
