@@ -235,12 +235,17 @@ const Index = () => {
   };
 
   const handleAddToBooksRead = (bookId: number) => {
-    console.log(`Adding book ${bookId} to Books read collection`);
+    console.log(`Adding/removing book ${bookId} to/from Books read collection`);
     setBooksReadList(prev => {
       if (prev.includes(bookId)) {
-        return prev; // Book already in list
+        // Remove from books read
+        console.log(`Removing book ${bookId} from Books read`);
+        return prev.filter(id => id !== bookId);
+      } else {
+        // Add to books read
+        console.log(`Adding book ${bookId} to Books read`);
+        return [...prev, bookId];
       }
-      return [...prev, bookId];
     });
   };
 
