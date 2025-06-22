@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { BookOpen, User, Search as SearchIcon } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -14,7 +13,7 @@ import Recommendations from '../components/Recommendations';
 import PriceInputModal from '../components/PriceInputModal';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/Book';
-import { Plus, Filter, Heart, Star, BookmarkPlus } from 'lucide-react';
+import { Plus, Filter, Heart, Star, BookmarkPlus, Quote } from 'lucide-react';
 
 // Updated mock data with detailed book information
 const mockBooks: Book[] = [
@@ -128,9 +127,9 @@ const mockBooks: Book[] = [
 ];
 
 const mockCollections = [
-  { id: 2, name: "To Read 📚", count: 8, color: "bg-blue-500" },
-  { id: 3, name: "Classics", count: 12, color: "bg-amber-500" },
-  { id: 4, name: "Sci-Fi Adventures", count: 6, color: "bg-purple-500" }
+  { id: 2, name: "To Read 📚", count: 3, color: "bg-blue-500" },
+  { id: 3, name: "Classics", count: 3, color: "bg-amber-500" },
+  { id: 4, name: "Sci-Fi Adventures", count: 2, color: "bg-purple-500" }
 ];
 
 const Index = () => {
@@ -371,6 +370,22 @@ const Index = () => {
                     <p className="text-2xl font-bold text-slate-800">{totalCollections}</p>
                   </div>
                   <BookmarkPlus className="h-8 w-8 text-indigo-500" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quote of the Day */}
+          <div className="mb-8">
+            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-200">
+              <div className="flex items-start gap-3">
+                <Quote className="h-6 w-6 text-indigo-600 mt-1 flex-shrink-0" />
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-800 mb-2">Quote of the Day</h3>
+                  <blockquote className="text-slate-700 italic text-lg leading-relaxed mb-2">
+                    "A reader lives a thousand lives before he dies. The man who never reads lives only one."
+                  </blockquote>
+                  <cite className="text-slate-600 text-sm">— George R.R. Martin</cite>
                 </div>
               </div>
             </div>

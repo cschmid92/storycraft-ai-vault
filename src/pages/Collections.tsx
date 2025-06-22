@@ -98,7 +98,7 @@ const Collections = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [collections, setCollections] = useState(mockCollections);
-  const [books] = useState(mockBooks);
+  const [books, setBooks] = useState(mockBooks);
   const [booksReadList, setBooksReadList] = useState<number[]>([1, 2]);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
@@ -145,7 +145,9 @@ const Collections = () => {
   };
 
   const handleToggleFavorite = (bookId: number) => {
-    console.log('Toggle favorite:', bookId);
+    setBooks(books.map(book => 
+      book.id === bookId ? { ...book, isFavorite: !book.isFavorite } : book
+    ));
   };
 
   const handleAddToCollection = (bookId: number) => {
@@ -250,7 +252,7 @@ const Collections = () => {
                 </div>
                 <div>
                   <h1 className="text-xl font-bold text-slate-800">{selectedCollection.name}</h1>
-                  <p className="text-xs text-slate-600">{selectedCollection.count} books in collection</p>
+                  <p className="text-xs text-slate-600">{collectionBooks.length} books in collection</p>
                 </div>
               </div>
               {canEdit && (

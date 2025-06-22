@@ -78,9 +78,9 @@ const mockUsedBooks: UsedBook[] = [
 ];
 
 const mockCollections = [
-  { id: 2, name: "To Read 📚", count: 8, color: "bg-blue-500" },
-  { id: 3, name: "Classics", count: 12, color: "bg-amber-500" },
-  { id: 4, name: "Sci-Fi Adventures", count: 6, color: "bg-purple-500" }
+  { id: 2, name: "To Read 📚", count: 3, color: "bg-blue-500" },
+  { id: 3, name: "Classics", count: 3, color: "bg-amber-500" },
+  { id: 4, name: "Sci-Fi Adventures", count: 2, color: "bg-purple-500" }
 ];
 
 const BuyUsedBooks = () => {
@@ -194,7 +194,7 @@ const BuyUsedBooks = () => {
           onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
           books={books}
           onBookClick={handleBookClick}
-          booksReadCount={booksReadList.length}
+          booksReadCount={5}
         />
 
         {/* Main Content */}
