@@ -5,12 +5,48 @@ import { ArrowLeft, BookOpen, User, Heart, Library, Users, Sparkles } from 'luci
 import { Button } from "@/components/ui/button";
 import CollectionSidebar from '../components/CollectionSidebar';
 
-// Mock data for sidebar
+// Mock data for sidebar - same as other pages
 const mockCollections = [
-  { id: 1, name: "Favorites ❤️", count: 3, color: "bg-red-500" },
   { id: 2, name: "To Read 📚", count: 8, color: "bg-blue-500" },
   { id: 3, name: "Classics", count: 12, color: "bg-amber-500" },
   { id: 4, name: "Sci-Fi Adventures", count: 6, color: "bg-purple-500" }
+];
+
+const mockBooks = [
+  {
+    id: 1,
+    title: "The Great Gatsby",
+    author: "F. Scott Fitzgerald",
+    cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop",
+    rating: 4.2,
+    genre: "Classic Literature",
+    year: 1925,
+    description: "A classic American novel set in the Jazz Age.",
+    isFavorite: true,
+    isOwnedForSale: false,
+    isbn10: "0743273567",
+    isbn13: "978-0743273565",
+    publisher: "Scribner",
+    pages: 180,
+    language: "English"
+  },
+  {
+    id: 2,
+    title: "To Kill a Mockingbird",
+    author: "Harper Lee",
+    cover: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=450&fit=crop",
+    rating: 4.5,
+    genre: "Fiction",
+    year: 1960,
+    description: "A powerful story of racial injustice.",
+    isFavorite: true,
+    isOwnedForSale: false,
+    isbn10: "0061120081",
+    isbn13: "978-0061120084",
+    publisher: "Harper Perennial Modern Classics",
+    pages: 376,
+    language: "English"
+  }
 ];
 
 const About = () => {
@@ -49,9 +85,9 @@ const About = () => {
           selectedCollection={null}
           onSelectCollection={() => {}}
           onOpenCollectionModal={() => {}}
-          books={[]}
+          books={mockBooks}
           onBookClick={() => {}}
-          booksReadCount={0}
+          booksReadCount={2}
         />
 
         {/* Main Content */}

@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, BookmarkPlus, Edit, Trash2, Heart } from 'lucide-react';
@@ -49,8 +48,49 @@ const mockBooks: Book[] = [
     publisher: "Harper Perennial Modern Classics",
     pages: 376,
     language: "English"
+  },
+  {
+    id: 3,
+    title: "1984",
+    author: "George Orwell",
+    cover: "https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=300&h=450&fit=crop",
+    rating: 4.4,
+    genre: "Classic Literature",
+    year: 1949,
+    description: "A dystopian social science fiction novel about totalitarian control.",
+    isFavorite: false,
+    isOwnedForSale: false,
+    isbn10: "0451524934",
+    isbn13: "978-0451524935",
+    publisher: "Signet Classics",
+    pages: 328,
+    language: "English"
+  },
+  {
+    id: 4,
+    title: "Pride and Prejudice",
+    author: "Jane Austen",
+    cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop",
+    rating: 4.3,
+    genre: "Classic Literature",
+    year: 1813,
+    description: "A romantic novel of manners set in Georgian England.",
+    isFavorite: false,
+    isOwnedForSale: false,
+    isbn10: "0141439513",
+    isbn13: "978-0141439518",
+    publisher: "Penguin Classics",
+    pages: 432,
+    language: "English"
   }
 ];
+
+// Mock collection mappings - in a real app this would come from a database
+const collectionBookMappings = {
+  2: [1, 3, 4], // "To Read" collection has books 1, 3, 4
+  3: [1, 2, 4], // "Classics" collection has books 1, 2, 4
+  4: [2, 3] // "Sci-Fi Adventures" collection has books 2, 3
+};
 
 const Collections = () => {
   const { id } = useParams();
@@ -72,7 +112,10 @@ const Collections = () => {
     collectionBooks = books.filter(book => booksReadList.includes(book.id));
   } else {
     selectedCollection = collections.find(c => c.id === parseInt(id || ''));
-    collectionBooks = mockBooks; // In real app, filter by collection
+    if (selectedCollection) {
+      const bookIds = collectionBookMappings[selectedCollection.id as keyof typeof collectionBookMappings] || [];
+      collectionBooks = books.filter(book => bookIds.includes(book.id));
+    }
   }
 
   const handleEditCollection = (collectionId: number) => {

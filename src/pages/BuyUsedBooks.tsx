@@ -10,11 +10,11 @@ import { Book } from '../types/Book';
 
 // Extended Book interface for used books with distance
 interface UsedBook extends Book {
-  distance?: number; // in miles
+  distance?: number; // in kilometers
   location?: string;
 }
 
-// Mock data for used books marketplace with distance information
+// Mock data for used books marketplace with distance information in kilometers
 const mockUsedBooks: UsedBook[] = [
   {
     id: 7,
@@ -34,7 +34,7 @@ const mockUsedBooks: UsedBook[] = [
     pages: 366,
     language: "English",
     condition: "Good",
-    distance: 2.3,
+    distance: 3.7,
     location: "Downtown Library District"
   },
   {
@@ -55,7 +55,7 @@ const mockUsedBooks: UsedBook[] = [
     pages: 688,
     language: "English",
     condition: "Very Good",
-    distance: 5.7,
+    distance: 9.2,
     location: "University District"
   },
   {
@@ -71,7 +71,7 @@ const mockUsedBooks: UsedBook[] = [
     isOwnedForSale: true,
     salePrice: 25.00,
     condition: "Like New",
-    distance: 12.1,
+    distance: 19.5,
     location: "Suburb East"
   }
 ];
@@ -96,9 +96,9 @@ const BuyUsedBooks = () => {
     if (priceRange === "over20" && book.salePrice && book.salePrice <= 20) matchesPrice = false;
     
     let matchesDistance = true;
-    if (distanceRange === "under5" && book.distance && book.distance >= 5) matchesDistance = false;
-    if (distanceRange === "5to10" && book.distance && (book.distance < 5 || book.distance > 10)) matchesDistance = false;
-    if (distanceRange === "over10" && book.distance && book.distance <= 10) matchesDistance = false;
+    if (distanceRange === "under8" && book.distance && book.distance >= 8) matchesDistance = false;
+    if (distanceRange === "8to16" && book.distance && (book.distance < 8 || book.distance > 16)) matchesDistance = false;
+    if (distanceRange === "over16" && book.distance && book.distance <= 16) matchesDistance = false;
     
     return matchesSearch && matchesGenre && matchesPrice && matchesDistance;
   });
@@ -219,9 +219,9 @@ const BuyUsedBooks = () => {
                   className="px-4 py-2 bg-white/80 border border-slate-300 rounded-lg text-slate-700 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                   <option value="all">All Distances</option>
-                  <option value="under5">Under 5 miles</option>
-                  <option value="5to10">5 - 10 miles</option>
-                  <option value="over10">Over 10 miles</option>
+                  <option value="under8">Under 8 km</option>
+                  <option value="8to16">8 - 16 km</option>
+                  <option value="over16">Over 16 km</option>
                 </select>
               </div>
             </div>
@@ -246,13 +246,20 @@ const BuyUsedBooks = () => {
                   onAddToBooksRead={handleAddToBooksRead}
                   isInBooksRead={booksReadList.includes(book.id)}
                 />
-                {/* Distance Badge */}
-                {book.distance && (
-                  <div className="absolute top-2 left-2 bg-blue-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                    <MapPin className="h-3 w-3" />
-                    {book.distance} mi
-                  </div>
-                )}
+                {/* Distance and Condition Badge */}
+                <div className="absolute top-2 left-2 flex flex-col gap-1">
+                  {book.distance && (
+                    <div className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
+                      <MapPin className="h-3 w-3" />
+                      {(book.distance * 1.60934).toFixed(1)} km
+                    </div>
+                  )}
+                  {book.condition && (
+                    <div className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">
+                      {book.condition}
+                    </div>
+                  )}
+                </div>
               </div>
             ))}
           </div>
