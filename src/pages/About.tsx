@@ -51,6 +51,7 @@ const About = () => {
           onOpenCollectionModal={() => {}}
           books={[]}
           onBookClick={() => {}}
+          booksReadCount={0}
         />
 
         {/* Main Content */}

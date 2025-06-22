@@ -216,7 +216,7 @@ const Index = () => {
     setIsCollectionSelectionOpen(true);
   };
 
-  const handleSelectCollection = (collection: any) => {
+  const handleCollectionSelect = (collection: any) => {
     setSelectedCollection(collection);
     // Navigate to collection page for all collections including default ones
     if (collection?.id === 'favorites') {

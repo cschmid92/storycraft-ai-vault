@@ -121,6 +121,7 @@ const SearchResults = () => {
               onToggleFavorite={() => {}}
               onBookClick={() => {}}
               onAddToCollection={() => {}}
+              onAddToBooksRead={() => {}}
             />
           ))}
         </div>
