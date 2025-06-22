@@ -444,7 +444,7 @@ const Index = () => {
         isOpen={isCollectionSelectionOpen}
         onClose={() => setIsCollectionSelectionOpen(false)}
         collections={collections}
-        onSelectCollection={handleSelectCollection}
+        onSelectCollection={handleCollectionSelect}
         bookTitle={selectedBookTitle}
       />
       
