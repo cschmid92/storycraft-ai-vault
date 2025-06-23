@@ -34,11 +34,11 @@ export const useCollections = () => {
     setCollections(prev => [...prev, newCollection]);
   };
 
-  const deleteCollection = (collectionId: number) => {
+  const deleteCollection = (collectionId: number | string) => {
     setCollections(prev => prev.filter(c => c.id !== collectionId));
   };
 
-  const updateCollectionCount = (collectionId: number, count: number) => {
+  const updateCollectionCount = (collectionId: number | string, count: number) => {
     setCollections(prev => prev.map(c => 
       c.id === collectionId ? { ...c, count } : c
     ));
