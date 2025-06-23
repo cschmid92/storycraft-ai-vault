@@ -8,6 +8,7 @@ export default defineConfig(({ mode }) => ({
   server: {
     host: "::",
     port: 8080,
+    allowedHosts: ["bacondo-demo-1.onrender.com", "demo.bacondo.com"]
   },
   plugins: [
     react(),
