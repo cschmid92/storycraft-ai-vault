@@ -2,19 +2,13 @@
 import React from 'react';
 import { X, Plus } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-
-interface Collection {
-  id: number;
-  name: string;
-  count: number;
-  color: string;
-}
+import { Collection } from '../hooks/useCollections';
 
 interface CollectionSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
   collections: Collection[];
-  onSelectCollection: (collectionId: number) => void;
+  onSelectCollection: (collection: Collection | null) => void;
   bookTitle: string;
 }
 
@@ -51,7 +45,7 @@ const CollectionSelectionModal = ({
             <button
               key={collection.id}
               onClick={() => {
-                onSelectCollection(collection.id);
+                onSelectCollection(collection);
                 onClose();
               }}
               className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left hover:bg-slate-50 transition-colors border border-slate-200"
