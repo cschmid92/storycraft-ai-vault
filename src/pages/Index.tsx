@@ -14,7 +14,7 @@ import PriceInputModal from '../components/PriceInputModal';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/Book';
 import { Plus, Filter, Heart, Star, BookmarkPlus, Quote } from 'lucide-react';
-import { useCollections } from '../hooks/useCollections';
+import { useCollections, Collection } from '../hooks/useCollections';
 
 // Updated mock data with detailed book information
 const mockBooks: Book[] = [
@@ -130,7 +130,7 @@ const mockBooks: Book[] = [
 const Index = () => {
   const { collections, addCollection, deleteCollection } = useCollections();
   const [books, setBooks] = useState(mockBooks);
-  const [selectedCollection, setSelectedCollection] = useState(null);
+  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isCollectionSelectionOpen, setIsCollectionSelectionOpen] = useState(false);
   const [selectedBookForCollection, setSelectedBookForCollection] = useState<number | null>(null);
@@ -205,7 +205,7 @@ const Index = () => {
     setIsCollectionSelectionOpen(true);
   };
 
-  const handleCollectionSelect = (collection: any) => {
+  const handleCollectionSelect = (collection: Collection | null) => {
     setSelectedCollection(collection);
     // Navigate to collection page for all collections including default ones
     if (collection?.id === 'favorites') {
