@@ -91,6 +91,8 @@ const Collections = () => {
   const [booksReadList, setBooksReadList] = useState<number[]>([1, 2]);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingCollection, setEditingCollection] = useState<any>(null);
   
   // Handle both standard and user collections
   let selectedCollection: any = null;
@@ -111,12 +113,18 @@ const Collections = () => {
   }
 
   const handleEditCollection = (collectionId: number) => {
-    console.log('Edit collection:', collectionId);
+    const collection = collections.find(c => c.id === collectionId);
+    if (collection) {
+      setEditingCollection(collection);
+      setIsEditModalOpen(true);
+    }
   };
 
   const handleDeleteCollection = (collectionId: number) => {
-    deleteCollection(collectionId);
-    navigate('/');
+    if (window.confirm('Are you sure you want to delete this collection? This action cannot be undone.')) {
+      deleteCollection(collectionId);
+      navigate('/');
+    }
   };
 
   const handleCollectionSelect = (collection: any) => {
@@ -154,6 +162,13 @@ const Collections = () => {
 
   const handleCreateCollection = (name: string, color: string) => {
     addCollection(name, color);
+  };
+
+  const handleUpdateCollection = (name: string, color: string) => {
+    // This would normally update the collection in the state/database
+    console.log('Update collection:', editingCollection?.id, name, color);
+    setIsEditModalOpen(false);
+    setEditingCollection(null);
   };
 
   if (!selectedCollection) {
@@ -294,6 +309,18 @@ const Collections = () => {
         isOpen={isCollectionModalOpen}
         onClose={() => setIsCollectionModalOpen(false)}
         onCreateCollection={handleCreateCollection}
+      />
+
+      <CollectionModal 
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setEditingCollection(null);
+        }}
+        onCreateCollection={handleUpdateCollection}
+        editMode={true}
+        initialName={editingCollection?.name}
+        initialColor={editingCollection?.color}
       />
       
       <AccountModal 

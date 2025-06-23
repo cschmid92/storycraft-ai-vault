@@ -1,5 +1,6 @@
+
 import React, { useState } from 'react';
-import { Library, Heart, BookOpen, Plus, DollarSign, ChevronDown, ChevronRight, Edit, Trash2, ShoppingCart, Info, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { Library, Heart, BookOpen, Plus, DollarSign, ChevronDown, ChevronRight, ShoppingCart, Info, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import BooksForSale from './BooksForSale';
@@ -30,18 +31,6 @@ const SharedSidebar = ({
   const [showBooksForSale, setShowBooksForSale] = useState(false);
   const booksForSaleCount = books.filter(book => book.isOwnedForSale && book.salePrice).length;
 
-  const handleEditCollection = (e: React.MouseEvent, collectionId: number | string) => {
-    e.stopPropagation();
-    console.log('Edit collection:', collectionId);
-  };
-
-  const handleDeleteCollection = (e: React.MouseEvent, collectionId: number | string) => {
-    e.stopPropagation();
-    if (onDeleteCollection) {
-      onDeleteCollection(collectionId);
-    }
-  };
-
   // Calculate actual counts for collections
   const getCollectionCount = (collectionId: number | string) => {
     if (collectionId === 'favorites') {
@@ -62,7 +51,7 @@ const SharedSidebar = ({
   ];
 
   return (
-    <aside className="w-64 bg-white/60 backdrop-blur-md border-r border-slate-200 p-4 h-screen sticky top-16 overflow-y-auto flex flex-col">
+    <aside className="w-64 bg-white/60 backdrop-blur-md border-r border-slate-200 p-4 h-[calc(100vh-4rem)] sticky top-16 overflow-y-auto flex flex-col">
       <div className="space-y-6 flex-1">
         {/* Quick Access */}
         <div>
@@ -128,7 +117,7 @@ const SharedSidebar = ({
             {standardCollections.map((collection) => (
               <div
                 key={collection.id}
-                className={`group relative flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
                   selectedCollection?.id === collection.id 
                     ? 'bg-blue-100 text-blue-800 border border-blue-200' 
                     : 'text-slate-600 hover:bg-slate-100'
@@ -149,7 +138,7 @@ const SharedSidebar = ({
             {collections.map((collection) => (
               <div
                 key={collection.id}
-                className={`group relative flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
                   selectedCollection?.id === collection.id 
                     ? 'bg-blue-100 text-blue-800 border border-blue-200' 
                     : 'text-slate-600 hover:bg-slate-100'
@@ -163,26 +152,6 @@ const SharedSidebar = ({
                   <span className="text-sm flex-1 truncate">{collection.name}</span>
                   <span className="text-xs text-slate-500">{getCollectionCount(collection.id)}</span>
                 </button>
-                
-                {/* Edit/Delete buttons - shown on hover */}
-                <div className="absolute right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 w-6 p-0 hover:bg-slate-200"
-                    onClick={(e) => handleEditCollection(e, collection.id)}
-                  >
-                    <Edit className="h-3 w-3" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-6 w-6 p-0 hover:bg-red-100 hover:text-red-600"
-                    onClick={(e) => handleDeleteCollection(e, collection.id)}
-                  >
-                    <Trash2 className="h-3 w-3" />
-                  </Button>
-                </div>
               </div>
             ))}
             
@@ -199,8 +168,8 @@ const SharedSidebar = ({
         </div>
       </div>
 
-      {/* Social Media Icons */}
-      <div className="border-t border-slate-200 pt-4 mt-4">
+      {/* Social Media Icons - Fixed to be fully visible */}
+      <div className="border-t border-slate-200 pt-4 mt-4 pb-2">
         <h4 className="text-xs font-semibold text-slate-700 uppercase tracking-wide mb-3">
           Follow Us
         </h4>
