@@ -1,161 +1,109 @@
 
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Search, BookOpen, User, MapPin } from 'lucide-react';
+import { BookOpen, User, ShoppingCart, Filter, DollarSign, MapPin, Star } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import BookCard from '../components/BookCard';
-import CollectionSidebar from '../components/CollectionSidebar';
+import SharedSidebar from '../components/SharedSidebar';
 import CollectionModal from '../components/CollectionModal';
+import AccountModal from '../components/AccountModal';
+import { Link } from 'react-router-dom';
 import { Book } from '../types/Book';
+import { useCollections } from '../hooks/useCollections';
 
-// Extended Book interface for used books with distance
-interface UsedBook extends Book {
-  distance?: number; // in kilometers
-  location?: string;
-}
-
-// Mock data for used books marketplace with distance information in kilometers
-const mockUsedBooks: UsedBook[] = [
+// Mock books for sale data
+const booksForSale = [
   {
-    id: 7,
-    title: "The Hobbit",
-    author: "J.R.R. Tolkien",
-    cover: "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=300&h=450&fit=crop",
-    rating: 4.6,
-    genre: "Fantasy",
-    year: 1937,
-    description: "A classic fantasy adventure about Bilbo Baggins' unexpected journey.",
-    isFavorite: false,
-    isOwnedForSale: true,
-    salePrice: 8.99,
-    isbn10: "0547928227",
-    isbn13: "978-0547928227",
-    publisher: "Mariner Books",
-    pages: 366,
-    language: "English",
+    id: 1,
+    title: "The Great Gatsby",
+    author: "F. Scott Fitzgerald",
+    cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop",
+    price: 12.99,
     condition: "Good",
-    distance: 3.7,
-    location: "Downtown Library District"
+    seller: "BookLover123",
+    location: "New York, NY",
+    rating: 4.2,
+    originalPrice: 15.99
   },
   {
-    id: 8,
-    title: "Dune",
-    author: "Frank Herbert",
-    cover: "https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=300&h=450&fit=crop",
-    rating: 4.3,
-    genre: "Science Fiction",
-    year: 1965,
-    description: "Epic science fiction novel set on the desert planet Arrakis.",
-    isFavorite: false,
-    isOwnedForSale: true,
-    salePrice: 15.50,
-    isbn10: "0441172717",
-    isbn13: "978-0441172719",
-    publisher: "Ace",
-    pages: 688,
-    language: "English",
+    id: 2,
+    title: "To Kill a Mockingbird",
+    author: "Harper Lee",
+    cover: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=450&fit=crop",
+    price: 10.50,
     condition: "Very Good",
-    distance: 9.2,
-    location: "University District"
+    seller: "ClassicReads",
+    location: "Los Angeles, CA",
+    rating: 4.5,
+    originalPrice: 14.99
   },
   {
-    id: 9,
-    title: "The Lord of the Rings",
-    author: "J.R.R. Tolkien",
-    cover: "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=300&h=450&fit=crop",
-    rating: 4.8,
-    genre: "Fantasy",
-    year: 1954,
-    description: "Epic fantasy trilogy about the quest to destroy the One Ring.",
-    isFavorite: false,
-    isOwnedForSale: true,
-    salePrice: 25.00,
-    condition: "Like New",
-    distance: 19.5,
-    location: "Suburb East"
+    id: 3,
+    title: "1984",
+    author: "George Orwell",
+    cover: "https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=300&h=450&fit=crop",
+    price: 8.75,
+    condition: "Fair",
+    seller: "OrwellFan",
+    location: "Chicago, IL",
+    rating: 4.4,
+    originalPrice: 13.99
   }
 ];
 
-const mockCollections = [
-  { id: 2, name: "To Read 📚", count: 3, color: "bg-blue-500" },
-  { id: 3, name: "Classics", count: 3, color: "bg-amber-500" },
-  { id: 4, name: "Sci-Fi Adventures", count: 2, color: "bg-purple-500" }
+// Mock books data for sidebar
+const mockBooks: Book[] = [
+  {
+    id: 1,
+    title: "The Great Gatsby",
+    author: "F. Scott Fitzgerald",
+    cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop",
+    rating: 4.2,
+    genre: "Classic Literature",
+    year: 1925,
+    description: "A classic American novel set in the Jazz Age, exploring themes of wealth, love, and the American Dream.",
+    isFavorite: true,
+    isOwnedForSale: false,
+    isbn10: "0743273567",
+    isbn13: "978-0743273565",
+    publisher: "Scribner",
+    pages: 180,
+    language: "English"
+  }
 ];
 
 const BuyUsedBooks = () => {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterGenre, setFilterGenre] = useState("");
-  const [priceRange, setPriceRange] = useState("all");
-  const [distanceRange, setDistanceRange] = useState("all");
-  const [books, setBooks] = useState(mockUsedBooks);
-  const [collections, setCollections] = useState(mockCollections);
-  const [booksReadList, setBooksReadList] = useState<number[]>([]);
+  const { collections, addCollection } = useCollections();
+  const [books] = useState(mockBooks);
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
-  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState("");
+  const [maxPrice, setMaxPrice] = useState("");
+  const [selectedCondition, setSelectedCondition] = useState("");
+  const [booksReadList] = useState<number[]>([1]);
 
-  const genres = [...new Set(books.map(book => book.genre))];
-
-  const filteredBooks = books.filter(book => {
-    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         book.author.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesGenre = !filterGenre || book.genre === filterGenre;
-    
-    let matchesPrice = true;
-    if (priceRange === "under10" && book.salePrice && book.salePrice >= 10) matchesPrice = false;
-    if (priceRange === "10to20" && book.salePrice && (book.salePrice < 10 || book.salePrice > 20)) matchesPrice = false;
-    if (priceRange === "over20" && book.salePrice && book.salePrice <= 20) matchesPrice = false;
-    
-    let matchesDistance = true;
-    if (distanceRange === "under8" && book.distance && book.distance >= 8) matchesDistance = false;
-    if (distanceRange === "8to16" && book.distance && (book.distance < 8 || book.distance > 16)) matchesDistance = false;
-    if (distanceRange === "over16" && book.distance && book.distance <= 16) matchesDistance = false;
-    
-    return matchesSearch && matchesGenre && matchesPrice && matchesDistance;
-  });
+  const handleCollectionSelect = (collection: any) => {
+    console.log('Selected collection:', collection);
+  };
 
   const handleBookClick = (book: Book) => {
     console.log('Book clicked:', book);
   };
 
-  const handleToggleFavorite = (bookId: number) => {
-    setBooks(books.map(book => 
-      book.id === bookId ? { ...book, isFavorite: !book.isFavorite } : book
-    ));
-  };
-
-  const handleAddToCollection = (bookId: number) => {
-    console.log('Add to collection:', bookId);
-  };
-
-  const handleAddToBooksRead = (bookId: number) => {
-    setBooksReadList(prev => {
-      if (prev.includes(bookId)) {
-        return prev.filter(id => id !== bookId);
-      }
-      return [...prev, bookId];
-    });
-  };
-
-  const handleCollectionSelect = (collection: any) => {
-    if (collection?.id === 'favorites') {
-      navigate('/collections/favorites');
-    } else if (collection?.id === 'books-read') {
-      navigate('/collections/books-read');
-    } else if (collection && typeof collection.id === 'number') {
-      navigate(`/collections/${collection.id}`);
-    }
-  };
-
   const handleCreateCollection = (name: string, color: string) => {
-    const newCollection = {
-      id: Date.now(),
-      name,
-      count: 0,
-      color
-    };
-    setCollections([...collections, newCollection]);
+    addCollection(name, color);
   };
+
+  const handleContactSeller = (seller: string) => {
+    alert(`Contacting ${seller}...`);
+  };
+
+  const filteredBooks = booksForSale.filter(book => {
+    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         book.author.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesPrice = !maxPrice || book.price <= parseFloat(maxPrice);
+    const matchesCondition = !selectedCondition || book.condition === selectedCondition;
+    return matchesSearch && matchesPrice && matchesCondition;
+  });
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
@@ -163,7 +111,7 @@ const BuyUsedBooks = () => {
       <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-3">
+            <Link to="/" className="flex items-center space-x-3">
               <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
                 <BookOpen className="h-6 w-6 text-white" />
               </div>
@@ -171,11 +119,12 @@ const BuyUsedBooks = () => {
                 <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
                 <p className="text-xs text-slate-600">Your Digital Library</p>
               </div>
-            </div>
+            </Link>
             <div className="flex items-center gap-3">
               <Button 
                 variant="outline"
                 className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
+                onClick={() => setIsAccountModalOpen(true)}
               >
                 <User className="h-4 w-4 mr-2" />
                 Account
@@ -187,131 +136,138 @@ const BuyUsedBooks = () => {
 
       <div className="flex">
         {/* Sidebar */}
-        <CollectionSidebar 
+        <SharedSidebar 
           collections={collections}
           selectedCollection={null}
           onSelectCollection={handleCollectionSelect}
           onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
           books={books}
           onBookClick={handleBookClick}
-          booksReadCount={5}
+          booksReadCount={booksReadList.length}
         />
 
         {/* Main Content */}
-        <main className="flex-1 p-6">
-          {/* Page Header */}
-          <div className="mb-6">
-            <div className="flex items-center gap-3 mb-4">
-              <Link to="/">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back
-                </Button>
-              </Link>
-              <h1 className="text-2xl font-bold text-slate-800">Buy Used Books</h1>
-            </div>
-            <p className="text-slate-600">Find great deals on pre-owned books</p>
-          </div>
-
-          {/* Search and Filters */}
-          <div className="mb-8">
-            <div className="flex flex-col sm:flex-row gap-4 mb-6">
-              <div className="flex-1 relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-                <Input
-                  placeholder="Search used books..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 bg-white/80 border-slate-300"
-                />
-              </div>
-              <div className="flex gap-2">
-                <select 
-                  value={filterGenre}
-                  onChange={(e) => setFilterGenre(e.target.value)}
-                  className="px-4 py-2 bg-white/80 border border-slate-300 rounded-lg text-slate-700 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="">All Genres</option>
-                  {genres.map(genre => (
-                    <option key={genre} value={genre}>{genre}</option>
-                  ))}
-                </select>
-                <select 
-                  value={priceRange}
-                  onChange={(e) => setPriceRange(e.target.value)}
-                  className="px-4 py-2 bg-white/80 border border-slate-300 rounded-lg text-slate-700 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="all">All Prices</option>
-                  <option value="under10">Under $10</option>
-                  <option value="10to20">$10 - $20</option>
-                  <option value="over20">Over $20</option>
-                </select>
-                <select 
-                  value={distanceRange}
-                  onChange={(e) => setDistanceRange(e.target.value)}
-                  className="px-4 py-2 bg-white/80 border border-slate-300 rounded-lg text-slate-700 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                >
-                  <option value="all">All Distances</option>
-                  <option value="under8">Under 8 km</option>
-                  <option value="8to16">8 - 16 km</option>
-                  <option value="over16">Over 16 km</option>
-                </select>
+        <main className="flex-1 p-8">
+          <div className="max-w-6xl mx-auto">
+            {/* Page Header */}
+            <div className="flex items-center mb-8">
+              <ShoppingCart className="h-8 w-8 text-blue-600 mr-3" />
+              <div>
+                <h1 className="text-3xl font-bold text-slate-800">Buy Used Books</h1>
+                <p className="text-slate-600">Find great deals on pre-owned books from our community</p>
               </div>
             </div>
 
-            <div className="flex items-center justify-between mb-6">
-              <h2 className="text-xl font-bold text-slate-800">Available Used Books</h2>
-              <p className="text-slate-600">
-                {filteredBooks.length} book{filteredBooks.length !== 1 ? 's' : ''} available
-              </p>
-            </div>
-          </div>
-
-          {/* Books Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredBooks.map(book => (
-              <div key={book.id} className="relative">
-                <BookCard 
-                  book={book}
-                  onToggleFavorite={handleToggleFavorite}
-                  onBookClick={handleBookClick}
-                  onAddToCollection={handleAddToCollection}
-                  onAddToBooksRead={handleAddToBooksRead}
-                  isInBooksRead={booksReadList.includes(book.id)}
-                />
-                {/* Distance and Condition Badge */}
-                <div className="absolute top-2 left-2 flex flex-col gap-1">
-                  {book.distance && (
-                    <div className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full flex items-center gap-1">
-                      <MapPin className="h-3 w-3" />
-                      {book.distance.toFixed(1)} km
-                    </div>
-                  )}
-                  {book.condition && (
-                    <div className="bg-green-500 text-white text-xs px-2 py-1 rounded-full">
-                      {book.condition}
-                    </div>
-                  )}
+            {/* Search and Filters */}
+            <div className="bg-white/60 backdrop-blur-md rounded-xl p-6 mb-8 border border-slate-200">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div className="md:col-span-2">
+                  <Input
+                    placeholder="Search books or authors..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="bg-white"
+                  />
+                </div>
+                <div>
+                  <Input
+                    type="number"
+                    placeholder="Max price"
+                    value={maxPrice}
+                    onChange={(e) => setMaxPrice(e.target.value)}
+                    className="bg-white"
+                  />
+                </div>
+                <div>
+                  <select 
+                    value={selectedCondition}
+                    onChange={(e) => setSelectedCondition(e.target.value)}
+                    className="w-full px-3 py-2 bg-white border border-slate-300 rounded-md text-slate-700"
+                  >
+                    <option value="">All Conditions</option>
+                    <option value="New">New</option>
+                    <option value="Very Good">Very Good</option>
+                    <option value="Good">Good</option>
+                    <option value="Fair">Fair</option>
+                  </select>
                 </div>
               </div>
-            ))}
-          </div>
-
-          {filteredBooks.length === 0 && (
-            <div className="text-center py-12">
-              <BookOpen className="h-16 w-16 text-slate-400 mx-auto mb-4 opacity-50" />
-              <h3 className="text-xl font-semibold text-slate-700 mb-2">No books found</h3>
-              <p className="text-slate-500">Try adjusting your search or filters</p>
             </div>
-          )}
+
+            {/* Results */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredBooks.map(book => (
+                <div key={book.id} className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-shadow">
+                  <div className="aspect-[3/4] relative">
+                    <img 
+                      src={book.cover} 
+                      alt={book.title}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute top-2 left-2 bg-green-500 text-white px-2 py-1 rounded-full text-xs font-medium">
+                      ${book.price}
+                    </div>
+                    <div className="absolute top-2 right-2 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full text-xs">
+                      {book.condition}
+                    </div>
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-semibold text-slate-800 mb-1 line-clamp-2">{book.title}</h3>
+                    <p className="text-slate-600 text-sm mb-2">{book.author}</p>
+                    
+                    <div className="flex items-center justify-between mb-3">
+                      <div className="flex items-center">
+                        <Star className="h-4 w-4 text-yellow-500 fill-yellow-500 mr-1" />
+                        <span className="text-sm text-slate-600">{book.rating}</span>
+                      </div>
+                      <div className="text-right">
+                        <div className="text-lg font-bold text-green-600">${book.price}</div>
+                        <div className="text-xs text-slate-500 line-through">${book.originalPrice}</div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center text-xs text-slate-500 mb-3">
+                      <MapPin className="h-3 w-3 mr-1" />
+                      <span>{book.location}</span>
+                    </div>
+
+                    <div className="text-xs text-slate-600 mb-3">
+                      Sold by: <span className="font-medium">{book.seller}</span>
+                    </div>
+
+                    <Button 
+                      onClick={() => handleContactSeller(book.seller)}
+                      className="w-full bg-blue-600 hover:bg-blue-700"
+                      size="sm"
+                    >
+                      Contact Seller
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {filteredBooks.length === 0 && (
+              <div className="text-center py-12">
+                <ShoppingCart className="h-16 w-16 text-slate-400 mx-auto mb-4 opacity-50" />
+                <h3 className="text-xl font-semibold text-slate-700 mb-2">No books found</h3>
+                <p className="text-slate-500">Try adjusting your search criteria</p>
+              </div>
+            )}
+          </div>
         </main>
       </div>
 
-      {/* Collection Modal */}
+      {/* Modals */}
       <CollectionModal 
         isOpen={isCollectionModalOpen}
         onClose={() => setIsCollectionModalOpen(false)}
         onCreateCollection={handleCreateCollection}
+      />
+      
+      <AccountModal 
+        isOpen={isAccountModalOpen}
+        onClose={() => setIsAccountModalOpen(false)}
       />
     </div>
   );

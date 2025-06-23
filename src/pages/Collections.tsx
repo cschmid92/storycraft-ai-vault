@@ -4,18 +4,14 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, BookmarkPlus, Edit, Trash2, Heart } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import BookCard from '../components/BookCard';
-import CollectionSidebar from '../components/CollectionSidebar';
+import SharedSidebar from '../components/SharedSidebar';
 import CollectionModal from '../components/CollectionModal';
+import AccountModal from '../components/AccountModal';
 import { Book } from '../types/Book';
 import { BookOpen, User } from 'lucide-react';
+import { useCollections, collectionBookMappings } from '../hooks/useCollections';
 
-// Mock data
-const mockCollections = [
-  { id: 2, name: "To Read 📚", count: 8, color: "bg-blue-500" },
-  { id: 3, name: "Classics", count: 12, color: "bg-amber-500" },
-  { id: 4, name: "Sci-Fi Adventures", count: 6, color: "bg-purple-500" }
-];
-
+// Mock books data
 const mockBooks: Book[] = [
   {
     id: 1,
@@ -87,17 +83,10 @@ const mockBooks: Book[] = [
   }
 ];
 
-// Mock collection mappings - in a real app this would come from a database
-const collectionBookMappings = {
-  2: [1, 3, 4], // "To Read" collection has books 1, 3, 4
-  3: [1, 2, 4], // "Classics" collection has books 1, 2, 4
-  4: [2, 3] // "Sci-Fi Adventures" collection has books 2, 3
-};
-
 const Collections = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const [collections, setCollections] = useState(mockCollections);
+  const { collections, addCollection, deleteCollection } = useCollections();
   const [books, setBooks] = useState(mockBooks);
   const [booksReadList, setBooksReadList] = useState<number[]>([1, 2]);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
@@ -126,7 +115,7 @@ const Collections = () => {
   };
 
   const handleDeleteCollection = (collectionId: number) => {
-    setCollections(collections.filter(c => c.id !== collectionId));
+    deleteCollection(collectionId);
     navigate('/');
   };
 
@@ -164,13 +153,7 @@ const Collections = () => {
   };
 
   const handleCreateCollection = (name: string, color: string) => {
-    const newCollection = {
-      id: Date.now(),
-      name,
-      count: 0,
-      color
-    };
-    setCollections([...collections, newCollection]);
+    addCollection(name, color);
   };
 
   if (!selectedCollection) {
@@ -222,7 +205,7 @@ const Collections = () => {
 
       <div className="flex">
         {/* Sidebar */}
-        <CollectionSidebar 
+        <SharedSidebar 
           collections={collections}
           selectedCollection={selectedCollection}
           onSelectCollection={handleCollectionSelect}
@@ -230,6 +213,7 @@ const Collections = () => {
           books={books}
           onBookClick={handleBookClick}
           booksReadCount={booksReadList.length}
+          onDeleteCollection={handleDeleteCollection}
         />
 
         {/* Main Content */}
@@ -305,11 +289,16 @@ const Collections = () => {
         </main>
       </div>
 
-      {/* Collection Modal */}
+      {/* Modals */}
       <CollectionModal 
         isOpen={isCollectionModalOpen}
         onClose={() => setIsCollectionModalOpen(false)}
         onCreateCollection={handleCreateCollection}
+      />
+      
+      <AccountModal 
+        isOpen={isAccountModalOpen}
+        onClose={() => setIsAccountModalOpen(false)}
       />
     </div>
   );

@@ -28,7 +28,7 @@ const BookCard = ({ book, onToggleFavorite, onBookClick, onAddToCollection, onAd
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         
-        {/* Action Buttons - Reordered: 1. Favorites, 2. Books Read, 3. Add to Collection */}
+        {/* Action Buttons - Correct order: 1. Favorites, 2. Books Read, 3. Add to Collection */}
         <div className="absolute top-2 right-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <Button
             size="sm"

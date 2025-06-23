@@ -5,7 +5,7 @@ import BookCard from '../components/BookCard';
 import CollectionModal from '../components/CollectionModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import SearchBar from '../components/SearchBar';
-import CollectionSidebar from '../components/CollectionSidebar';
+import SharedSidebar from '../components/SharedSidebar';
 import BookDetailModal from '../components/BookDetailModal';
 import AccountModal from '../components/AccountModal';
 import PopularReads from '../components/PopularReads';
@@ -14,6 +14,7 @@ import PriceInputModal from '../components/PriceInputModal';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/Book';
 import { Plus, Filter, Heart, Star, BookmarkPlus, Quote } from 'lucide-react';
+import { useCollections } from '../hooks/useCollections';
 
 // Updated mock data with detailed book information
 const mockBooks: Book[] = [
@@ -126,15 +127,9 @@ const mockBooks: Book[] = [
   }
 ];
 
-const mockCollections = [
-  { id: 2, name: "To Read 📚", count: 3, color: "bg-blue-500" },
-  { id: 3, name: "Classics", count: 3, color: "bg-amber-500" },
-  { id: 4, name: "Sci-Fi Adventures", count: 2, color: "bg-purple-500" }
-];
-
 const Index = () => {
+  const { collections, addCollection, deleteCollection } = useCollections();
   const [books, setBooks] = useState(mockBooks);
-  const [collections, setCollections] = useState(mockCollections);
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isCollectionSelectionOpen, setIsCollectionSelectionOpen] = useState(false);
@@ -146,7 +141,7 @@ const Index = () => {
   const [filterGenre, setFilterGenre] = useState("");
   const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
   const [selectedBookForSale, setSelectedBookForSale] = useState<number | null>(null);
-  const [booksReadList, setBooksReadList] = useState<number[]>([1, 2, 3, 4, 5]); // Mock books read
+  const [booksReadList, setBooksReadList] = useState<number[]>([1, 2, 3, 4, 5]);
   const collectionSectionRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -166,13 +161,7 @@ const Index = () => {
   const genres = [...new Set(books.map(book => book.genre))];
 
   const handleCreateCollection = (name: string, color: string) => {
-    const newCollection = {
-      id: Date.now(),
-      name,
-      count: 0,
-      color
-    };
-    setCollections([...collections, newCollection]);
+    addCollection(name, color);
   };
 
   const toggleFavorite = (bookId: number) => {
@@ -294,7 +283,7 @@ const Index = () => {
 
       <div className="flex">
         {/* Sidebar */}
-        <CollectionSidebar 
+        <SharedSidebar 
           collections={collections}
           selectedCollection={selectedCollection}
           onSelectCollection={handleCollectionSelect}
@@ -302,6 +291,7 @@ const Index = () => {
           books={books}
           onBookClick={handleBookClick}
           booksReadCount={booksReadCount}
+          onDeleteCollection={deleteCollection}
         />
 
         {/* Main Content */}

@@ -1,18 +1,16 @@
+
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookOpen, User, Heart, Library, Users, Sparkles } from 'lucide-react';
+import { BookOpen, User, Award, Target, Users, Globe } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import CollectionSidebar from '../components/CollectionSidebar';
+import SharedSidebar from '../components/SharedSidebar';
 import CollectionModal from '../components/CollectionModal';
+import AccountModal from '../components/AccountModal';
+import { Link } from 'react-router-dom';
+import { Book } from '../types/Book';
+import { useCollections } from '../hooks/useCollections';
 
-// Mock data for sidebar - same as other pages
-const mockCollections = [
-  { id: 2, name: "To Read 📚", count: 3, color: "bg-blue-500" },
-  { id: 3, name: "Classics", count: 3, color: "bg-amber-500" },
-  { id: 4, name: "Sci-Fi Adventures", count: 2, color: "bg-purple-500" }
-];
-
-const mockBooks = [
+// Mock books data for sidebar
+const mockBooks: Book[] = [
   {
     id: 1,
     title: "The Great Gatsby",
@@ -21,7 +19,7 @@ const mockBooks = [
     rating: 4.2,
     genre: "Classic Literature",
     year: 1925,
-    description: "A classic American novel set in the Jazz Age.",
+    description: "A classic American novel set in the Jazz Age, exploring themes of wealth, love, and the American Dream.",
     isFavorite: true,
     isOwnedForSale: false,
     isbn10: "0743273567",
@@ -38,7 +36,7 @@ const mockBooks = [
     rating: 4.5,
     genre: "Fiction",
     year: 1960,
-    description: "A powerful story of racial injustice.",
+    description: "A powerful story of racial injustice and childhood innocence in the American South.",
     isFavorite: true,
     isOwnedForSale: false,
     isbn10: "0061120081",
@@ -50,32 +48,22 @@ const mockBooks = [
 ];
 
 const About = () => {
-  const [collections, setCollections] = useState(mockCollections);
+  const { collections, addCollection } = useCollections();
+  const [books] = useState(mockBooks);
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
-  const navigate = useNavigate();
+  const [booksReadList] = useState<number[]>([1, 2]);
 
   const handleCollectionSelect = (collection: any) => {
-    if (collection?.id === 'favorites') {
-      navigate('/collections/favorites');
-    } else if (collection?.id === 'books-read') {
-      navigate('/collections/books-read');
-    } else if (collection && typeof collection.id === 'number') {
-      navigate(`/collections/${collection.id}`);
-    }
+    console.log('Selected collection:', collection);
   };
 
-  const handleBookClick = (book: any) => {
+  const handleBookClick = (book: Book) => {
     console.log('Book clicked:', book);
   };
 
   const handleCreateCollection = (name: string, color: string) => {
-    const newCollection = {
-      id: Date.now(),
-      name,
-      count: 0,
-      color
-    };
-    setCollections([...collections, newCollection]);
+    addCollection(name, color);
   };
 
   return (
@@ -84,7 +72,7 @@ const About = () => {
       <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-3">
+            <Link to="/" className="flex items-center space-x-3">
               <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
                 <BookOpen className="h-6 w-6 text-white" />
               </div>
@@ -92,11 +80,12 @@ const About = () => {
                 <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
                 <p className="text-xs text-slate-600">Your Digital Library</p>
               </div>
-            </div>
+            </Link>
             <div className="flex items-center gap-3">
               <Button 
                 variant="outline"
                 className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
+                onClick={() => setIsAccountModalOpen(true)}
               >
                 <User className="h-4 w-4 mr-2" />
                 Account
@@ -108,109 +97,112 @@ const About = () => {
 
       <div className="flex">
         {/* Sidebar */}
-        <CollectionSidebar 
+        <SharedSidebar 
           collections={collections}
           selectedCollection={null}
           onSelectCollection={handleCollectionSelect}
           onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
-          books={mockBooks}
+          books={books}
           onBookClick={handleBookClick}
-          booksReadCount={5}
+          booksReadCount={booksReadList.length}
         />
 
         {/* Main Content */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-8">
           <div className="max-w-4xl mx-auto">
-            <div className="mb-8">
-              <Link to="/">
-                <Button variant="ghost" size="sm" className="mb-4">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back to Library
-                </Button>
-              </Link>
+            {/* Hero Section */}
+            <div className="text-center mb-16">
+              <div className="p-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl inline-block mb-6">
+                <BookOpen className="h-16 w-16 text-white" />
+              </div>
               <h1 className="text-4xl font-bold text-slate-800 mb-4">About Bacondo</h1>
-              <p className="text-xl text-slate-600">Your personal digital library companion</p>
+              <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+                Your personal digital library for organizing, discovering, and sharing your favorite books.
+              </p>
             </div>
 
-            <div className="space-y-8">
-              {/* Mission Section */}
-              <div className="bg-white/60 backdrop-blur-md rounded-xl p-8 border border-slate-200">
+            {/* Mission Section */}
+            <div className="bg-white/60 backdrop-blur-md rounded-2xl p-8 mb-12 border border-slate-200">
+              <div className="flex items-center mb-6">
+                <Target className="h-8 w-8 text-blue-600 mr-3" />
+                <h2 className="text-2xl font-bold text-slate-800">Our Mission</h2>
+              </div>
+              <p className="text-slate-700 text-lg leading-relaxed">
+                At Bacondo, we believe that every book has the power to transform lives. Our mission is to create 
+                a seamless digital experience that helps book lovers organize their collections, discover new reads, 
+                and connect with fellow bibliophiles around the world.
+              </p>
+            </div>
+
+            {/* Features Grid */}
+            <div className="grid md:grid-cols-2 gap-8 mb-12">
+              <div className="bg-white/60 backdrop-blur-md rounded-xl p-6 border border-slate-200">
                 <div className="flex items-center mb-4">
-                  <Sparkles className="h-8 w-8 text-blue-600 mr-3" />
-                  <h2 className="text-2xl font-bold text-slate-800">Our Mission</h2>
+                  <BookOpen className="h-6 w-6 text-indigo-600 mr-3" />
+                  <h3 className="text-xl font-semibold text-slate-800">Organize Your Library</h3>
                 </div>
-                <p className="text-slate-600 leading-relaxed text-lg">
-                  Bacondo is designed to revolutionize how you organize, discover, and interact with your book collection. 
-                  We believe that every book lover deserves a beautiful, intuitive way to manage their literary journey.
+                <p className="text-slate-600">
+                  Create custom collections, track your reading progress, and keep all your favorite books in one place.
                 </p>
               </div>
 
-              {/* Features Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div className="bg-white/60 backdrop-blur-md rounded-xl p-6 border border-slate-200">
-                  <div className="flex items-center mb-4">
-                    <Library className="h-6 w-6 text-indigo-600 mr-3" />
-                    <h3 className="text-xl font-semibold text-slate-800">Organize Your Library</h3>
-                  </div>
-                  <p className="text-slate-600">
-                    Create custom collections, track your reading progress, and organize your books in a way that makes sense to you.
-                  </p>
+              <div className="bg-white/60 backdrop-blur-md rounded-xl p-6 border border-slate-200">
+                <div className="flex items-center mb-4">
+                  <Users className="h-6 w-6 text-green-600 mr-3" />
+                  <h3 className="text-xl font-semibold text-slate-800">Connect & Share</h3>
                 </div>
-
-                <div className="bg-white/60 backdrop-blur-md rounded-xl p-6 border border-slate-200">
-                  <div className="flex items-center mb-4">
-                    <Heart className="h-6 w-6 text-red-600 mr-3" />
-                    <h3 className="text-xl font-semibold text-slate-800">Discover New Favorites</h3>
-                  </div>
-                  <p className="text-slate-600">
-                    Get personalized recommendations based on your reading history and preferences. Find your next great read effortlessly.
-                  </p>
-                </div>
-
-                <div className="bg-white/60 backdrop-blur-md rounded-xl p-6 border border-slate-200">
-                  <div className="flex items-center mb-4">
-                    <Users className="h-6 w-6 text-green-600 mr-3" />
-                    <h3 className="text-xl font-semibold text-slate-800">Community Marketplace</h3>
-                  </div>
-                  <p className="text-slate-600">
-                    Buy and sell used books within our community. Give your books a second life while discovering hidden gems from other readers.
-                  </p>
-                </div>
-
-                <div className="bg-white/60 backdrop-blur-md rounded-xl p-6 border border-slate-200">
-                  <div className="flex items-center mb-4">
-                    <BookOpen className="h-6 w-6 text-purple-600 mr-3" />
-                    <h3 className="text-xl font-semibold text-slate-800">Rich Book Details</h3>
-                  </div>
-                  <p className="text-slate-600">
-                    Access comprehensive information about every book including ratings, reviews, publication details, and more.
-                  </p>
-                </div>
-              </div>
-
-              {/* Vision Section */}
-              <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-8 border border-blue-200">
-                <h2 className="text-2xl font-bold text-slate-800 mb-4">Our Vision</h2>
-                <p className="text-slate-600 leading-relaxed text-lg mb-4">
-                  We envision a world where book lovers can seamlessly connect with their literary passions. 
-                  Bacondo aims to be more than just a catalog - it's a gateway to rediscovering the joy of reading, 
-                  sharing literary experiences, and building a sustainable book ecosystem.
-                </p>
-                <p className="text-slate-600 leading-relaxed text-lg">
-                  Whether you're a casual reader or a bibliophile with thousands of books, Bacondo adapts to your needs, 
-                  helping you make the most of your reading journey.
+                <p className="text-slate-600">
+                  Share your collections with friends, discover what others are reading, and build a community around books.
                 </p>
               </div>
+
+              <div className="bg-white/60 backdrop-blur-md rounded-xl p-6 border border-slate-200">
+                <div className="flex items-center mb-4">
+                  <Globe className="h-6 w-6 text-purple-600 mr-3" />
+                  <h3 className="text-xl font-semibold text-slate-800">Marketplace</h3>
+                </div>
+                <p className="text-slate-600">
+                  Buy and sell used books with other community members, giving books a second life.
+                </p>
+              </div>
+
+              <div className="bg-white/60 backdrop-blur-md rounded-xl p-6 border border-slate-200">
+                <div className="flex items-center mb-4">
+                  <Award className="h-6 w-6 text-yellow-600 mr-3" />
+                  <h3 className="text-xl font-semibold text-slate-800">Personalized Experience</h3>
+                </div>
+                <p className="text-slate-600">
+                  Get book recommendations based on your reading history and preferences.
+                </p>
+              </div>
+            </div>
+
+            {/* Call to Action */}
+            <div className="text-center bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-200">
+              <h2 className="text-2xl font-bold text-slate-800 mb-4">Ready to Start Your Journey?</h2>
+              <p className="text-slate-600 mb-6">
+                Join thousands of book lovers who have already organized their libraries with Bacondo.
+              </p>
+              <Link to="/">
+                <Button className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3">
+                  Explore Your Library
+                </Button>
+              </Link>
             </div>
           </div>
         </main>
       </div>
 
-      {/* Collection Modal */}
+      {/* Modals */}
       <CollectionModal 
         isOpen={isCollectionModalOpen}
         onClose={() => setIsCollectionModalOpen(false)}
         onCreateCollection={handleCreateCollection}
+      />
+      
+      <AccountModal 
+        isOpen={isAccountModalOpen}
+        onClose={() => setIsAccountModalOpen(false)}
       />
     </div>
   );
