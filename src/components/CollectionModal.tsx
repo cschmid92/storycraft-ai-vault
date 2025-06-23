@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Palette } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,6 +8,9 @@ interface CollectionModalProps {
   isOpen: boolean;
   onClose: () => void;
   onCreateCollection: (name: string, color: string) => void;
+  editMode?: boolean;
+  initialName?: string;
+  initialColor?: string;
 }
 
 const colorOptions = [
@@ -21,9 +24,26 @@ const colorOptions = [
   'bg-orange-500'
 ];
 
-const CollectionModal = ({ isOpen, onClose, onCreateCollection }: CollectionModalProps) => {
+const CollectionModal = ({ 
+  isOpen, 
+  onClose, 
+  onCreateCollection, 
+  editMode = false, 
+  initialName = '', 
+  initialColor = 'bg-blue-500' 
+}: CollectionModalProps) => {
   const [name, setName] = useState('');
   const [selectedColor, setSelectedColor] = useState('bg-blue-500');
+
+  useEffect(() => {
+    if (editMode && isOpen) {
+      setName(initialName);
+      setSelectedColor(initialColor);
+    } else if (!editMode && isOpen) {
+      setName('');
+      setSelectedColor('bg-blue-500');
+    }
+  }, [editMode, initialName, initialColor, isOpen]);
 
   if (!isOpen) return null;
 
@@ -31,8 +51,10 @@ const CollectionModal = ({ isOpen, onClose, onCreateCollection }: CollectionModa
     e.preventDefault();
     if (name.trim()) {
       onCreateCollection(name.trim(), selectedColor);
-      setName('');
-      setSelectedColor('bg-blue-500');
+      if (!editMode) {
+        setName('');
+        setSelectedColor('bg-blue-500');
+      }
       onClose();
     }
   };
@@ -41,7 +63,9 @@ const CollectionModal = ({ isOpen, onClose, onCreateCollection }: CollectionModa
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
       <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 p-6 w-full max-w-md">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-white">Create New Collection</h2>
+          <h2 className="text-xl font-bold text-white">
+            {editMode ? 'Edit Collection' : 'Create New Collection'}
+          </h2>
           <Button
             variant="outline"
             size="sm"
@@ -101,7 +125,7 @@ const CollectionModal = ({ isOpen, onClose, onCreateCollection }: CollectionModa
               type="submit"
               className="flex-1 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white border-0"
             >
-              Create Collection
+              {editMode ? 'Update Collection' : 'Create Collection'}
             </Button>
           </div>
         </form>
