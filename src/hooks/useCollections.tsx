@@ -38,12 +38,6 @@ export const useCollections = () => {
     setCollections(prev => prev.filter(c => c.id !== collectionId));
   };
 
-  const updateCollection = (collectionId: number | string, name: string, color: string) => {
-    setCollections(prev => prev.map(c => 
-      c.id === collectionId ? { ...c, name, color } : c
-    ));
-  };
-
   const updateCollectionCount = (collectionId: number | string, count: number) => {
     setCollections(prev => prev.map(c => 
       c.id === collectionId ? { ...c, count } : c
@@ -54,7 +48,6 @@ export const useCollections = () => {
     collections,
     addCollection,
     deleteCollection,
-    updateCollection,
     updateCollectionCount
   };
 };

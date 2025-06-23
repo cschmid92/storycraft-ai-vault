@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, BookmarkPlus, Edit, Trash2, Heart } from 'lucide-react';
@@ -85,7 +86,7 @@ const mockBooks: Book[] = [
 const Collections = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { collections, addCollection, deleteCollection, updateCollection } = useCollections();
+  const { collections, addCollection, deleteCollection } = useCollections();
   const [books, setBooks] = useState(mockBooks);
   const [booksReadList, setBooksReadList] = useState<number[]>([1, 2]);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
@@ -164,15 +165,10 @@ const Collections = () => {
   };
 
   const handleUpdateCollection = (name: string, color: string) => {
-    if (editingCollection) {
-      updateCollection(editingCollection.id, name, color);
-      setIsEditModalOpen(false);
-      setEditingCollection(null);
-      // Update the selected collection if it's the one being edited
-      if (selectedCollection && selectedCollection.id === editingCollection.id) {
-        setSelectedCollection({ ...selectedCollection, name, color });
-      }
-    }
+    // This would normally update the collection in the state/database
+    console.log('Update collection:', editingCollection?.id, name, color);
+    setIsEditModalOpen(false);
+    setEditingCollection(null);
   };
 
   if (!selectedCollection) {
