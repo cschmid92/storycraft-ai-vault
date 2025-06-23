@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Heart, BookmarkPlus, DollarSign } from 'lucide-react';
+import { Heart, BookmarkPlus, DollarSign, ExternalLink } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 interface BookActionsProps {
@@ -20,6 +20,11 @@ const BookActions = ({
   onAddToCollection, 
   onToggleOwnedForSale 
 }: BookActionsProps) => {
+  const handleBuyOnline = () => {
+    // Open Amazon search for the book - in a real app, you'd use the book's ISBN or title
+    window.open('https://www.amazon.com/s?k=books', '_blank');
+  };
+
   return (
     <div className="flex flex-wrap gap-3">
       <Button
@@ -46,6 +51,15 @@ const BookActions = ({
       >
         <DollarSign className="h-4 w-4 mr-2" />
         {isOwnedForSale ? 'Remove from Sale' : 'Mark for Sale'}
+      </Button>
+
+      <Button
+        onClick={handleBuyOnline}
+        variant="outline"
+        className="border-blue-500 text-blue-600 hover:bg-blue-50"
+      >
+        <ExternalLink className="h-4 w-4 mr-2" />
+        Buy Online
       </Button>
     </div>
   );

@@ -28,7 +28,7 @@ const BookCard = ({ book, onToggleFavorite, onBookClick, onAddToCollection, onAd
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         
-        {/* Action Buttons */}
+        {/* Action Buttons - Reordered: 1. Favorites, 2. Books Read, 3. Add to Collection */}
         <div className="absolute top-2 right-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
           <Button
             size="sm"
@@ -49,10 +49,10 @@ const BookCard = ({ book, onToggleFavorite, onBookClick, onAddToCollection, onAd
             className="w-8 h-8 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
             onClick={(e) => {
               e.stopPropagation();
-              onAddToCollection(book.id);
+              onAddToBooksRead(book.id);
             }}
           >
-            <BookmarkPlus className="h-4 w-4 text-slate-600" />
+            <BookOpen className={`h-4 w-4 ${isInBooksRead ? 'text-green-600 fill-green-600' : 'text-green-600'}`} />
           </Button>
           <Button
             size="sm"
@@ -60,10 +60,10 @@ const BookCard = ({ book, onToggleFavorite, onBookClick, onAddToCollection, onAd
             className="w-8 h-8 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
             onClick={(e) => {
               e.stopPropagation();
-              onAddToBooksRead(book.id);
+              onAddToCollection(book.id);
             }}
           >
-            <BookOpen className={`h-4 w-4 ${isInBooksRead ? 'text-green-600 fill-green-600' : 'text-green-600'}`} />
+            <BookmarkPlus className="h-4 w-4 text-slate-600" />
           </Button>
         </div>
 

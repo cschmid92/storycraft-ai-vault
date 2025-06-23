@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { X, User, Mail, Settings, Users } from 'lucide-react';
+import { X, User, Mail, Settings, Users, Globe } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -12,6 +12,7 @@ interface AccountModalProps {
 const AccountModal = ({ isOpen, onClose }: AccountModalProps) => {
   const [activeTab, setActiveTab] = useState('profile');
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedLanguage, setSelectedLanguage] = useState('English');
 
   if (!isOpen) return null;
 
@@ -113,6 +114,20 @@ const AccountModal = ({ isOpen, onClose }: AccountModalProps) => {
               <div className="space-y-6">
                 <h3 className="text-lg font-semibold text-slate-800">Account Settings</h3>
                 <div className="space-y-4">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <h4 className="font-medium text-slate-700">Language</h4>
+                      <p className="text-sm text-slate-500">Choose your preferred language</p>
+                    </div>
+                    <select 
+                      value={selectedLanguage}
+                      onChange={(e) => setSelectedLanguage(e.target.value)}
+                      className="px-3 py-2 border border-slate-300 rounded-md text-sm"
+                    >
+                      <option value="English">English</option>
+                      <option value="German">Deutsch</option>
+                    </select>
+                  </div>
                   <div className="flex items-center justify-between">
                     <div>
                       <h4 className="font-medium text-slate-700">Email Notifications</h4>
