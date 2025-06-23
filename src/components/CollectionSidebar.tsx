@@ -1,17 +1,10 @@
-
 import React, { useState } from 'react';
 import { Library, Heart, BookOpen, Plus, DollarSign, ChevronDown, ChevronRight, Edit, Trash2, ShoppingCart, Info, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import BooksForSale from './BooksForSale';
 import { Book } from '../types/Book';
-
-interface Collection {
-  id: number | string;
-  name: string;
-  count: number;
-  color: string;
-}
+import { Collection } from '../hooks/useCollections';
 
 interface CollectionSidebarProps {
   collections: Collection[];
@@ -35,12 +28,12 @@ const CollectionSidebar = ({
   const [showBooksForSale, setShowBooksForSale] = useState(false);
   const booksForSaleCount = books.filter(book => book.isOwnedForSale && book.salePrice).length;
 
-  const handleEditCollection = (e: React.MouseEvent, collectionId: number) => {
+  const handleEditCollection = (e: React.MouseEvent, collectionId: number | string) => {
     e.stopPropagation();
     console.log('Edit collection:', collectionId);
   };
 
-  const handleDeleteCollection = (e: React.MouseEvent, collectionId: number) => {
+  const handleDeleteCollection = (e: React.MouseEvent, collectionId: number | string) => {
     e.stopPropagation();
     console.log('Delete collection:', collectionId);
   };
@@ -160,7 +153,7 @@ const CollectionSidebar = ({
                     variant="ghost"
                     size="sm"
                     className="h-6 w-6 p-0 hover:bg-slate-200"
-                    onClick={(e) => handleEditCollection(e, collection.id as number)}
+                    onClick={(e) => handleEditCollection(e, collection.id)}
                   >
                     <Edit className="h-3 w-3" />
                   </Button>
@@ -168,7 +161,7 @@ const CollectionSidebar = ({
                     variant="ghost"
                     size="sm"
                     className="h-6 w-6 p-0 hover:bg-red-100 hover:text-red-600"
-                    onClick={(e) => handleDeleteCollection(e, collection.id as number)}
+                    onClick={(e) => handleDeleteCollection(e, collection.id)}
                   >
                     <Trash2 className="h-3 w-3" />
                   </Button>
