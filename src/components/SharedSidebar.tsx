@@ -59,24 +59,18 @@ const SharedSidebar = ({
             Quick Access
           </h3>
           <div className="space-y-1">
-            <button
-              onClick={() => onSelectCollection(null)}
-              className="w-full"
-            >
+            <Link to="/about">
               <Button variant="ghost" className="w-full justify-start text-slate-600 hover:bg-slate-100 px-3 py-2 h-auto text-sm">
                 <Info className="h-4 w-4 mr-3" />
                 <span>About Bacondo</span>
               </Button>
-            </button>
-            <button
-              onClick={() => onSelectCollection(null)}
-              className="w-full"
-            >
+            </Link>
+            <Link to="/buy-used-books">
               <Button variant="ghost" className="w-full justify-start text-slate-600 hover:bg-slate-100 px-3 py-2 h-auto text-sm">
                 <ShoppingCart className="h-4 w-4 mr-3" />
                 <span>Buy Used Books</span>
               </Button>
-            </button>
+            </Link>
           </div>
         </div>
 
@@ -104,14 +98,11 @@ const SharedSidebar = ({
           {showBooksForSale && (
             <div className="ml-2 mb-4">
               <BooksForSale books={books} onBookClick={onBookClick} />
-              <button
-                onClick={() => onSelectCollection(null)}
-                className="w-full mt-2"
-              >
-                <Button variant="outline" size="sm" className="w-full text-xs">
+              <Link to="/books-for-sale">
+                <Button variant="outline" size="sm" className="w-full text-xs mt-2">
                   View All
                 </Button>
-              </button>
+              </Link>
             </div>
           )}
         </div>

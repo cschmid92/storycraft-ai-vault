@@ -39,7 +39,7 @@ const PopularReads = ({ books, onBookClick, onToggleFavorite, onAddToCollection,
                 #{index + 1}
               </div>
               
-              {/* Action Buttons */}
+              {/* Action Buttons - Fixed order: 1. Favorites, 2. Books Read, 3. Add to Collection */}
               <div className="absolute top-2 right-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                 <Button
                   size="sm"
@@ -60,10 +60,10 @@ const PopularReads = ({ books, onBookClick, onToggleFavorite, onAddToCollection,
                   className="w-7 h-7 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onAddToCollection(book.id);
+                    onAddToBooksRead(book.id);
                   }}
                 >
-                  <BookmarkPlus className="h-3 w-3 text-slate-600" />
+                  <BookOpen className={`h-3 w-3 ${isInBooksRead && isInBooksRead(book.id) ? 'text-green-600 fill-green-600' : 'text-green-600'}`} />
                 </Button>
                 <Button
                   size="sm"
@@ -71,10 +71,10 @@ const PopularReads = ({ books, onBookClick, onToggleFavorite, onAddToCollection,
                   className="w-7 h-7 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
                   onClick={(e) => {
                     e.stopPropagation();
-                    onAddToBooksRead(book.id);
+                    onAddToCollection(book.id);
                   }}
                 >
-                  <BookOpen className={`h-3 w-3 ${isInBooksRead && isInBooksRead(book.id) ? 'text-green-600 fill-green-600' : 'text-green-600'}`} />
+                  <BookmarkPlus className="h-3 w-3 text-slate-600" />
                 </Button>
               </div>
             </div>
