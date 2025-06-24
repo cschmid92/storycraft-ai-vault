@@ -64,6 +64,12 @@ export const useCollections = () => {
   // Save to localStorage whenever collections change
   useEffect(() => {
     saveCollections(collections);
+    // Update collectionBookMappings for backward compatibility
+    collections.forEach(collection => {
+      if (typeof collection.id === 'number') {
+        collectionBookMappings[collection.id] = collection.bookIds || [];
+      }
+    });
   }, [collections]);
 
   const addCollection = (name: string, color: string, description?: string) => {
@@ -78,16 +84,19 @@ export const useCollections = () => {
       updatedAt: new Date()
     };
     setCollections(prev => [...prev, newCollection]);
+    console.log('Created new collection:', name);
   };
 
   const deleteCollection = (collectionId: number | string) => {
     setCollections(prev => prev.filter(c => c.id !== collectionId));
+    console.log('Deleted collection:', collectionId);
   };
 
   const updateCollection = (collectionId: number | string, updates: Partial<Collection>) => {
     setCollections(prev => prev.map(c => 
       c.id === collectionId ? { ...c, ...updates, updatedAt: new Date() } : c
     ));
+    console.log('Updated collection:', collectionId, updates);
   };
 
   const addBookToCollection = (collectionId: number | string, bookId: number) => {
@@ -96,7 +105,10 @@ export const useCollections = () => {
         const bookIds = c.bookIds || [];
         if (!bookIds.includes(bookId)) {
           const newBookIds = [...bookIds, bookId];
+          console.log(`Added book ${bookId} to collection ${c.name}`);
           return { ...c, bookIds: newBookIds, count: newBookIds.length, updatedAt: new Date() };
+        } else {
+          console.log(`Book ${bookId} already in collection ${c.name}`);
         }
       }
       return c;
@@ -108,6 +120,7 @@ export const useCollections = () => {
       if (c.id === collectionId) {
         const bookIds = c.bookIds || [];
         const newBookIds = bookIds.filter(id => id !== bookId);
+        console.log(`Removed book ${bookId} from collection ${c.name}`);
         return { ...c, bookIds: newBookIds, count: newBookIds.length, updatedAt: new Date() };
       }
       return c;
@@ -116,7 +129,8 @@ export const useCollections = () => {
 
   const isBookInCollection = (collectionId: number | string, bookId: number): boolean => {
     const collection = collections.find(c => c.id === collectionId);
-    return collection?.bookIds?.includes(bookId) || false;
+    const result = collection?.bookIds?.includes(bookId) || false;
+    return result;
   };
 
   const getCollectionBooks = (collectionId: number | string): number[] => {

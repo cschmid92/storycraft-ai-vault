@@ -17,7 +17,7 @@ import { useBooks } from '../hooks/useBooks';
 const Collections = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { collections, addCollection, deleteCollection, updateCollection } = useCollections();
+  const { collections, addCollection, deleteCollection, updateCollection, addBookToCollection } = useCollections();
   const { books, toggleFavorite, toggleOwnedForSale, rateBook } = useBooks();
   const [booksReadList, setBooksReadList] = useState<number[]>([1, 2]);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
@@ -93,9 +93,11 @@ const Collections = () => {
 
   const handleCollectionSelection = (collection: Collection) => {
     if (collection && selectedBookForCollection) {
+      addBookToCollection(collection.id, Number(selectedBookForCollection.id));
       console.log(`Added "${selectedBookForCollection.title}" to collection "${collection.name}"`);
     }
     setSelectedBookForCollection(null);
+    setIsCollectionSelectionModalOpen(false);
   };
 
   const handleAddToBooksRead = (bookId: number) => {
@@ -239,7 +241,7 @@ const Collections = () => {
                   )}
                 </div>
                 <div>
-                  <h1 className="text-lg md:text-xl font-bold text-slate-800">{selectedCollection.name}</h1>
+                  <h1 className="text-2xl md:text-3xl font-bold text-slate-800">{selectedCollection.name}</h1>
                   <p className="text-xs text-slate-600">{collectionBooks.length} books</p>
                 </div>
               </div>
@@ -265,8 +267,6 @@ const Collections = () => {
                 </div>
               )}
             </div>
-
-            <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-6">Books in Collection</h2>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, User, Menu, ArrowLeft, Library, Heart, TrendingUp, DollarSign, Users, Search } from 'lucide-react';
@@ -33,6 +34,10 @@ const About = () => {
     
     if (collection && typeof collection.id === 'number') {
       window.location.href = `/collections/${collection.id}`;
+    } else if (collection?.id === 'favorites') {
+      window.location.href = `/collections/favorites`;
+    } else if (collection?.id === 'books-read') {
+      window.location.href = `/collections/books-read`;
     }
   };
 
@@ -131,7 +136,7 @@ const About = () => {
                 Back
               </Button>
             </Link>
-            <h2 className="text-4xl md:text-5xl font-bold text-slate-800">
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-800">
               Welcome to Bacondo
             </h2>
           </div>
