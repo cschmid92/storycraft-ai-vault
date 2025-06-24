@@ -51,7 +51,7 @@ const SharedSidebar = ({
   ];
 
   return (
-    <aside className="w-64 bg-white/60 backdrop-blur-md border-r border-slate-200 p-4 h-screen md:h-[calc(100vh-4rem)] md:sticky md:top-16 overflow-y-auto flex flex-col">
+    <aside className="w-64 bg-white/60 backdrop-blur-md border-r border-slate-200 p-4 h-full overflow-y-auto flex flex-col">
       <div className="space-y-4 md:space-y-6 flex-1">
         {/* Quick Access */}
         <div>
@@ -59,18 +59,24 @@ const SharedSidebar = ({
             Quick Access
           </h3>
           <div className="space-y-1">
-            <Link to="/about">
+            <button
+              onClick={() => onSelectCollection(null)}
+              className="w-full"
+            >
               <Button variant="ghost" className="w-full justify-start text-slate-600 hover:bg-slate-100 px-3 py-2 h-auto text-sm">
                 <Info className="h-4 w-4 mr-3" />
                 <span>About Bacondo</span>
               </Button>
-            </Link>
-            <Link to="/buy-used-books">
+            </button>
+            <button
+              onClick={() => onSelectCollection(null)}
+              className="w-full"
+            >
               <Button variant="ghost" className="w-full justify-start text-slate-600 hover:bg-slate-100 px-3 py-2 h-auto text-sm">
                 <ShoppingCart className="h-4 w-4 mr-3" />
                 <span>Buy Used Books</span>
               </Button>
-            </Link>
+            </button>
           </div>
         </div>
 
@@ -98,11 +104,14 @@ const SharedSidebar = ({
           {showBooksForSale && (
             <div className="ml-2 mb-4">
               <BooksForSale books={books} onBookClick={onBookClick} />
-              <Link to="/books-for-sale">
-                <Button variant="outline" size="sm" className="w-full mt-2 text-xs">
+              <button
+                onClick={() => onSelectCollection(null)}
+                className="w-full mt-2"
+              >
+                <Button variant="outline" size="sm" className="w-full text-xs">
                   View All
                 </Button>
-              </Link>
+              </button>
             </div>
           )}
         </div>
@@ -115,36 +124,36 @@ const SharedSidebar = ({
           <div className="space-y-1">
             {/* Standard Collections */}
             {standardCollections.map((collection) => (
-              <Link
+              <button
                 key={collection.id}
-                to={`/collections/${collection.id}`}
-                className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                onClick={() => onSelectCollection(collection as any)}
+                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
                   selectedCollection?.id === collection.id 
                     ? 'bg-blue-100 text-blue-800 border border-blue-200' 
                     : 'text-slate-600 hover:bg-slate-100'
                 }`}
               >
                 <div className={`w-3 h-3 rounded-full ${collection.color}`} />
-                <span className="text-sm flex-1 truncate">{collection.name}</span>
+                <span className="text-sm flex-1 truncate text-left">{collection.name}</span>
                 <span className="text-xs text-slate-500">{collection.count}</span>
-              </Link>
+              </button>
             ))}
 
             {/* User Collections */}
             {collections.map((collection) => (
-              <Link
+              <button
                 key={collection.id}
-                to={`/collections/${collection.id}`}
-                className={`flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                onClick={() => onSelectCollection(collection)}
+                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
                   selectedCollection?.id === collection.id 
                     ? 'bg-blue-100 text-blue-800 border border-blue-200' 
                     : 'text-slate-600 hover:bg-slate-100'
                 }`}
               >
                 <div className={`w-3 h-3 rounded-full ${collection.color}`} />
-                <span className="text-sm flex-1 truncate">{collection.name}</span>
+                <span className="text-sm flex-1 truncate text-left">{collection.name}</span>
                 <span className="text-xs text-slate-500">{getCollectionCount(collection.id)}</span>
-              </Link>
+              </button>
             ))}
             
             {/* New Collection Button */}
