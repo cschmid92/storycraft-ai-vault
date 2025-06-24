@@ -44,7 +44,7 @@ const BookCard = ({
             variant="outline"
             className="w-8 h-8 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
             onClick={(e) => {
-              e.stopPropagation();
+              if (e) e.stopPropagation();
               onToggleFavorite(book.id);
             }}
           >
@@ -57,7 +57,7 @@ const BookCard = ({
             variant="outline"
             className="w-8 h-8 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
             onClick={(e) => {
-              e.stopPropagation();
+              if (e) e.stopPropagation();
               onAddToBooksRead(book.id);
             }}
           >
@@ -68,7 +68,7 @@ const BookCard = ({
             variant="outline"
             className="w-8 h-8 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
             onClick={(e) => {
-              e.stopPropagation();
+              if (e) e.stopPropagation();
               onAddToCollection(book.id);
             }}
           >
