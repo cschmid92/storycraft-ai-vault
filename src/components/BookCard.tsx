@@ -28,19 +28,8 @@ const BookCard = ({ book, onToggleFavorite, onBookClick, onAddToCollection, onAd
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         
-        {/* Action Buttons - Correct order: 1. Add to Collection, 2. Favorites, 3. Books Read */}
+        {/* Action Buttons - Correct order: 1. Favorites, 2. Books Read, 3. Add to Collection */}
         <div className="absolute top-2 right-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          <Button
-            size="sm"
-            variant="outline"
-            className="w-8 h-8 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
-            onClick={(e) => {
-              e.stopPropagation();
-              onAddToCollection(book.id);
-            }}
-          >
-            <BookmarkPlus className="h-4 w-4 text-slate-600" />
-          </Button>
           <Button
             size="sm"
             variant="outline"
@@ -65,6 +54,17 @@ const BookCard = ({ book, onToggleFavorite, onBookClick, onAddToCollection, onAd
           >
             <BookOpen className={`h-4 w-4 ${isInBooksRead ? 'text-green-600 fill-green-600' : 'text-green-600'}`} />
           </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            className="w-8 h-8 p-0 bg-white/80 backdrop-blur-md border-slate-300 hover:bg-white"
+            onClick={(e) => {
+              e.stopPropagation();
+              onAddToCollection(book.id);
+            }}
+          >
+            <BookmarkPlus className="h-4 w-4 text-slate-600" />
+          </Button>
         </div>
 
         {/* Rating Badge */}
@@ -75,16 +75,16 @@ const BookCard = ({ book, onToggleFavorite, onBookClick, onAddToCollection, onAd
       </div>
 
       {/* Book Details */}
-      <div className="p-4">
+      <div className="p-3 md:p-4">
         <div className="mb-2">
-          <h3 className="font-semibold text-slate-800 text-sm leading-tight line-clamp-2 mb-1">
+          <h3 className="font-semibold text-slate-800 text-xs md:text-sm leading-tight line-clamp-2 mb-1">
             {book.title}
           </h3>
           <p className="text-slate-600 text-xs mb-2">{book.author}</p>
         </div>
 
         <div className="flex items-center justify-between text-xs">
-          <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full">
+          <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full text-xs">
             {book.genre}
           </span>
           <span className="text-slate-500">{book.year}</span>

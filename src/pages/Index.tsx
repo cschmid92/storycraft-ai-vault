@@ -1,5 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { BookOpen, User, Search as SearchIcon } from 'lucide-react';
+import { BookOpen, User, Search as SearchIcon, Menu } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import BookCard from '../components/BookCard';
 import CollectionModal from '../components/CollectionModal';
@@ -142,6 +142,7 @@ const Index = () => {
   const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
   const [selectedBookForSale, setSelectedBookForSale] = useState<number | null>(null);
   const [booksReadList, setBooksReadList] = useState<number[]>([1, 2, 3, 4, 5]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const collectionSectionRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
@@ -175,11 +176,9 @@ const Index = () => {
     if (!book) return;
 
     if (!book.isOwnedForSale) {
-      // If not currently for sale, open price modal
       setSelectedBookForSale(bookId);
       setIsPriceModalOpen(true);
     } else {
-      // If currently for sale, remove from sale
       setBooks(books.map(book => 
         book.id === bookId ? { ...book, isOwnedForSale: false, salePrice: undefined } : book
       ));
@@ -207,7 +206,6 @@ const Index = () => {
 
   const handleCollectionSelect = (collection: Collection | null) => {
     setSelectedCollection(collection);
-    // Navigate to collection page for all collections including default ones
     if (collection?.id === 'favorites') {
       navigate('/collections/favorites');
     } else if (collection?.id === 'books-read') {
@@ -215,6 +213,7 @@ const Index = () => {
     } else if (collection && typeof collection.id === 'number') {
       navigate(`/collections/${collection.id}`);
     }
+    setIsSidebarOpen(false); // Close sidebar on mobile after selection
   };
 
   const handleRateBook = (bookId: number, rating: number) => {
@@ -227,11 +226,9 @@ const Index = () => {
     console.log(`Adding/removing book ${bookId} to/from Books read collection`);
     setBooksReadList(prev => {
       if (prev.includes(bookId)) {
-        // Remove from books read
         console.log(`Removing book ${bookId} from Books read`);
         return prev.filter(id => id !== bookId);
       } else {
-        // Add to books read
         console.log(`Adding book ${bookId} to Books read`);
         return [...prev, bookId];
       }
@@ -259,22 +256,32 @@ const Index = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
+              {/* Mobile menu button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="md:hidden"
+                onClick={() => setIsSidebarOpen(true)}
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
               <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
                 <BookOpen className="h-6 w-6 text-white" />
               </div>
               <div>
                 <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
-                <p className="text-xs text-slate-600">Your Digital Library</p>
+                <p className="text-xs text-slate-600 hidden sm:block">Your Digital Library</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Button 
                 variant="outline"
+                size="sm"
                 className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
                 onClick={() => setIsAccountModalOpen(true)}
               >
-                <User className="h-4 w-4 mr-2" />
-                Account
+                <User className="h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Account</span>
               </Button>
             </div>
           </div>
@@ -282,24 +289,34 @@ const Index = () => {
       </header>
 
       <div className="flex">
+        {/* Sidebar - Mobile overlay */}
+        {isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-50 md:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+        
         {/* Sidebar */}
-        <SharedSidebar 
-          collections={collections}
-          selectedCollection={selectedCollection}
-          onSelectCollection={handleCollectionSelect}
-          onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
-          books={books}
-          onBookClick={handleBookClick}
-          booksReadCount={booksReadCount}
-          onDeleteCollection={deleteCollection}
-        />
+        <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-50 md:z-auto`}>
+          <SharedSidebar 
+            collections={collections}
+            selectedCollection={selectedCollection}
+            onSelectCollection={handleCollectionSelect}
+            onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
+            books={books}
+            onBookClick={handleBookClick}
+            booksReadCount={booksReadCount}
+            onDeleteCollection={deleteCollection}
+          />
+        </div>
 
         {/* Main Content */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-4 md:p-6">
           {/* Search and Filters */}
-          <div className="mb-8">
-            <div className="flex flex-col sm:flex-row gap-4 mb-6">
-              <div className="flex-1 flex gap-2 max-w-2xl">
+          <div className="mb-6 md:mb-8">
+            <div className="flex flex-col gap-4 mb-6">
+              <div className="flex gap-2">
                 <div className="flex-1">
                   <SearchBar 
                     searchTerm={searchTerm}
@@ -309,6 +326,7 @@ const Index = () => {
                 <Button 
                   onClick={handleSearch}
                   className="bg-blue-600 hover:bg-blue-700"
+                  size="sm"
                 >
                   <SearchIcon className="h-4 w-4" />
                 </Button>
@@ -317,7 +335,7 @@ const Index = () => {
                 <select 
                   value={filterGenre}
                   onChange={(e) => setFilterGenre(e.target.value)}
-                  className="px-4 py-2 bg-white/80 border border-slate-300 rounded-lg text-slate-700 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  className="flex-1 px-4 py-2 bg-white/80 border border-slate-300 rounded-lg text-slate-700 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
                 >
                   <option value="">All Genres</option>
                   {genres.map(genre => (
@@ -325,16 +343,16 @@ const Index = () => {
                   ))}
                 </select>
                 <Link to="/advanced-search">
-                  <Button variant="outline" className="bg-white/80 border-slate-300">
+                  <Button variant="outline" size="sm" className="bg-white/80 border-slate-300">
                     <Filter className="h-4 w-4 mr-2" />
-                    Advanced
+                    <span className="hidden sm:inline">Advanced</span>
                   </Button>
                 </Link>
               </div>
             </div>
 
-            {/* Stats - Reordered */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
+            {/* Stats */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 md:mb-8">
               <div className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200">
                 <div className="flex items-center justify-between">
                   <div>
@@ -366,13 +384,13 @@ const Index = () => {
           </div>
 
           {/* Quote of the Day */}
-          <div className="mb-8">
-            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-6 border border-indigo-200">
+          <div className="mb-6 md:mb-8">
+            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-4 md:p-6 border border-indigo-200">
               <div className="flex items-start gap-3">
                 <Quote className="h-6 w-6 text-indigo-600 mt-1 flex-shrink-0" />
                 <div>
                   <h3 className="text-lg font-semibold text-slate-800 mb-2">Quote of the Day</h3>
-                  <blockquote className="text-slate-700 italic text-lg leading-relaxed mb-2">
+                  <blockquote className="text-slate-700 italic text-base md:text-lg leading-relaxed mb-2">
                     "A reader lives a thousand lives before he dies. The man who never reads lives only one."
                   </blockquote>
                   <cite className="text-slate-600 text-sm">— George R.R. Martin</cite>

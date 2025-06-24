@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookmarkPlus, Edit, Trash2, Heart } from 'lucide-react';
+import { ArrowLeft, BookmarkPlus, Edit, Trash2, Heart, Menu } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import BookCard from '../components/BookCard';
 import SharedSidebar from '../components/SharedSidebar';
@@ -86,13 +85,14 @@ const mockBooks: Book[] = [
 const Collections = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { collections, addCollection, deleteCollection } = useCollections();
+  const { collections, addCollection, deleteCollection, updateCollection } = useCollections();
   const [books, setBooks] = useState(mockBooks);
   const [booksReadList, setBooksReadList] = useState<number[]>([1, 2]);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingCollection, setEditingCollection] = useState<any>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   // Handle both standard and user collections
   let selectedCollection: any = null;
@@ -135,6 +135,7 @@ const Collections = () => {
     } else if (collection && typeof collection.id === 'number') {
       navigate(`/collections/${collection.id}`);
     }
+    setIsSidebarOpen(false); // Close sidebar on mobile after selection
   };
 
   const handleBookClick = (book: Book) => {
@@ -165,10 +166,11 @@ const Collections = () => {
   };
 
   const handleUpdateCollection = (name: string, color: string) => {
-    // This would normally update the collection in the state/database
-    console.log('Update collection:', editingCollection?.id, name, color);
-    setIsEditModalOpen(false);
-    setEditingCollection(null);
+    if (editingCollection) {
+      updateCollection(editingCollection.id, name, color);
+      setIsEditModalOpen(false);
+      setEditingCollection(null);
+    }
   };
 
   if (!selectedCollection) {
@@ -196,22 +198,32 @@ const Collections = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
+              {/* Mobile menu button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="md:hidden"
+                onClick={() => setIsSidebarOpen(true)}
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
               <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
                 <BookOpen className="h-6 w-6 text-white" />
               </div>
               <div>
                 <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
-                <p className="text-xs text-slate-600">Your Digital Library</p>
+                <p className="text-xs text-slate-600 hidden sm:block">Your Digital Library</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Button 
                 variant="outline"
+                size="sm"
                 className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
                 onClick={() => setIsAccountModalOpen(true)}
               >
-                <User className="h-4 w-4 mr-2" />
-                Account
+                <User className="h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Account</span>
               </Button>
             </div>
           </div>
@@ -219,27 +231,37 @@ const Collections = () => {
       </header>
 
       <div className="flex">
+        {/* Sidebar - Mobile overlay */}
+        {isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-50 md:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+        
         {/* Sidebar */}
-        <SharedSidebar 
-          collections={collections}
-          selectedCollection={selectedCollection}
-          onSelectCollection={handleCollectionSelect}
-          onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
-          books={books}
-          onBookClick={handleBookClick}
-          booksReadCount={booksReadList.length}
-          onDeleteCollection={handleDeleteCollection}
-        />
+        <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-50 md:z-auto`}>
+          <SharedSidebar 
+            collections={collections}
+            selectedCollection={selectedCollection}
+            onSelectCollection={handleCollectionSelect}
+            onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
+            books={books}
+            onBookClick={handleBookClick}
+            booksReadCount={booksReadList.length}
+            onDeleteCollection={handleDeleteCollection}
+          />
+        </div>
 
         {/* Main Content */}
-        <main className="flex-1 p-6">
-          <div className="mb-8">
+        <main className="flex-1 p-4 md:p-6">
+          <div className="mb-6 md:mb-8">
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center space-x-3">
                 <Link to="/">
                   <Button variant="ghost" size="sm">
                     <ArrowLeft className="h-4 w-4 mr-2" />
-                    Back
+                    <span className="hidden sm:inline">Back</span>
                   </Button>
                 </Link>
                 <div className={`p-2 rounded-xl ${selectedCollection.color}`}>
@@ -250,8 +272,8 @@ const Collections = () => {
                   )}
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-slate-800">{selectedCollection.name}</h1>
-                  <p className="text-xs text-slate-600">{collectionBooks.length} books in collection</p>
+                  <h1 className="text-lg md:text-xl font-bold text-slate-800">{selectedCollection.name}</h1>
+                  <p className="text-xs text-slate-600">{collectionBooks.length} books</p>
                 </div>
               </div>
               {canEdit && (
@@ -261,8 +283,8 @@ const Collections = () => {
                     size="sm"
                     onClick={() => handleEditCollection(selectedCollection.id)}
                   >
-                    <Edit className="h-4 w-4 mr-2" />
-                    Edit
+                    <Edit className="h-4 w-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Edit</span>
                   </Button>
                   <Button 
                     variant="outline" 
@@ -270,17 +292,17 @@ const Collections = () => {
                     onClick={() => handleDeleteCollection(selectedCollection.id)}
                     className="text-red-600 hover:text-red-700 hover:bg-red-50"
                   >
-                    <Trash2 className="h-4 w-4 mr-2" />
-                    Delete
+                    <Trash2 className="h-4 w-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Delete</span>
                   </Button>
                 </div>
               )}
             </div>
 
-            <h2 className="text-2xl font-bold text-slate-800 mb-6">Books in Collection</h2>
+            <h2 className="text-xl md:text-2xl font-bold text-slate-800 mb-6">Books in Collection</h2>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
             {collectionBooks.map(book => (
               <BookCard 
                 key={book.id}
