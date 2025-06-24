@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, User, Menu, ArrowLeft, Library, Heart, TrendingUp, DollarSign, Users, Search } from 'lucide-react';
@@ -32,12 +31,12 @@ const About = () => {
     setSelectedCollection(collection);
     setIsSidebarOpen(false);
     
-    if (collection && typeof collection.id === 'number') {
-      window.location.href = `/collections/${collection.id}`;
-    } else if (collection?.id === 'favorites') {
+    if (collection && String(collection.id) === 'favorites') {
       window.location.href = `/collections/favorites`;
-    } else if (collection?.id === 'books-read') {
+    } else if (collection && String(collection.id) === 'books-read') {
       window.location.href = `/collections/books-read`;
+    } else if (collection && typeof collection.id === 'number') {
+      window.location.href = `/collections/${collection.id}`;
     }
   };
 
