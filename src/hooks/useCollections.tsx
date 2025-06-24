@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 import { Collection } from '../types/entities';
 
@@ -88,7 +87,21 @@ export const useCollections = () => {
   };
 
   const deleteCollection = (collectionId: number | string) => {
-    setCollections(prev => prev.filter(c => c.id !== collectionId));
+    console.log('Deleting collection with ID:', collectionId, 'Type:', typeof collectionId);
+    
+    setCollections(prev => {
+      const filtered = prev.filter(c => {
+        const matches = String(c.id) === String(collectionId);
+        console.log(`Collection ${c.id} (${c.name}) matches ${collectionId}:`, matches);
+        return !matches;
+      });
+      
+      console.log('Collections before deletion:', prev.length);
+      console.log('Collections after deletion:', filtered.length);
+      
+      return filtered;
+    });
+    
     console.log('Deleted collection:', collectionId);
   };
 
