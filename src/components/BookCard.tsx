@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Star, Heart, BookmarkPlus, BookOpen } from 'lucide-react';
+import { Star, Heart, BookmarkPlus, BookOpen, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/entities';
 
@@ -12,6 +12,8 @@ interface BookCardProps {
   onAddToBooksRead: (bookId: number) => void;
   onToggleOwnedForSale?: (bookId: number, price?: number) => void;
   isInBooksRead?: boolean;
+  onRemoveFromCollection?: (bookId: number) => void;
+  showRemoveFromCollection?: boolean;
 }
 
 const BookCard = ({ 
@@ -21,7 +23,9 @@ const BookCard = ({
   onAddToCollection, 
   onAddToBooksRead, 
   onToggleOwnedForSale,
-  isInBooksRead = false 
+  isInBooksRead = false,
+  onRemoveFromCollection,
+  showRemoveFromCollection = false
 }: BookCardProps) => {
   return (
     <div 
@@ -37,8 +41,21 @@ const BookCard = ({
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         
-        {/* Action Buttons - Correct order: 1. Favorites, 2. Books Read, 3. Add to Collection */}
+        {/* Action Buttons */}
         <div className="absolute top-2 right-2 flex flex-col gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          {showRemoveFromCollection && onRemoveFromCollection && (
+            <Button
+              size="sm"
+              variant="outline"
+              className="w-8 h-8 p-0 bg-red-500/80 backdrop-blur-md border-red-400 hover:bg-red-600 text-white"
+              onClick={(e) => {
+                if (e) e.stopPropagation();
+                onRemoveFromCollection(book.id);
+              }}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          )}
           <Button
             size="sm"
             variant="outline"

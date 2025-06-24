@@ -56,10 +56,8 @@ const Collections = () => {
   };
 
   const handleDeleteCollection = (collectionId: number | string) => {
-    if (window.confirm('Are you sure you want to delete this collection? This action cannot be undone.')) {
-      deleteCollection(collectionId);
-      navigate('/');
-    }
+    deleteCollection(collectionId);
+    navigate('/');
   };
 
   const handleCollectionSelect = (collection: Collection | { id: string; name: string; count: number; color: string } | null) => {
