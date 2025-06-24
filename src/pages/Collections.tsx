@@ -56,7 +56,9 @@ const Collections = () => {
   };
 
   const handleDeleteCollection = (collectionId: number | string) => {
+    console.log('Attempting to delete collection:', collectionId);
     deleteCollection(collectionId);
+    console.log('Collection deleted, navigating to home');
     navigate('/');
   };
 
