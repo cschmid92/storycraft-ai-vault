@@ -107,7 +107,20 @@ const Collections = () => {
   };
 
   const handleToggleOwnedForSale = (bookId: number, price?: number) => {
-    toggleOwnedForSale(bookId, price);
+    const book = books.find(b => b.id === bookId);
+    if (book && book.isOwnedForSale && !price) {
+      // If removing from sale, don't require price
+      toggleOwnedForSale(bookId);
+    } else if (book && !book.isOwnedForSale && price) {
+      // If adding to sale, use provided price
+      toggleOwnedForSale(bookId, price);
+    } else if (book && !book.isOwnedForSale) {
+      // If adding to sale without price, use default or prompt
+      toggleOwnedForSale(bookId, 10); // Default price
+    } else {
+      // Toggle current state
+      toggleOwnedForSale(bookId, price);
+    }
   };
 
   const handleRateBook = (bookId: number, rating: number) => {

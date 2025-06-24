@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { X, User, Mail, Settings, Users, Globe } from 'lucide-react';
+import { X, User, Mail, Settings, Users, Globe, MapPin } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -85,6 +85,34 @@ const AccountModal = ({ isOpen, onClose }: AccountModalProps) => {
                       className="w-full px-3 py-2 border border-slate-300 rounded-md resize-none h-24"
                       placeholder="Tell others about yourself..."
                     />
+                  </div>
+                  <div className="border-t pt-4">
+                    <h4 className="text-md font-medium text-slate-800 mb-3 flex items-center gap-2">
+                      <MapPin className="h-4 w-4" />
+                      Address Information
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Street Address</label>
+                        <Input placeholder="123 Main Street" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">City</label>
+                        <Input placeholder="New York" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">State/Province</label>
+                        <Input placeholder="NY" />
+                      </div>
+                      <div>
+                        <label className="block text-sm font-medium text-slate-700 mb-2">ZIP/Postal Code</label>
+                        <Input placeholder="10001" />
+                      </div>
+                      <div className="md:col-span-2">
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Country</label>
+                        <Input placeholder="United States" />
+                      </div>
+                    </div>
                   </div>
                   <Button>Save Changes</Button>
                 </div>
