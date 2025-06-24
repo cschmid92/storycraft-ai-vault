@@ -21,77 +21,79 @@ const SearchResults = () => {
 
   return (
     <SharedLayout>
-      <PageHeader
-        title="Search Results"
-        subtitle={query ? `Results for "${query}"` : 'Search results'}
-        icon={Search}
-        iconGradient="from-blue-600 to-indigo-600"
-      />
+      <div className="flex-1">
+        <PageHeader
+          title="Search Results"
+          subtitle={query ? `Results for "${query}"` : 'Search results'}
+          icon={Search}
+          iconGradient="from-blue-600 to-indigo-600"
+        />
 
-      {/* Main Content */}
-      <main className="max-w-7xl mx-auto p-6">
-        {/* Search and Filters */}
-        <div className="mb-8">
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
-              <Input
-                placeholder="Search books..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 bg-white/80 border-slate-300"
+        {/* Main Content */}
+        <main className="max-w-7xl mx-auto p-6">
+          {/* Search and Filters */}
+          <div className="mb-8">
+            <div className="flex flex-col sm:flex-row gap-4 mb-6">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-slate-400" />
+                <Input
+                  placeholder="Search books..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10 bg-white/80 border-slate-300"
+                />
+              </div>
+              <div className="flex gap-2">
+                <select 
+                  value={filterGenre}
+                  onChange={(e) => setFilterGenre(e.target.value)}
+                  className="px-4 py-2 bg-white/80 border border-slate-300 rounded-lg text-slate-700 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                >
+                  <option value="">All Genres</option>
+                  {genres.map(genre => (
+                    <option key={genre} value={genre}>{genre}</option>
+                  ))}
+                </select>
+                <Link to="/advanced-search">
+                  <Button variant="outline" className="bg-white/80 border-slate-300">
+                    <Filter className="h-4 w-4 mr-2" />
+                    Advanced
+                  </Button>
+                </Link>
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-bold text-slate-800">Search Results</h2>
+              <p className="text-slate-600">
+                {filteredBooks.length} result{filteredBooks.length !== 1 ? 's' : ''} found
+              </p>
+            </div>
+          </div>
+
+          {/* Results Grid */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredBooks.map(book => (
+              <BookCard 
+                key={book.id}
+                book={book}
+                onToggleFavorite={() => {}}
+                onBookClick={() => {}}
+                onAddToCollection={() => {}}
+                onAddToBooksRead={() => {}}
               />
+            ))}
+          </div>
+
+          {filteredBooks.length === 0 && (
+            <div className="text-center py-12">
+              <BookOpen className="h-16 w-16 text-slate-400 mx-auto mb-4 opacity-50" />
+              <h3 className="text-xl font-semibold text-slate-700 mb-2">No results found</h3>
+              <p className="text-slate-500">Try adjusting your search terms or filters</p>
             </div>
-            <div className="flex gap-2">
-              <select 
-                value={filterGenre}
-                onChange={(e) => setFilterGenre(e.target.value)}
-                className="px-4 py-2 bg-white/80 border border-slate-300 rounded-lg text-slate-700 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">All Genres</option>
-                {genres.map(genre => (
-                  <option key={genre} value={genre}>{genre}</option>
-                ))}
-              </select>
-              <Link to="/advanced-search">
-                <Button variant="outline" className="bg-white/80 border-slate-300">
-                  <Filter className="h-4 w-4 mr-2" />
-                  Advanced
-                </Button>
-              </Link>
-            </div>
-          </div>
-
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-2xl font-bold text-slate-800">Search Results</h2>
-            <p className="text-slate-600">
-              {filteredBooks.length} result{filteredBooks.length !== 1 ? 's' : ''} found
-            </p>
-          </div>
-        </div>
-
-        {/* Results Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredBooks.map(book => (
-            <BookCard 
-              key={book.id}
-              book={book}
-              onToggleFavorite={() => {}}
-              onBookClick={() => {}}
-              onAddToCollection={() => {}}
-              onAddToBooksRead={() => {}}
-            />
-          ))}
-        </div>
-
-        {filteredBooks.length === 0 && (
-          <div className="text-center py-12">
-            <BookOpen className="h-16 w-16 text-slate-400 mx-auto mb-4 opacity-50" />
-            <h3 className="text-xl font-semibold text-slate-700 mb-2">No results found</h3>
-            <p className="text-slate-500">Try adjusting your search terms or filters</p>
-          </div>
-        )}
-      </main>
+          )}
+        </main>
+      </div>
     </SharedLayout>
   );
 };
