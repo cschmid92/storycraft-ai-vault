@@ -13,7 +13,7 @@ import PopularReads from '../components/PopularReads';
 import Recommendations from '../components/Recommendations';
 import PriceInputModal from '../components/PriceInputModal';
 import { Button } from "@/components/ui/button";
-import { Book } from '../types/entities';
+import { Book, BookCondition } from '../types/entities';
 import { Plus, Filter, Heart, Star, BookmarkPlus, Quote } from 'lucide-react';
 import { useCollections, Collection } from '../hooks/useCollections';
 
@@ -189,7 +189,12 @@ const Index = () => {
   const handleSetSalePrice = (price: number, condition: string) => {
     if (selectedBookForSale) {
       setBooks(books.map(book => 
-        book.id === selectedBookForSale ? { ...book, isOwnedForSale: true, salePrice: price, condition } : book
+        book.id === selectedBookForSale ? { 
+          ...book, 
+          isOwnedForSale: true, 
+          salePrice: price, 
+          condition: condition as BookCondition 
+        } : book
       ));
       setSelectedBookForSale(null);
     }

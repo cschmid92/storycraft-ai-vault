@@ -51,7 +51,7 @@ export class BookService {
   }
 
   static getBooksByIds(bookIds: number[]): Book[] {
-    return mockBooks.filter(book => bookIds.includes(book.id as number));
+    return mockBooks.filter(book => bookIds.includes(book.id));
   }
 
   static getFavoriteBooks(): Book[] {

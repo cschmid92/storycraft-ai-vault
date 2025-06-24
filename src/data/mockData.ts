@@ -226,6 +226,9 @@ export const mockUsedBooksForSale: Book[] = [
   }
 ];
 
+// Export mockUsedBooks as an alias for consistency
+export const mockUsedBooks = mockUsedBooksForSale;
+
 export const mockCollections: Collection[] = [
   {
     id: 1,
