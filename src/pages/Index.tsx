@@ -1,102 +1,261 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { BookOpen, User, Search as SearchIcon, Menu } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Menu, User, Library } from 'lucide-react';
-import { Button } from "@/components/ui/button";
+import BookCard from '../components/BookCard';
 import CollectionModal from '../components/CollectionModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import SearchBar from '../components/SearchBar';
-import UnifiedSidebar from '../components/UnifiedSidebar';
+import SharedSidebar from '../components/SharedSidebar';
 import BookDetailModal from '../components/BookDetailModal';
 import AccountModal from '../components/AccountModal';
 import PopularReads from '../components/PopularReads';
 import Recommendations from '../components/Recommendations';
+import PriceInputModal from '../components/PriceInputModal';
+import { Button } from "@/components/ui/button";
 import { Book } from '../types/Book';
+import { Plus, Filter, Heart, Star, BookmarkPlus, Quote } from 'lucide-react';
 import { useCollections, Collection } from '../hooks/useCollections';
-import { DataService } from '../services/mockDataService';
+
+// Updated mock data with detailed book information
+const mockBooks: Book[] = [
+  {
+    id: 1,
+    title: "The Great Gatsby",
+    author: "F. Scott Fitzgerald",
+    cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop",
+    rating: 4.2,
+    genre: "Classic Literature",
+    year: 1925,
+    description: "A classic American novel set in the Jazz Age, exploring themes of wealth, love, and the American Dream.",
+    isFavorite: false,
+    isOwnedForSale: false,
+    isbn10: "0743273567",
+    isbn13: "978-0743273565",
+    publisher: "Scribner",
+    publicationDate: "April 10, 2004",
+    pages: 180,
+    language: "English",
+    binding: "Paperback",
+    listPrice: 15.95,
+    synopsis: "The Great Gatsby is a 1925 novel by American writer F. Scott Fitzgerald. Set in the Jazz Age on prosperous Long Island and in New York City during the summer of 1922, the novel follows the tragic story of Jay Gatsby and his pursuit of the American Dream.",
+    subject: "American Literature, Jazz Age"
+  },
+  {
+    id: 2,
+    title: "To Kill a Mockingbird",
+    author: "Harper Lee",
+    cover: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=450&fit=crop",
+    rating: 4.5,
+    genre: "Fiction",
+    year: 1960,
+    description: "A powerful story of racial injustice and childhood innocence in the American South.",
+    isFavorite: true,
+    isOwnedForSale: false,
+    isbn10: "0061120081",
+    isbn13: "978-0061120084",
+    publisher: "Harper Perennial Modern Classics",
+    pages: 376,
+    language: "English"
+  },
+  {
+    id: 3,
+    title: "1984",
+    author: "George Orwell",
+    cover: "https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=300&h=450&fit=crop",
+    rating: 4.4,
+    genre: "Dystopian Fiction",
+    year: 1949,
+    description: "A dystopian social science fiction novel about totalitarian control and surveillance.",
+    isFavorite: false,
+    isOwnedForSale: true,
+    isbn10: "0452284236",
+    isbn13: "978-0452284234",
+    publisher: "Plume",
+    pages: 328,
+    language: "English"
+  },
+  {
+    id: 4,
+    title: "Pride and Prejudice",
+    author: "Jane Austen",
+    cover: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=300&h=450&fit=crop",
+    rating: 4.3,
+    genre: "Romance",
+    year: 1813,
+    description: "A romantic novel dealing with issues of marriage, money, and social status in 19th century England.",
+    isFavorite: true,
+    isOwnedForSale: false,
+    isbn10: "0141439513",
+    isbn13: "978-0141439518",
+    publisher: "Penguin Classics",
+    pages: 480,
+    language: "English"
+  },
+  {
+    id: 5,
+    title: "The Catcher in the Rye",
+    author: "J.D. Salinger",
+    cover: "https://images.unsplash.com/photo-1521123845560-5240e429f392?w=300&h=450&fit=crop",
+    rating: 3.8,
+    genre: "Coming of Age",
+    year: 1951,
+    description: "A controversial novel about teenage rebellion and alienation in post-war America.",
+    isFavorite: false,
+    isOwnedForSale: false,
+    isbn10: "0316769177",
+    isbn13: "978-0316769174",
+    publisher: "Little, Brown and Company",
+    pages: 234,
+    language: "English"
+  },
+  {
+    id: 6,
+    title: "Harry Potter and the Philosopher's Stone",
+    author: "J.K. Rowling",
+    cover: "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=300&h=450&fit=crop",
+    rating: 4.7,
+    genre: "Fantasy",
+    year: 1997,
+    description: "The first book in the beloved Harry Potter series about a young wizard's adventures.",
+    isFavorite: true,
+    isOwnedForSale: false,
+    isbn10: "0439708184",
+    isbn13: "978-0439708180",
+    publisher: "Scholastic",
+    pages: 309,
+    language: "English"
+  }
+];
 
 const Index = () => {
-  const { collections, addCollection, addBookToCollection } = useCollections();
-  const navigate = useNavigate();
-  
-  // Use centralized data service instead of inline mock data
-  const [books] = useState<Book[]>(DataService.getBooks());
-  const [booksReadList] = useState<number[]>([3]);
-  
+  const { collections, addCollection, deleteCollection, addBookToCollection } = useCollections();
+  const [books, setBooks] = useState(mockBooks);
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
-  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
-  const [isBookDetailModalOpen, setIsBookDetailModalOpen] = useState(false);
-  const [isCollectionSelectionModalOpen, setIsCollectionSelectionModalOpen] = useState(false);
+  const [isCollectionSelectionOpen, setIsCollectionSelectionOpen] = useState(false);
+  const [selectedBookForCollection, setSelectedBookForCollection] = useState<number | null>(null);
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-  const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
+  const [isBookDetailOpen, setIsBookDetailOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterGenre, setFilterGenre] = useState("");
+  const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
+  const [selectedBookForSale, setSelectedBookForSale] = useState<number | null>(null);
+  const [booksReadList, setBooksReadList] = useState<number[]>([1, 2, 3, 4, 5]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
+  const collectionSectionRef = useRef<HTMLDivElement>(null);
+  const navigate = useNavigate();
 
-  // Get popular books (highest rated)
-  const popularBooks = books
-    .filter(book => book.rating >= 4.0)
-    .sort((a, b) => b.rating - a.rating)
-    .slice(0, 10);
+  // Books read collection count
+  const booksReadCount = booksReadList.length;
 
-  // Get recommendation books (favorites or highly rated)
-  const recommendedBooks = books
-    .filter(book => book.isFavorite || book.rating >= 4.2)
-    .slice(0, 8);
+  // Total collections including default ones (Favorites and Books read)
+  const totalCollections = collections.length + 2;
 
-  const handleCollectionSelect = (collection: Collection | null) => {
-    if (collection && typeof collection.id !== 'undefined') {
-      navigate(`/collections/${collection.id}`);
-    }
-    setSelectedCollection(collection);
-    setIsSidebarOpen(false);
-  };
+  const filteredBooks = books.filter(book => {
+    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         book.author.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesGenre = !filterGenre || book.genre === filterGenre;
+    return matchesSearch && matchesGenre;
+  });
 
-  const handleBookClick = (book: Book) => {
-    setSelectedBook(book);
-    setIsBookDetailModalOpen(true);
-  };
+  const genres = [...new Set(books.map(book => book.genre))];
 
   const handleCreateCollection = (name: string, color: string) => {
     addCollection(name, color);
   };
 
-  const handleAddToCollection = (book: Book) => {
-    setSelectedBookForCollection(book);
-    setIsCollectionSelectionModalOpen(true);
+  const toggleFavorite = (bookId: number) => {
+    setBooks(books.map(book => 
+      book.id === bookId ? { ...book, isFavorite: !book.isFavorite } : book
+    ));
+  };
+
+  const toggleOwnedForSale = (bookId: number, price?: number) => {
+    const book = books.find(b => b.id === bookId);
+    if (!book) return;
+
+    if (!book.isOwnedForSale) {
+      setSelectedBookForSale(bookId);
+      setIsPriceModalOpen(true);
+    } else {
+      setBooks(books.map(book => 
+        book.id === bookId ? { ...book, isOwnedForSale: false, salePrice: undefined } : book
+      ));
+    }
+  };
+
+  const handleSetSalePrice = (price: number, condition: string) => {
+    if (selectedBookForSale) {
+      setBooks(books.map(book => 
+        book.id === selectedBookForSale ? { ...book, isOwnedForSale: true, salePrice: price, condition } : book
+      ));
+      setSelectedBookForSale(null);
+    }
+  };
+
+  const handleBookClick = (book: Book) => {
+    setSelectedBook(book);
+    setIsBookDetailOpen(true);
+  };
+
+  const handleAddToCollection = (bookId: number) => {
+    setSelectedBookForCollection(bookId);
+    setIsCollectionSelectionOpen(true);
+  };
+
+  const handleCollectionSelect = (collection: Collection | null) => {
+    setSelectedCollection(collection);
+    if (collection?.id === 'favorites') {
+      navigate('/collections/favorites');
+    } else if (collection?.id === 'books-read') {
+      navigate('/collections/books-read');
+    } else if (collection && typeof collection.id === 'number') {
+      navigate(`/collections/${collection.id}`);
+    }
+    setIsSidebarOpen(false); // Close sidebar on mobile after selection
   };
 
   const handleCollectionSelection = (collection: Collection) => {
     if (collection && selectedBookForCollection) {
-      addBookToCollection(collection.id, selectedBookForCollection.id);
-      console.log(`Added "${selectedBookForCollection.title}" to collection "${collection.name}"`);
+      addBookToCollection(collection.id, selectedBookForCollection);
+      console.log(`Added "${books.find(b => b.id === selectedBookForCollection)?.title}" to collection "${collection.name}"`);
     }
     setSelectedBookForCollection(null);
-    setIsCollectionSelectionModalOpen(false);
+    setIsCollectionSelectionOpen(false);
   };
 
-  const handleSearch = (query: string) => {
-    if (query.trim()) {
-      navigate(`/search?q=${encodeURIComponent(query)}`);
-    }
-  };
-
-  const handleToggleFavorite = (bookId: number) => {
-    console.log('Toggle favorite for book:', bookId);
-  };
-
-  const handleAddToCollectionById = (bookId: number) => {
-    const book = books.find(b => b.id === bookId);
-    if (book) {
-      handleAddToCollection(book);
-    }
+  const handleRateBook = (bookId: number, rating: number) => {
+    setBooks(books.map(book => 
+      book.id === bookId ? { ...book, userRating: rating } : book
+    ));
   };
 
   const handleAddToBooksRead = (bookId: number) => {
-    console.log('Add to books read:', bookId);
+    console.log(`Adding/removing book ${bookId} to/from Books read collection`);
+    setBooksReadList(prev => {
+      if (prev.includes(bookId)) {
+        console.log(`Removing book ${bookId} from Books read`);
+        return prev.filter(id => id !== bookId);
+      } else {
+        console.log(`Adding book ${bookId} to Books read`);
+        return [...prev, bookId];
+      }
+    });
   };
 
-  const isInBooksRead = (bookId: number) => {
-    return booksReadList.includes(bookId);
+  const selectedBookTitle = selectedBookForCollection 
+    ? books.find(book => book.id === selectedBookForCollection)?.title || ""
+    : "";
+
+  const selectedBookForSaleTitle = selectedBookForSale 
+    ? books.find(book => book.id === selectedBookForSale)?.title || ""
+    : "";
+
+  const handleSearch = () => {
+    if (searchTerm.trim()) {
+      navigate(`/search?q=${encodeURIComponent(searchTerm)}`);
+    }
   };
 
   return (
@@ -116,7 +275,7 @@ const Index = () => {
                 <Menu className="h-5 w-5" />
               </Button>
               <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
-                <Library className="h-6 w-6 text-white" />
+                <BookOpen className="h-6 w-6 text-white" />
               </div>
               <div>
                 <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
@@ -149,95 +308,161 @@ const Index = () => {
         
         {/* Sidebar */}
         <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-50 md:z-auto`}>
-          <UnifiedSidebar 
+          <SharedSidebar 
             collections={collections}
             selectedCollection={selectedCollection}
             onSelectCollection={handleCollectionSelect}
             onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
             books={books}
             onBookClick={handleBookClick}
-            booksReadCount={booksReadList.length}
+            booksReadCount={booksReadCount}
+            onDeleteCollection={deleteCollection}
           />
         </div>
 
         {/* Main Content */}
         <main className="flex-1 p-4 md:p-6">
-          <div className="max-w-7xl mx-auto space-y-6 md:space-y-8">
-            {/* Hero Section */}
-            <div className="text-center py-8 md:py-12">
-              <h1 className="text-3xl md:text-5xl font-bold text-slate-800 mb-4">
-                Welcome to <span className="text-blue-600">Bacondo</span>
-              </h1>
-              <p className="text-lg md:text-xl text-slate-600 mb-8 max-w-2xl mx-auto">
-                Your personal digital library to discover, organize, and share amazing books
-              </p>
-              
-              {/* Search Bar */}
-              <div className="max-w-2xl mx-auto">
-                <SearchBar 
-                  searchTerm={searchTerm}
-                  onSearchChange={setSearchTerm}
-                />
+          {/* Search and Filters */}
+          <div className="mb-6 md:mb-8">
+            <div className="flex flex-col gap-4 mb-6">
+              <div className="flex gap-2">
+                <div className="flex-1">
+                  <SearchBar 
+                    searchTerm={searchTerm}
+                    onSearchChange={setSearchTerm}
+                  />
+                </div>
+                <Button 
+                  onClick={handleSearch}
+                  className="bg-blue-600 hover:bg-blue-700"
+                  size="sm"
+                >
+                  <SearchIcon className="h-4 w-4" />
+                </Button>
               </div>
-              
-              {/* Quick Actions */}
-              <div className="flex flex-wrap justify-center gap-4 mt-8">
+              <div className="flex gap-2">
+                <select 
+                  value={filterGenre}
+                  onChange={(e) => setFilterGenre(e.target.value)}
+                  className="flex-1 px-4 py-2 bg-white/80 border border-slate-300 rounded-lg text-slate-700 backdrop-blur-md focus:outline-none focus:ring-2 focus:ring-blue-500 text-sm"
+                >
+                  <option value="">All Genres</option>
+                  {genres.map(genre => (
+                    <option key={genre} value={genre}>{genre}</option>
+                  ))}
+                </select>
                 <Link to="/advanced-search">
-                  <Button variant="outline" className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100">
-                    Advanced Search
-                  </Button>
-                </Link>
-                <Link to="/buy-used-books">
-                  <Button variant="outline" className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100">
-                    Buy Used Books
+                  <Button variant="outline" size="sm" className="bg-white/80 border-slate-300">
+                    <Filter className="h-4 w-4 mr-2" />
+                    <span className="hidden sm:inline">Advanced</span>
                   </Button>
                 </Link>
               </div>
             </div>
 
-            {/* Popular Reads Section */}
-            <PopularReads 
-              books={popularBooks}
-              onBookClick={handleBookClick}
-              onToggleFavorite={handleToggleFavorite}
-              onAddToCollection={handleAddToCollectionById}
-              onAddToBooksRead={handleAddToBooksRead}
-              isInBooksRead={isInBooksRead}
-            />
-
-            {/* Recommendations Section */}
-            <Recommendations 
-              books={recommendedBooks}
-              onBookClick={handleBookClick}
-              onAddToCollection={handleAddToCollection}
-            />
+            {/* Stats */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 md:mb-8">
+              <div className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-slate-600 text-sm">Favorites</p>
+                    <p className="text-2xl font-bold text-slate-800">{books.filter(b => b.isFavorite).length}</p>
+                  </div>
+                  <Heart className="h-8 w-8 text-red-500" />
+                </div>
+              </div>
+              <div className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-slate-600 text-sm">Total books read</p>
+                    <p className="text-2xl font-bold text-slate-800">{booksReadCount}</p>
+                  </div>
+                  <BookOpen className="h-8 w-8 text-blue-500" />
+                </div>
+              </div>
+              <div className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-slate-600 text-sm">Collections</p>
+                    <p className="text-2xl font-bold text-slate-800">{totalCollections}</p>
+                  </div>
+                  <BookmarkPlus className="h-8 w-8 text-indigo-500" />
+                </div>
+              </div>
+            </div>
           </div>
+
+          {/* Quote of the Day */}
+          <div className="mb-6 md:mb-8">
+            <div className="bg-gradient-to-r from-indigo-50 to-purple-50 rounded-xl p-4 md:p-6 border border-indigo-200">
+              <div className="flex items-start gap-3">
+                <Quote className="h-6 w-6 text-indigo-600 mt-1 flex-shrink-0" />
+                <div>
+                  <h3 className="text-lg font-semibold text-slate-800 mb-2">Quote of the Day</h3>
+                  <blockquote className="text-slate-700 italic text-base md:text-lg leading-relaxed mb-2">
+                    "A reader lives a thousand lives before he dies. The man who never reads lives only one."
+                  </blockquote>
+                  <cite className="text-slate-600 text-sm">— George R.R. Martin</cite>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Popular Reads */}
+          <PopularReads 
+            books={books} 
+            onBookClick={handleBookClick}
+            onToggleFavorite={toggleFavorite}
+            onAddToCollection={handleAddToCollection}
+            onAddToBooksRead={handleAddToBooksRead}
+            isInBooksRead={(bookId) => booksReadList.includes(bookId)}
+          />
+
+          {/* Recommendations */}
+          <Recommendations 
+            books={books} 
+            onBookClick={handleBookClick}
+            onToggleFavorite={toggleFavorite}
+            onAddToCollection={handleAddToCollection}
+            onAddToBooksRead={handleAddToBooksRead}
+            isInBooksRead={(bookId) => booksReadList.includes(bookId)}
+          />
         </main>
       </div>
 
-      {/* Modals */}
+      {/* Modals with proper z-index ordering */}
       <CollectionModal 
         isOpen={isCollectionModalOpen}
         onClose={() => setIsCollectionModalOpen(false)}
         onCreateCollection={handleCreateCollection}
       />
-
+      
+      <BookDetailModal 
+        book={selectedBook}
+        isOpen={isBookDetailOpen}
+        onClose={() => setIsBookDetailOpen(false)}
+        onToggleFavorite={toggleFavorite}
+        onAddToCollection={handleAddToCollection}
+        onToggleOwnedForSale={toggleOwnedForSale}
+        onRateBook={handleRateBook}
+      />
+      
       <CollectionSelectionModal
-        isOpen={isCollectionSelectionModalOpen}
-        onClose={() => setIsCollectionSelectionModalOpen(false)}
+        isOpen={isCollectionSelectionOpen}
+        onClose={() => setIsCollectionSelectionOpen(false)}
         collections={collections}
         onSelectCollection={handleCollectionSelection}
-        bookTitle={selectedBookForCollection?.title || ""}
+        bookTitle={selectedBookTitle}
       />
-
-      <BookDetailModal
-        book={selectedBook}
-        isOpen={isBookDetailModalOpen}
-        onClose={() => setIsBookDetailModalOpen(false)}
-        onToggleFavorite={() => {}}
-        onAddToCollection={() => selectedBook && handleAddToCollection(selectedBook)}
-        onToggleOwnedForSale={() => {}}
-        onRateBook={() => {}}
+      
+      <PriceInputModal 
+        isOpen={isPriceModalOpen}
+        onClose={() => {
+          setIsPriceModalOpen(false);
+          setSelectedBookForSale(null);
+        }}
+        onConfirm={handleSetSalePrice}
+        bookTitle={selectedBookForSaleTitle}
       />
       
       <AccountModal 

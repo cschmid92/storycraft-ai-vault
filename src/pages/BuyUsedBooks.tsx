@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, User, Menu, Library } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/Book';
-import UnifiedSidebar from '../components/UnifiedSidebar';
+import SharedSidebar from '../components/SharedSidebar';
 import CollectionModal from '../components/CollectionModal';
 import AccountModal from '../components/AccountModal';
 import BookDetailModal from '../components/BookDetailModal';
@@ -11,10 +11,9 @@ import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import BuyUsedBooksFilters from '../components/BuyUsedBooksFilters';
 import UsedBookGrid from '../components/UsedBookGrid';
 import { useCollections, Collection } from '../hooks/useCollections';
-import { DataService } from '../services/mockDataService';
 
-// Extended mock data for used books marketplace
-const mockUsedBooksForSale: Book[] = [
+// Mock data - in a real app this would come from props or context
+const mockBooksForSale: Book[] = [
   {
     id: 3,
     title: "1984",
@@ -80,15 +79,10 @@ const mockUsedBooksForSale: Book[] = [
   }
 ];
 
-const BuyUsedBooks = () => {
+const BooksForSale = () => {
   const { collections, addCollection, addBookToCollection } = useCollections();
   const navigate = useNavigate();
-  
-  // Use centralized data service for main books, but keep marketplace-specific data local
-  const [books] = useState<Book[]>(DataService.getBooks());
-  const [usedBooks] = useState(mockUsedBooksForSale);
-  const [booksReadList] = useState<number[]>([3]);
-  
+  const [books] = useState(mockBooksForSale);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('');
   const [maxDistance, setMaxDistance] = useState<number | null>(null);
@@ -98,13 +92,14 @@ const BuyUsedBooks = () => {
   const [isCollectionSelectionModalOpen, setIsCollectionSelectionModalOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
+  const [booksReadList] = useState<number[]>([3]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Get unique genres for filtering
-  const genres = Array.from(new Set(usedBooks.map(book => book.genre)));
+  const genres = Array.from(new Set(books.map(book => book.genre)));
 
   // Filter books based on search term, genre, and distance
-  const filteredBooks = usedBooks.filter(book => {
+  const filteredBooks = books.filter(book => {
     const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          book.genre.toLowerCase().includes(searchTerm.toLowerCase());
@@ -196,7 +191,7 @@ const BuyUsedBooks = () => {
         
         {/* Sidebar */}
         <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-50 md:z-auto`}>
-          <UnifiedSidebar 
+          <SharedSidebar 
             collections={collections}
             selectedCollection={null}
             onSelectCollection={handleCollectionSelect}
@@ -277,4 +272,4 @@ const BuyUsedBooks = () => {
   );
 };
 
-export default BuyUsedBooks;
+export default BooksForSale;

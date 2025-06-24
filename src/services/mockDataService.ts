@@ -1,7 +1,7 @@
 
 import { Book } from '../types/Book';
 
-// Mock Books Data - Single source of truth
+// Mock Books Data
 export const mockBooks: Book[] = [
   {
     id: 1,
@@ -98,24 +98,5 @@ export class SearchService {
              matchesPublisher && matchesYearFrom && matchesYearTo && 
              matchesLanguage && matchesRating;
     });
-  }
-}
-
-// Data Service - centralized data management
-export class DataService {
-  static getBooks(): Book[] {
-    return mockBooks;
-  }
-
-  static getBook(id: number): Book | undefined {
-    return mockBooks.find(book => book.id === id);
-  }
-
-  static getFavoriteBooks(): Book[] {
-    return mockBooks.filter(book => book.isFavorite);
-  }
-
-  static getBooksForSale(): Book[] {
-    return mockBooks.filter(book => book.isOwnedForSale && book.salePrice);
   }
 }

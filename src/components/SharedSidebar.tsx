@@ -1,13 +1,13 @@
 
 import React, { useState } from 'react';
-import { Library, Heart, BookOpen, Plus, DollarSign, ChevronDown, ChevronRight, Edit, Trash2, ShoppingCart, Info, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { Library, Heart, BookOpen, Plus, DollarSign, ChevronDown, ChevronRight, ShoppingCart, Info, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import BooksForSale from './BooksForSale';
 import { Book } from '../types/Book';
 import { Collection, collectionBookMappings } from '../hooks/useCollections';
 
-interface UnifiedSidebarProps {
+interface SharedSidebarProps {
   collections: Collection[];
   selectedCollection: Collection | null;
   onSelectCollection: (collection: Collection | null) => void;
@@ -16,10 +16,9 @@ interface UnifiedSidebarProps {
   onBookClick: (book: Book) => void;
   booksReadCount: number;
   onDeleteCollection?: (collectionId: number | string) => void;
-  showEditOptions?: boolean;
 }
 
-const UnifiedSidebar = ({ 
+const SharedSidebar = ({ 
   collections, 
   selectedCollection, 
   onSelectCollection, 
@@ -27,23 +26,10 @@ const UnifiedSidebar = ({
   books,
   onBookClick,
   booksReadCount,
-  onDeleteCollection,
-  showEditOptions = false
-}: UnifiedSidebarProps) => {
+  onDeleteCollection
+}: SharedSidebarProps) => {
   const [showBooksForSale, setShowBooksForSale] = useState(false);
   const booksForSaleCount = books.filter(book => book.isOwnedForSale && book.salePrice).length;
-
-  const handleEditCollection = (e: React.MouseEvent, collectionId: number | string) => {
-    e.stopPropagation();
-    console.log('Edit collection:', collectionId);
-  };
-
-  const handleDeleteCollection = (e: React.MouseEvent, collectionId: number | string) => {
-    e.stopPropagation();
-    if (onDeleteCollection) {
-      onDeleteCollection(collectionId);
-    }
-  };
 
   // Calculate actual counts for collections
   const getCollectionCount = (collectionId: number | string) => {
@@ -129,66 +115,36 @@ const UnifiedSidebar = ({
           <div className="space-y-1">
             {/* Standard Collections */}
             {standardCollections.map((collection) => (
-              <div
+              <button
                 key={collection.id}
-                className={`group relative flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                onClick={() => onSelectCollection(collection as any)}
+                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
                   selectedCollection?.id === collection.id 
                     ? 'bg-blue-100 text-blue-800 border border-blue-200' 
                     : 'text-slate-600 hover:bg-slate-100'
                 }`}
               >
-                <button
-                  onClick={() => onSelectCollection(collection as any)}
-                  className="flex items-center space-x-3 flex-1 text-left"
-                >
-                  <div className={`w-3 h-3 rounded-full ${collection.color}`} />
-                  <span className="text-sm flex-1 truncate">{collection.name}</span>
-                  <span className="text-xs text-slate-500">{collection.count}</span>
-                </button>
-              </div>
+                <div className={`w-3 h-3 rounded-full ${collection.color}`} />
+                <span className="text-sm flex-1 truncate text-left">{collection.name}</span>
+                <span className="text-xs text-slate-500">{collection.count}</span>
+              </button>
             ))}
 
             {/* User Collections */}
             {collections.map((collection) => (
-              <div
+              <button
                 key={collection.id}
-                className={`group relative flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                onClick={() => onSelectCollection(collection)}
+                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
                   selectedCollection?.id === collection.id 
                     ? 'bg-blue-100 text-blue-800 border border-blue-200' 
                     : 'text-slate-600 hover:bg-slate-100'
                 }`}
               >
-                <button
-                  onClick={() => onSelectCollection(collection)}
-                  className="flex items-center space-x-3 flex-1 text-left"
-                >
-                  <div className={`w-3 h-3 rounded-full ${collection.color}`} />
-                  <span className="text-sm flex-1 truncate">{collection.name}</span>
-                  <span className="text-xs text-slate-500">{getCollectionCount(collection.id)}</span>
-                </button>
-                
-                {/* Edit/Delete buttons - only show when explicitly enabled */}
-                {showEditOptions && (
-                  <div className="absolute right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 w-6 p-0 hover:bg-slate-200"
-                      onClick={(e) => handleEditCollection(e, collection.id)}
-                    >
-                      <Edit className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-6 w-6 p-0 hover:bg-red-100 hover:text-red-600"
-                      onClick={(e) => handleDeleteCollection(e, collection.id)}
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                  </div>
-                )}
-              </div>
+                <div className={`w-3 h-3 rounded-full ${collection.color}`} />
+                <span className="text-sm flex-1 truncate text-left">{collection.name}</span>
+                <span className="text-xs text-slate-500">{getCollectionCount(collection.id)}</span>
+              </button>
             ))}
             
             {/* New Collection Button */}
@@ -204,7 +160,7 @@ const UnifiedSidebar = ({
         </div>
       </div>
 
-      {/* Social Media Icons */}
+      {/* Social Media Icons - Fully visible with proper spacing */}
       <div className="border-t border-slate-200 pt-4 mt-4">
         <h4 className="text-xs font-semibold text-slate-700 uppercase tracking-wide mb-3">
           Follow Us
@@ -228,4 +184,4 @@ const UnifiedSidebar = ({
   );
 };
 
-export default UnifiedSidebar;
+export default SharedSidebar;
