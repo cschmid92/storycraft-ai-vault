@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ShoppingCart, Star, DollarSign, BookOpen, User, Menu, Library } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Star, DollarSign, BookOpen, User, Menu, Library, MapPin } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/Book';
 import SharedSidebar from '../components/SharedSidebar';
@@ -31,7 +30,51 @@ const mockBooksForSale: Book[] = [
     isbn13: "978-0452284234",
     publisher: "Plume",
     pages: 328,
-    language: "English"
+    language: "English",
+    distance: 2.3,
+    location: "Downtown"
+  },
+  {
+    id: 4,
+    title: "Pride and Prejudice",
+    author: "Jane Austen",
+    cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop",
+    rating: 4.3,
+    genre: "Classic Literature",
+    year: 1813,
+    description: "A romantic novel of manners set in Georgian England.",
+    isFavorite: false,
+    isOwnedForSale: true,
+    salePrice: 15.99,
+    condition: "Excellent",
+    isbn10: "0141439513",
+    isbn13: "978-0141439518",
+    publisher: "Penguin Classics",
+    pages: 432,
+    language: "English",
+    distance: 5.7,
+    location: "Uptown"
+  },
+  {
+    id: 5,
+    title: "The Great Gatsby",
+    author: "F. Scott Fitzgerald",
+    cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop",
+    rating: 4.2,
+    genre: "Classic Literature",
+    year: 1925,
+    description: "A classic American novel set in the Jazz Age, exploring themes of wealth, love, and the American Dream.",
+    isFavorite: false,
+    isOwnedForSale: true,
+    salePrice: 10.99,
+    condition: "Fair",
+    isbn10: "0743273567",
+    isbn13: "978-0743273565",
+    publisher: "Scribner",
+    pages: 180,
+    language: "English",
+    distance: 1.2,
+    location: "Midtown"
   }
 ];
 
@@ -40,6 +83,8 @@ const BooksForSale = () => {
   const navigate = useNavigate();
   const [books] = useState(mockBooksForSale);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedGenre, setSelectedGenre] = useState('');
+  const [maxDistance, setMaxDistance] = useState<number | null>(null);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isBookDetailModalOpen, setIsBookDetailModalOpen] = useState(false);
@@ -49,12 +94,21 @@ const BooksForSale = () => {
   const [booksReadList] = useState<number[]>([3]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  // Filter books based on search term
-  const filteredBooks = books.filter(book => 
-    book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    book.genre.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // Get unique genres for filtering
+  const genres = Array.from(new Set(books.map(book => book.genre)));
+
+  // Filter books based on search term, genre, and distance
+  const filteredBooks = books.filter(book => {
+    const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         book.genre.toLowerCase().includes(searchTerm.toLowerCase());
+    
+    const matchesGenre = !selectedGenre || book.genre === selectedGenre;
+    
+    const matchesDistance = !maxDistance || (book.distance && book.distance <= maxDistance);
+    
+    return matchesSearch && matchesGenre && matchesDistance;
+  });
 
   const handleCollectionSelect = (collection: any) => {
     if (collection && typeof collection.id !== 'undefined') {
@@ -165,12 +219,39 @@ const BooksForSale = () => {
               <h2 className="text-2xl font-bold text-slate-800 ml-2 inline-block">Buy Used Books</h2>
             </div>
 
-            {/* Search Bar */}
-            <div className="mb-6">
+            {/* Search and Filters */}
+            <div className="mb-6 space-y-4">
               <SearchBar 
                 searchTerm={searchTerm}
                 onSearchChange={setSearchTerm}
               />
+              
+              <div className="flex flex-wrap gap-4">
+                {/* Genre Filter */}
+                <div className="flex-1 min-w-48">
+                  <select
+                    value={selectedGenre}
+                    onChange={(e) => setSelectedGenre(e.target.value)}
+                    className="w-full px-3 py-2 bg-white/80 border border-slate-300 rounded-md text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  >
+                    <option value="">All Genres</option>
+                    {genres.map(genre => (
+                      <option key={genre} value={genre}>{genre}</option>
+                    ))}
+                  </select>
+                </div>
+
+                {/* Distance Filter */}
+                <div className="flex-1 min-w-48">
+                  <input
+                    type="number"
+                    placeholder="Max distance (miles)"
+                    value={maxDistance || ''}
+                    onChange={(e) => setMaxDistance(e.target.value ? Number(e.target.value) : null)}
+                    className="w-full px-3 py-2 bg-white/80 border border-slate-300 rounded-md text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+              </div>
             </div>
 
             <div className="mb-8">
@@ -190,9 +271,9 @@ const BooksForSale = () => {
                       alt={book.title}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
-                      <DollarSign className="h-3 w-3" />
-                      ${book.salePrice}
+                    <div className="absolute top-2 left-2 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
+                      <MapPin className="h-3 w-3" />
+                      {book.distance} mi
                     </div>
                     {book.condition && (
                       <div className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">
@@ -237,7 +318,7 @@ const BooksForSale = () => {
               <div className="text-center py-12">
                 <DollarSign className="h-16 w-16 text-slate-400 mx-auto mb-4 opacity-50" />
                 <h3 className="text-xl font-semibold text-slate-700 mb-2">No books found</h3>
-                <p className="text-slate-500">Try adjusting your search terms</p>
+                <p className="text-slate-500">Try adjusting your search terms or filters</p>
               </div>
             )}
           </div>

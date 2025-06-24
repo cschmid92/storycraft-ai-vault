@@ -23,4 +23,6 @@ export interface Book {
   synopsis?: string;
   subject?: string;
   condition?: string;
+  distance?: number;
+  location?: string;
 }
