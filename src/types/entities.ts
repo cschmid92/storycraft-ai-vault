@@ -1,7 +1,7 @@
 
 // Base entity interface
 export interface BaseEntity {
-  id: number | string;
+  id: number;
   createdAt?: Date;
   updatedAt?: Date;
 }
@@ -55,7 +55,7 @@ export interface User extends BaseEntity {
 }
 
 // Supporting types
-export type BookCondition = 'New' | 'Like New' | 'Very Good' | 'Good' | 'Fair' | 'Poor';
+export type BookCondition = 'New' | 'Like New' | 'Very Good' | 'Good' | 'Fair' | 'Poor' | 'Excellent';
 
 export interface UserPreferences {
   favoriteGenres: string[];

@@ -1,5 +1,5 @@
 
-import { Book } from '../types/entities';
+import { Book, Collection } from '../types/entities';
 
 export const mockBooks: Book[] = [
   {
@@ -11,13 +11,15 @@ export const mockBooks: Book[] = [
     genre: "Classic Literature",
     year: 1925,
     description: "A classic American novel set in the Jazz Age, exploring themes of wealth, love, and the American Dream.",
-    isFavorite: true,
+    isFavorite: false,
     isOwnedForSale: false,
     isbn10: "0743273567",
     isbn13: "978-0743273565",
     publisher: "Scribner",
     pages: 180,
-    language: "English"
+    language: "English",
+    synopsis: "Set in the summer of 1922, the novel follows Nick Carraway as he observes the decadent world of his mysterious neighbor Jay Gatsby.",
+    condition: "Good"
   },
   {
     id: 2,
@@ -25,16 +27,18 @@ export const mockBooks: Book[] = [
     author: "Harper Lee",
     cover: "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=300&h=450&fit=crop",
     rating: 4.5,
-    genre: "Fiction",
+    genre: "Classic Literature",
     year: 1960,
-    description: "A powerful story of racial injustice and childhood innocence in the American South.",
+    description: "A gripping tale of racial injustice and childhood innocence in the American South.",
     isFavorite: true,
     isOwnedForSale: false,
     isbn10: "0061120081",
     isbn13: "978-0061120084",
     publisher: "Harper Perennial Modern Classics",
     pages: 376,
-    language: "English"
+    language: "English",
+    synopsis: "Through the eyes of Scout Finch, we see the complexities of human nature and moral courage.",
+    condition: "Very Good"
   },
   {
     id: 3,
@@ -42,17 +46,19 @@ export const mockBooks: Book[] = [
     author: "George Orwell",
     cover: "https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=300&h=450&fit=crop",
     rating: 4.4,
-    genre: "Classic Literature",
+    genre: "Dystopian Fiction",
     year: 1949,
-    description: "A dystopian social science fiction novel about totalitarian control.",
+    description: "A dystopian social science fiction novel about totalitarian control and surveillance.",
     isFavorite: false,
     isOwnedForSale: true,
     salePrice: 12.99,
-    isbn10: "0451524934",
-    isbn13: "978-0451524935",
-    publisher: "Signet Classics",
+    isbn10: "0452284236",
+    isbn13: "978-0452284234",
+    publisher: "Plume",
     pages: 328,
-    language: "English"
+    language: "English",
+    synopsis: "Winston Smith struggles against a totalitarian regime in a world of perpetual war and surveillance.",
+    condition: "Good"
   },
   {
     id: 4,
@@ -64,12 +70,17 @@ export const mockBooks: Book[] = [
     year: 1813,
     description: "A romantic novel of manners set in Georgian England.",
     isFavorite: false,
-    isOwnedForSale: false,
+    isOwnedForSale: true,
+    salePrice: 15.99,
     isbn10: "0141439513",
     isbn13: "978-0141439518",
     publisher: "Penguin Classics",
     pages: 432,
-    language: "English"
+    language: "English",
+    synopsis: "Elizabeth Bennet navigates issues of marriage, morality, and misconceptions in 19th century England.",
+    condition: "Excellent",
+    distance: 9.2,
+    location: "Uptown"
   },
   {
     id: 5,
@@ -80,23 +91,164 @@ export const mockBooks: Book[] = [
     genre: "Coming-of-age Fiction",
     year: 1951,
     description: "A controversial novel about teenage rebellion and alienation.",
-    isFavorite: false,
-    isOwnedForSale: true,
-    salePrice: 8.99,
-    condition: "Good",
-    location: "New York, NY",
-    distance: 2.3,
-    isbn10: "0316769174",
-    isbn13: "978-0316769174",
+    isFavorite: true,
+    isOwnedForSale: false,
+    isbn10: "0316769487",
+    isbn13: "978-0316769488",
     publisher: "Little, Brown and Company",
     pages: 277,
-    language: "English"
+    language: "English",
+    synopsis: "Holden Caulfield's journey through New York City after being expelled from prep school.",
+    condition: "Fair"
+  },
+  {
+    id: 6,
+    title: "Dune",
+    author: "Frank Herbert",
+    cover: "https://images.unsplash.com/photo-1518373714866-3f1478910cc0?w=300&h=450&fit=crop",
+    rating: 4.6,
+    genre: "Science Fiction",
+    year: 1965,
+    description: "An epic science fiction novel set on the desert planet Arrakis.",
+    isFavorite: false,
+    isOwnedForSale: false,
+    isbn10: "0441013597",
+    isbn13: "978-0441013593",
+    publisher: "Ace",
+    pages: 688,
+    language: "English",
+    synopsis: "Paul Atreides navigates political intrigue and mystical powers on the desert planet Arrakis.",
+    condition: "New"
+  },
+  {
+    id: 7,
+    title: "The Lord of the Rings",
+    author: "J.R.R. Tolkien",
+    cover: "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=300&h=450&fit=crop",
+    rating: 4.7,
+    genre: "Fantasy",
+    year: 1954,
+    description: "An epic high fantasy novel following the quest to destroy the One Ring.",
+    isFavorite: true,
+    isOwnedForSale: false,
+    isbn10: "0544003415",
+    isbn13: "978-0544003415",
+    publisher: "Houghton Mifflin Harcourt",
+    pages: 1216,
+    language: "English",
+    synopsis: "Frodo Baggins embarks on a perilous journey to destroy the One Ring and save Middle-earth.",
+    condition: "Like New"
+  },
+  {
+    id: 8,
+    title: "Harry Potter and the Sorcerer's Stone",
+    author: "J.K. Rowling",
+    cover: "https://images.unsplash.com/photo-1621944190310-e3cdd9129c3d?w=300&h=450&fit=crop",
+    rating: 4.5,
+    genre: "Fantasy",
+    year: 1997,
+    description: "The first book in the beloved Harry Potter series about a young wizard's adventures.",
+    isFavorite: false,
+    isOwnedForSale: false,
+    isbn10: "0439708184",
+    isbn13: "978-0439708180",
+    publisher: "Scholastic",
+    pages: 309,
+    language: "English",
+    synopsis: "Harry Potter discovers he's a wizard on his 11th birthday and begins his magical education at Hogwarts.",
+    condition: "Very Good"
   }
 ];
 
-export const mockUsedBooks: Book[] = mockBooks.filter(book => book.isOwnedForSale).map(book => ({
-  ...book,
-  condition: book.condition || "Very Good",
-  location: book.location || "Local Area",
-  distance: book.distance || Math.random() * 10 + 1
-}));
+export const mockUsedBooksForSale: Book[] = [
+  {
+    id: 9,
+    title: "1984",
+    author: "George Orwell",
+    cover: "https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=300&h=450&fit=crop",
+    rating: 4.4,
+    genre: "Dystopian Fiction",
+    year: 1949,
+    description: "A dystopian social science fiction novel about totalitarian control and surveillance.",
+    isFavorite: false,
+    isOwnedForSale: true,
+    salePrice: 12.99,
+    condition: "Good",
+    isbn10: "0452284236",
+    isbn13: "978-0452284234",
+    publisher: "Plume",
+    pages: 328,
+    language: "English",
+    distance: 3.7,
+    location: "Downtown"
+  },
+  {
+    id: 10,
+    title: "Pride and Prejudice",
+    author: "Jane Austen",
+    cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop",
+    rating: 4.3,
+    genre: "Classic Literature",
+    year: 1813,
+    description: "A romantic novel of manners set in Georgian England.",
+    isFavorite: false,
+    isOwnedForSale: true,
+    salePrice: 15.99,
+    condition: "Excellent",
+    isbn10: "0141439513",
+    isbn13: "978-0141439518",
+    publisher: "Penguin Classics",
+    pages: 432,
+    language: "English",
+    distance: 9.2,
+    location: "Uptown"
+  },
+  {
+    id: 11,
+    title: "The Great Gatsby",
+    author: "F. Scott Fitzgerald",
+    cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop",
+    rating: 4.2,
+    genre: "Classic Literature",
+    year: 1925,
+    description: "A classic American novel set in the Jazz Age, exploring themes of wealth, love, and the American Dream.",
+    isFavorite: false,
+    isOwnedForSale: true,
+    salePrice: 10.99,
+    condition: "Fair",
+    isbn10: "0743273567",
+    isbn13: "978-0743273565",
+    publisher: "Scribner",
+    pages: 180,
+    language: "English",
+    distance: 1.9,
+    location: "Midtown"
+  }
+];
+
+export const mockCollections: Collection[] = [
+  {
+    id: 1,
+    name: "Classics",
+    count: 3,
+    color: "blue",
+    bookIds: [1, 2, 4],
+    description: "Timeless literary masterpieces"
+  },
+  {
+    id: 2,
+    name: "Science Fiction",
+    count: 2,
+    color: "purple",
+    bookIds: [6, 3],
+    description: "Futuristic worlds and advanced technology"
+  },
+  {
+    id: 3,
+    name: "Fantasy Adventures",
+    count: 2,
+    color: "green",
+    bookIds: [7, 8],
+    description: "Magical realms and epic quests"
+  }
+];
