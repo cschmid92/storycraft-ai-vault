@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, User, Menu, ArrowLeft } from 'lucide-react';
+import { BookOpen, User, Menu, ArrowLeft, Library, Heart, TrendingUp, DollarSign, Users, Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import SharedSidebar from '../components/SharedSidebar';
 import AccountModal from '../components/AccountModal';
