@@ -13,6 +13,7 @@ const About = () => {
         <PageHeader
           title="About Bacondo"
           subtitle="Learn more about your digital library"
+          icon={BookOpen}
         />
         
         <div className="flex-1 overflow-auto">
