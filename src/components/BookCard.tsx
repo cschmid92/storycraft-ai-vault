@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Star, Heart, BookmarkPlus, BookOpen } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -9,10 +10,19 @@ interface BookCardProps {
   onBookClick: (book: Book) => void;
   onAddToCollection: (bookId: number) => void;
   onAddToBooksRead: (bookId: number) => void;
+  onToggleOwnedForSale?: (bookId: number, price?: number) => void;
   isInBooksRead?: boolean;
 }
 
-const BookCard = ({ book, onToggleFavorite, onBookClick, onAddToCollection, onAddToBooksRead, isInBooksRead = false }: BookCardProps) => {
+const BookCard = ({ 
+  book, 
+  onToggleFavorite, 
+  onBookClick, 
+  onAddToCollection, 
+  onAddToBooksRead, 
+  onToggleOwnedForSale,
+  isInBooksRead = false 
+}: BookCardProps) => {
   return (
     <div 
       className="group relative bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
