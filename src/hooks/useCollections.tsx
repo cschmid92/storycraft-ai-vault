@@ -6,6 +6,7 @@ export interface Collection {
   name: string;
   count: number;
   color: string;
+  bookIds?: number[]; // Add bookIds to track which books are in this collection
 }
 
 // Mock collection mappings - in a real app this would come from a database
@@ -16,9 +17,9 @@ export const collectionBookMappings: { [key: number]: number[] } = {
 };
 
 const mockCollections = [
-  { id: 2, name: "To Read 📚", count: 3, color: "bg-blue-500" },
-  { id: 3, name: "Classics", count: 3, color: "bg-amber-500" },
-  { id: 4, name: "Sci-Fi Adventures", count: 2, color: "bg-purple-500" }
+  { id: 2, name: "To Read 📚", count: 3, color: "bg-blue-500", bookIds: [1, 3, 4] },
+  { id: 3, name: "Classics", count: 3, color: "bg-amber-500", bookIds: [1, 2, 4] },
+  { id: 4, name: "Sci-Fi Adventures", count: 2, color: "bg-purple-500", bookIds: [2, 3] }
 ];
 
 export const useCollections = () => {
@@ -29,7 +30,8 @@ export const useCollections = () => {
       id: Date.now(),
       name,
       count: 0,
-      color
+      color,
+      bookIds: []
     };
     setCollections(prev => [...prev, newCollection]);
   };
@@ -50,11 +52,37 @@ export const useCollections = () => {
     ));
   };
 
+  const addBookToCollection = (collectionId: number | string, bookId: number) => {
+    setCollections(prev => prev.map(c => {
+      if (c.id === collectionId) {
+        const bookIds = c.bookIds || [];
+        if (!bookIds.includes(bookId)) {
+          const newBookIds = [...bookIds, bookId];
+          return { ...c, bookIds: newBookIds, count: newBookIds.length };
+        }
+      }
+      return c;
+    }));
+  };
+
+  const removeBookFromCollection = (collectionId: number | string, bookId: number) => {
+    setCollections(prev => prev.map(c => {
+      if (c.id === collectionId) {
+        const bookIds = c.bookIds || [];
+        const newBookIds = bookIds.filter(id => id !== bookId);
+        return { ...c, bookIds: newBookIds, count: newBookIds.length };
+      }
+      return c;
+    }));
+  };
+
   return {
     collections,
     addCollection,
     deleteCollection,
     updateCollection,
-    updateCollectionCount
+    updateCollectionCount,
+    addBookToCollection,
+    removeBookFromCollection
   };
 };

@@ -33,7 +33,7 @@ const mockBooksForSale: Book[] = [
 ];
 
 const BooksForSale = () => {
-  const { collections, addCollection } = useCollections();
+  const { collections, addCollection, addBookToCollection } = useCollections();
   const navigate = useNavigate();
   const [books] = useState(mockBooksForSale);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
@@ -68,6 +68,7 @@ const BooksForSale = () => {
 
   const handleCollectionSelection = (collection: Collection) => {
     if (collection && selectedBookForCollection) {
+      addBookToCollection(collection.id, selectedBookForCollection.id);
       console.log(`Added "${selectedBookForCollection.title}" to collection "${collection.name}"`);
     }
     setSelectedBookForCollection(null);

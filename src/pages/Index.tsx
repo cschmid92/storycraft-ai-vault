@@ -128,7 +128,7 @@ const mockBooks: Book[] = [
 ];
 
 const Index = () => {
-  const { collections, addCollection, deleteCollection } = useCollections();
+  const { collections, addCollection, deleteCollection, addBookToCollection } = useCollections();
   const [books, setBooks] = useState(mockBooks);
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
@@ -218,9 +218,8 @@ const Index = () => {
 
   const handleCollectionSelection = (collection: Collection) => {
     if (collection && selectedBookForCollection) {
+      addBookToCollection(collection.id, selectedBookForCollection);
       console.log(`Added "${books.find(b => b.id === selectedBookForCollection)?.title}" to collection "${collection.name}"`);
-      // Here you would typically update the collection's book list
-      // For now, we'll just log the action
     }
     setSelectedBookForCollection(null);
     setIsCollectionSelectionOpen(false);
