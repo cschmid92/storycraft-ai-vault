@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { DollarSign, Tag } from 'lucide-react';
-import { Book } from '../types/Book';
+import { Book } from '../types/entities';
 
 interface BooksForSaleProps {
   books: Book[];

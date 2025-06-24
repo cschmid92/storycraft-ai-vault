@@ -1,7 +1,6 @@
-
 import React from 'react';
 import { Calendar, Building2, FileText, Globe, Hash, Bookmark, DollarSign } from 'lucide-react';
-import { Book } from '../types/Book';
+import { Book } from '../types/entities';
 
 interface BookDetailsGridProps {
   book: Book;

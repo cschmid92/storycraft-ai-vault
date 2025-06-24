@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, User, Menu, Library } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { Book } from '../types/Book';
+import { Book } from '../types/entities';
 import SharedSidebar from '../components/SharedSidebar';
 import CollectionModal from '../components/CollectionModal';
 import AccountModal from '../components/AccountModal';

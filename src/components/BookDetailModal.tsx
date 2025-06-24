@@ -1,4 +1,3 @@
-
 import React from 'react';
 import BookDetailHeader from './BookDetailHeader';
 import BookCover from './BookCover';
@@ -6,7 +5,7 @@ import BookInfo from './BookInfo';
 import BookActions from './BookActions';
 import BookDescription from './BookDescription';
 import BookDetailsGrid from './BookDetailsGrid';
-import { Book } from '../types/Book';
+import { Book } from '../types/entities';
 
 interface BookDetailModalProps {
   book: Book | null;

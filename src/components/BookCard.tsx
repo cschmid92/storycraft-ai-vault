@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { Star, Heart, BookmarkPlus, BookOpen } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { Book } from '../types/Book';
+import { Book } from '../types/entities';
 
 interface BookCardProps {
   book: Book;

@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { DollarSign } from 'lucide-react';
-import { Book } from '../types/Book';
+import { Book } from '../types/entities';
 import UsedBookCard from './UsedBookCard';
 
 interface UsedBookGridProps {

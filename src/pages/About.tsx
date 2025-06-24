@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { BookOpen, User, Award, Target, Users, Globe, ArrowLeft, Menu, Info, Heart, Star, ShoppingCart, Search, Quote, Library } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -7,7 +8,7 @@ import AccountModal from '../components/AccountModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import BookDetailModal from '../components/BookDetailModal';
 import { Link, useNavigate } from 'react-router-dom';
-import { Book } from '../types/Book';
+import { Book } from '../types/entities';
 import { useCollections } from '../hooks/useCollections';
 
 // Mock books data for sidebar

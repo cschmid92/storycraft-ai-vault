@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from 'react';
 import { BookOpen, User, Search as SearchIcon, Menu } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -12,7 +13,7 @@ import PopularReads from '../components/PopularReads';
 import Recommendations from '../components/Recommendations';
 import PriceInputModal from '../components/PriceInputModal';
 import { Button } from "@/components/ui/button";
-import { Book } from '../types/Book';
+import { Book } from '../types/entities';
 import { Plus, Filter, Heart, Star, BookmarkPlus, Quote } from 'lucide-react';
 import { useCollections, Collection } from '../hooks/useCollections';
 

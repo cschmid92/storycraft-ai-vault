@@ -1,7 +1,7 @@
 import React from 'react';
 import { Star, MapPin } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { Book } from '../types/Book';
+import { Book } from '../types/entities';
 
 interface UsedBookCardProps {
   book: Book;

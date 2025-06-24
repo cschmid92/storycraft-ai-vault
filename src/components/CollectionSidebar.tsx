@@ -1,9 +1,10 @@
+
 import React, { useState } from 'react';
 import { Library, Heart, BookOpen, Plus, DollarSign, ChevronDown, ChevronRight, Edit, Trash2, ShoppingCart, Info, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import BooksForSale from './BooksForSale';
-import { Book } from '../types/Book';
+import { Book } from '../types/entities';
 import { Collection } from '../hooks/useCollections';
 
 interface CollectionSidebarProps {
