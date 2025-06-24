@@ -1,6 +1,5 @@
-
 import { Book, SearchFilters, Collection } from '../types/entities';
-import { mockBooks, mockUsedBooks } from '../data/mockData';
+import { mockBooks, mockUsedBooksForSale } from '../data/mockData';
 
 export class BookService {
   static getAllBooks(): Book[] {
@@ -8,7 +7,7 @@ export class BookService {
   }
 
   static getUsedBooks(): Book[] {
-    return mockUsedBooks;
+    return mockUsedBooksForSale;
   }
 
   static searchBooks(query: string, genre?: string): Book[] {

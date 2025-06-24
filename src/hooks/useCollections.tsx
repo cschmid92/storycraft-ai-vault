@@ -114,13 +114,25 @@ export const useCollections = () => {
     }));
   };
 
+  const isBookInCollection = (collectionId: number | string, bookId: number): boolean => {
+    const collection = collections.find(c => c.id === collectionId);
+    return collection?.bookIds?.includes(bookId) || false;
+  };
+
+  const getCollectionBooks = (collectionId: number | string): number[] => {
+    const collection = collections.find(c => c.id === collectionId);
+    return collection?.bookIds || [];
+  };
+
   return {
     collections,
     addCollection,
     deleteCollection,
     updateCollection,
     addBookToCollection,
-    removeBookFromCollection
+    removeBookFromCollection,
+    isBookInCollection,
+    getCollectionBooks
   };
 };
 
