@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, User, Menu, Library } from 'lucide-react';
@@ -33,7 +32,7 @@ const mockBooksForSale: Book[] = [
     publisher: "Plume",
     pages: 328,
     language: "English",
-    distance: 2.3,
+    distance: 3.7,
     location: "Downtown"
   },
   {
@@ -54,7 +53,7 @@ const mockBooksForSale: Book[] = [
     publisher: "Penguin Classics",
     pages: 432,
     language: "English",
-    distance: 5.7,
+    distance: 9.2,
     location: "Uptown"
   },
   {
@@ -75,7 +74,7 @@ const mockBooksForSale: Book[] = [
     publisher: "Scribner",
     pages: 180,
     language: "English",
-    distance: 1.2,
+    distance: 1.9,
     location: "Midtown"
   }
 ];
@@ -158,12 +157,12 @@ const BooksForSale = () => {
               >
                 <Menu className="h-5 w-5" />
               </Button>
-              <div className="p-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl">
+              <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
                 <Library className="h-6 w-6 text-white" />
               </div>
               <div>
                 <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
-                <p className="text-xs text-slate-600 hidden sm:block">Your personal book collection</p>
+                <p className="text-xs text-slate-600 hidden sm:block">Your Digital Library</p>
               </div>
             </div>
             <div className="flex items-center gap-3">

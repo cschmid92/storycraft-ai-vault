@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Star, MapPin } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -23,7 +22,7 @@ const UsedBookCard = ({ book, onBookClick }: UsedBookCardProps) => {
         />
         <div className="absolute top-2 left-2 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
           <MapPin className="h-3 w-3" />
-          {book.distance} mi
+          {book.distance} km
         </div>
         {book.condition && (
           <div className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">

@@ -47,7 +47,7 @@ const BuyUsedBooksFilters = ({
         <div className="flex-1 min-w-48">
           <input
             type="number"
-            placeholder="Max distance (miles)"
+            placeholder="Max distance (km)"
             value={maxDistance || ''}
             onChange={(e) => onDistanceChange(e.target.value ? Number(e.target.value) : null)}
             className="w-full px-3 py-2 bg-white/80 border border-slate-300 rounded-md text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
