@@ -212,9 +212,9 @@ const Index = () => {
 
   const handleCollectionSelect = (collection: Collection | null) => {
     setSelectedCollection(collection);
-    if (collection?.id === 'favorites') {
+    if (String(collection?.id) === 'favorites') {
       navigate('/collections/favorites');
-    } else if (collection?.id === 'books-read') {
+    } else if (String(collection?.id) === 'books-read') {
       navigate('/collections/books-read');
     } else if (collection && typeof collection.id === 'number') {
       navigate(`/collections/${collection.id}`);
