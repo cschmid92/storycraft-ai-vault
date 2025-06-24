@@ -11,9 +11,10 @@ import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import BuyUsedBooksFilters from '../components/BuyUsedBooksFilters';
 import UsedBookGrid from '../components/UsedBookGrid';
 import { useCollections, Collection } from '../hooks/useCollections';
+import { DataService } from '../services/mockDataService';
 
-// Mock data - in a real app this would come from props or context
-const mockBooksForSale: Book[] = [
+// Extended mock data for used books marketplace
+const mockUsedBooksForSale: Book[] = [
   {
     id: 3,
     title: "1984",
@@ -79,10 +80,15 @@ const mockBooksForSale: Book[] = [
   }
 ];
 
-const BooksForSale = () => {
+const BuyUsedBooks = () => {
   const { collections, addCollection, addBookToCollection } = useCollections();
   const navigate = useNavigate();
-  const [books] = useState(mockBooksForSale);
+  
+  // Use centralized data service for main books, but keep marketplace-specific data local
+  const [books] = useState<Book[]>(DataService.getBooks());
+  const [usedBooks] = useState(mockUsedBooksForSale);
+  const [booksReadList] = useState<number[]>([3]);
+  
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('');
   const [maxDistance, setMaxDistance] = useState<number | null>(null);
@@ -92,14 +98,13 @@ const BooksForSale = () => {
   const [isCollectionSelectionModalOpen, setIsCollectionSelectionModalOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
-  const [booksReadList] = useState<number[]>([3]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Get unique genres for filtering
-  const genres = Array.from(new Set(books.map(book => book.genre)));
+  const genres = Array.from(new Set(usedBooks.map(book => book.genre)));
 
   // Filter books based on search term, genre, and distance
-  const filteredBooks = books.filter(book => {
+  const filteredBooks = usedBooks.filter(book => {
     const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          book.genre.toLowerCase().includes(searchTerm.toLowerCase());
@@ -272,4 +277,4 @@ const BooksForSale = () => {
   );
 };
 
-export default BooksForSale;
+export default BuyUsedBooks;

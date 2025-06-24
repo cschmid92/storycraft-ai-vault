@@ -16,7 +16,7 @@ interface UnifiedSidebarProps {
   onBookClick: (book: Book) => void;
   booksReadCount: number;
   onDeleteCollection?: (collectionId: number | string) => void;
-  showEditOptions?: boolean; // New prop to control edit/delete visibility
+  showEditOptions?: boolean;
 }
 
 const UnifiedSidebar = ({ 
@@ -167,7 +167,7 @@ const UnifiedSidebar = ({
                   <span className="text-xs text-slate-500">{getCollectionCount(collection.id)}</span>
                 </button>
                 
-                {/* Edit/Delete buttons - shown on hover only if showEditOptions is true */}
+                {/* Edit/Delete buttons - only show when explicitly enabled */}
                 {showEditOptions && (
                   <div className="absolute right-2 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                     <Button
