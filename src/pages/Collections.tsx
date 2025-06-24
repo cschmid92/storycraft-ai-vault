@@ -3,7 +3,7 @@ import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, BookmarkPlus, Edit, Trash2, Heart, Menu } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import BookCard from '../components/BookCard';
-import SharedSidebar from '../components/SharedSidebar';
+import UnifiedSidebar from '../components/UnifiedSidebar';
 import CollectionModal from '../components/CollectionModal';
 import AccountModal from '../components/AccountModal';
 import BookDetailModal from '../components/BookDetailModal';
@@ -207,7 +207,7 @@ const Collections = () => {
         
         {/* Sidebar */}
         <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:sticky md:top-16 z-50 md:z-auto h-screen md:h-[calc(100vh-4rem)]`}>
-          <SharedSidebar 
+          <UnifiedSidebar 
             collections={collections}
             selectedCollection={selectedCollection}
             onSelectCollection={handleCollectionSelect}
@@ -216,6 +216,7 @@ const Collections = () => {
             onBookClick={handleBookClick}
             booksReadCount={booksReadList.length}
             onDeleteCollection={handleDeleteCollection}
+            showEditOptions={true}
           />
         </div>
 

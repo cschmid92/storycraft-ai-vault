@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import SharedSidebar from './SharedSidebar';
+import UnifiedSidebar from './UnifiedSidebar';
 import { useBooks } from '../hooks/useBooks';
 import { useCollections } from '../hooks/useCollections';
 import CollectionModal from './CollectionModal';
@@ -29,7 +29,6 @@ const SharedLayout = ({ children }: SharedLayoutProps) => {
   } = useCollections();
 
   // Compute derived values from books
-  const favorites = books.filter(book => book.isFavorite);
   const booksRead = books.filter(book => book.userRating && book.userRating > 0);
   const booksReadCount = booksRead.length;
 
@@ -84,7 +83,7 @@ const SharedLayout = ({ children }: SharedLayoutProps) => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex w-full">
-      <SharedSidebar
+      <UnifiedSidebar
         collections={collections}
         selectedCollection={selectedCollection}
         onSelectCollection={handleSelectCollection}
@@ -93,6 +92,7 @@ const SharedLayout = ({ children }: SharedLayoutProps) => {
         onBookClick={handleBookClick}
         booksReadCount={booksReadCount}
         onDeleteCollection={deleteCollection}
+        showEditOptions={false}
       />
       
       <div className="flex-1">
