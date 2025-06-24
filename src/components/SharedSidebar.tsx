@@ -4,8 +4,7 @@ import { Library, Heart, BookOpen, Plus, DollarSign, ChevronDown, ChevronRight, 
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import BooksForSale from './BooksForSale';
-import { Book } from '../types/Book';
-import { Collection, collectionBookMappings } from '../hooks/useCollections';
+import { Book, Collection } from '../types/entities';
 
 interface SharedSidebarProps {
   collections: Collection[];
@@ -37,11 +36,10 @@ const SharedSidebar = ({
       return books.filter(book => book.isFavorite).length;
     } else if (collectionId === 'books-read') {
       return booksReadCount;
-    } else if (typeof collectionId === 'number') {
-      const bookIds = collectionBookMappings[collectionId] || [];
-      return bookIds.length;
+    } else {
+      const collection = collections.find(c => c.id === collectionId);
+      return collection?.bookIds?.length || 0;
     }
-    return 0;
   };
 
   // Standard collections that appear before user collections

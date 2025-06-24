@@ -29,6 +29,13 @@ const defaultCollections: Collection[] = [
   }
 ];
 
+// Export collectionBookMappings for backward compatibility
+export const collectionBookMappings: Record<number, number[]> = {
+  2: [1, 3, 4],
+  3: [1, 2, 4], 
+  4: [2, 3]
+};
+
 const STORAGE_KEY = 'bacondo-collections';
 
 const loadCollections = (): Collection[] => {
@@ -116,3 +123,6 @@ export const useCollections = () => {
     removeBookFromCollection
   };
 };
+
+// Re-export Collection type for components
+export type { Collection };

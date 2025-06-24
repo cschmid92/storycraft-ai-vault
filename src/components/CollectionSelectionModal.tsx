@@ -2,7 +2,7 @@
 import React from 'react';
 import { X, Plus } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { Collection } from '../hooks/useCollections';
+import { Collection } from '../types/entities';
 
 interface CollectionSelectionModalProps {
   isOpen: boolean;

@@ -6,8 +6,7 @@ import { useCollections } from '../hooks/useCollections';
 import CollectionModal from './CollectionModal';
 import CollectionSelectionModal from './CollectionSelectionModal';
 import BookDetailModal from './BookDetailModal';
-import { Book } from '../types/Book';
-import { Collection } from '../hooks/useCollections';
+import { Book, Collection } from '../types/entities';
 
 interface SharedLayoutProps {
   children: React.ReactNode;

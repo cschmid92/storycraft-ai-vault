@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, BookmarkPlus, Edit, Trash2, Heart, Menu } from 'lucide-react';
@@ -8,9 +9,9 @@ import CollectionModal from '../components/CollectionModal';
 import AccountModal from '../components/AccountModal';
 import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
-import { Book } from '../types/Book';
+import { Book, Collection } from '../types/entities';
 import { BookOpen, User } from 'lucide-react';
-import { useCollections, collectionBookMappings } from '../hooks/useCollections';
+import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 
 const Collections = () => {
@@ -22,7 +23,7 @@ const Collections = () => {
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [editingCollection, setEditingCollection] = useState<any>(null);
+  const [editingCollection, setEditingCollection] = useState<Collection | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [isBookDetailModalOpen, setIsBookDetailModalOpen] = useState(false);
@@ -30,7 +31,7 @@ const Collections = () => {
   const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
   
   // Handle both standard and user collections
-  let selectedCollection: any = null;
+  let selectedCollection: Collection | { id: string; name: string; count: number; color: string } | null = null;
   let collectionBooks: Book[] = [];
 
   if (id === 'favorites') {
@@ -38,12 +39,12 @@ const Collections = () => {
     collectionBooks = books.filter(book => book.isFavorite);
   } else if (id === 'books-read') {
     selectedCollection = { id: 'books-read', name: "Books read 📖", count: booksReadList.length, color: "bg-green-500" };
-    collectionBooks = books.filter(book => booksReadList.includes(book.id));
+    collectionBooks = books.filter(book => booksReadList.includes(Number(book.id)));
   } else {
-    selectedCollection = collections.find(c => c.id === parseInt(id || ''));
+    selectedCollection = collections.find(c => c.id === parseInt(id || '')) || null;
     if (selectedCollection) {
-      const bookIds = collectionBookMappings[selectedCollection.id as keyof typeof collectionBookMappings] || [];
-      collectionBooks = books.filter(book => bookIds.includes(book.id));
+      const bookIds = (selectedCollection as Collection).bookIds || [];
+      collectionBooks = books.filter(book => bookIds.includes(Number(book.id)));
     }
   }
 
@@ -62,7 +63,7 @@ const Collections = () => {
     }
   };
 
-  const handleCollectionSelect = (collection: any) => {
+  const handleCollectionSelect = (collection: Collection | { id: string; name: string; count: number; color: string } | null) => {
     if (collection?.id === 'favorites') {
       navigate('/collections/favorites');
     } else if (collection?.id === 'books-read') {
@@ -83,14 +84,14 @@ const Collections = () => {
   };
 
   const handleAddToCollection = (bookId: number) => {
-    const book = books.find(b => b.id === bookId);
+    const book = books.find(b => Number(b.id) === bookId);
     if (book) {
       setSelectedBookForCollection(book);
       setIsCollectionSelectionModalOpen(true);
     }
   };
 
-  const handleCollectionSelection = (collection: any) => {
+  const handleCollectionSelection = (collection: Collection) => {
     if (collection && selectedBookForCollection) {
       console.log(`Added "${selectedBookForCollection.title}" to collection "${collection.name}"`);
     }
@@ -107,7 +108,7 @@ const Collections = () => {
   };
 
   const handleToggleOwnedForSale = (bookId: number, price?: number) => {
-    const book = books.find(b => b.id === bookId);
+    const book = books.find(b => Number(b.id) === bookId);
     if (book && book.isOwnedForSale && !price) {
       // If removing from sale, don't require price
       toggleOwnedForSale(bookId);
@@ -133,7 +134,7 @@ const Collections = () => {
 
   const handleUpdateCollection = (name: string, color: string) => {
     if (editingCollection) {
-      updateCollection(editingCollection.id, name, color);
+      updateCollection(editingCollection.id, { name, color });
       setIsEditModalOpen(false);
       setEditingCollection(null);
     }
@@ -209,7 +210,7 @@ const Collections = () => {
         <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:sticky md:top-16 z-50 md:z-auto h-screen md:h-[calc(100vh-4rem)]`}>
           <SharedSidebar 
             collections={collections}
-            selectedCollection={selectedCollection}
+            selectedCollection={selectedCollection as Collection}
             onSelectCollection={handleCollectionSelect}
             onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
             books={books}
@@ -247,7 +248,7 @@ const Collections = () => {
                   <Button 
                     variant="outline" 
                     size="sm"
-                    onClick={() => handleEditCollection(selectedCollection.id)}
+                    onClick={() => handleEditCollection(selectedCollection.id as number)}
                   >
                     <Edit className="h-4 w-4 sm:mr-2" />
                     <span className="hidden sm:inline">Edit</span>
@@ -255,7 +256,7 @@ const Collections = () => {
                   <Button 
                     variant="outline" 
                     size="sm"
-                    onClick={() => handleDeleteCollection(selectedCollection.id)}
+                    onClick={() => handleDeleteCollection(selectedCollection.id as number)}
                     className="text-red-600 hover:text-red-700 hover:bg-red-50"
                   >
                     <Trash2 className="h-4 w-4 sm:mr-2" />
@@ -277,7 +278,7 @@ const Collections = () => {
                 onBookClick={handleBookClick}
                 onAddToCollection={handleAddToCollection}
                 onAddToBooksRead={handleAddToBooksRead}
-                isInBooksRead={booksReadList.includes(book.id)}
+                isInBooksRead={booksReadList.includes(Number(book.id))}
               />
             ))}
           </div>
