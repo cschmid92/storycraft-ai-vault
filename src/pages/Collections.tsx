@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, BookmarkPlus, Edit, Trash2, Heart, Menu } from 'lucide-react';
@@ -7,6 +6,8 @@ import BookCard from '../components/BookCard';
 import SharedSidebar from '../components/SharedSidebar';
 import CollectionModal from '../components/CollectionModal';
 import AccountModal from '../components/AccountModal';
+import BookDetailModal from '../components/BookDetailModal';
+import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import { Book } from '../types/Book';
 import { BookOpen, User } from 'lucide-react';
 import { useCollections, collectionBookMappings } from '../hooks/useCollections';
@@ -94,6 +95,10 @@ const Collections = () => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingCollection, setEditingCollection] = useState<any>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [isBookDetailModalOpen, setIsBookDetailModalOpen] = useState(false);
+  const [isCollectionSelectionModalOpen, setIsCollectionSelectionModalOpen] = useState(false);
+  const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
   
   // Handle both standard and user collections
   let selectedCollection: any = null;
@@ -140,7 +145,8 @@ const Collections = () => {
   };
 
   const handleBookClick = (book: Book) => {
-    console.log('Book clicked:', book);
+    setSelectedBook(book);
+    setIsBookDetailModalOpen(true);
   };
 
   const handleToggleFavorite = (bookId: number) => {
@@ -150,7 +156,18 @@ const Collections = () => {
   };
 
   const handleAddToCollection = (bookId: number) => {
-    console.log('Add to collection:', bookId);
+    const book = books.find(b => b.id === bookId);
+    if (book) {
+      setSelectedBookForCollection(book);
+      setIsCollectionSelectionModalOpen(true);
+    }
+  };
+
+  const handleCollectionSelection = (collection: any) => {
+    if (collection && selectedBookForCollection) {
+      console.log(`Added "${selectedBookForCollection.title}" to collection "${collection.name}"`);
+    }
+    setSelectedBookForCollection(null);
   };
 
   const handleAddToBooksRead = (bookId: number) => {
@@ -160,6 +177,22 @@ const Collections = () => {
       }
       return [...prev, bookId];
     });
+  };
+
+  const handleToggleOwnedForSale = (bookId: number, price?: number) => {
+    setBooks(books.map(book =>
+      book.id === bookId 
+        ? { ...book, isOwnedForSale: !book.isOwnedForSale, salePrice: price }
+        : book
+    ));
+  };
+
+  const handleRateBook = (bookId: number, rating: number) => {
+    setBooks(books.map(book =>
+      book.id === bookId 
+        ? { ...book, userRating: rating }
+        : book
+    ));
   };
 
   const handleCreateCollection = (name: string, color: string) => {
@@ -344,6 +377,24 @@ const Collections = () => {
         editMode={true}
         initialName={editingCollection?.name}
         initialColor={editingCollection?.color}
+      />
+
+      <CollectionSelectionModal
+        isOpen={isCollectionSelectionModalOpen}
+        onClose={() => setIsCollectionSelectionModalOpen(false)}
+        collections={collections}
+        onSelectCollection={handleCollectionSelection}
+        bookTitle={selectedBookForCollection?.title || ""}
+      />
+
+      <BookDetailModal
+        book={selectedBook}
+        isOpen={isBookDetailModalOpen}
+        onClose={() => setIsBookDetailModalOpen(false)}
+        onToggleFavorite={handleToggleFavorite}
+        onAddToCollection={handleAddToCollection}
+        onToggleOwnedForSale={handleToggleOwnedForSale}
+        onRateBook={handleRateBook}
       />
       
       <AccountModal 

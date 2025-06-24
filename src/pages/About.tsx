@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { BookOpen, User, Award, Target, Users, Globe, ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -90,12 +91,6 @@ const About = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              <Link to="/">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back
-                </Button>
-              </Link>
               <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
                 <BookOpen className="h-6 w-6 text-white" />
               </div>
@@ -133,6 +128,16 @@ const About = () => {
         {/* Main Content */}
         <main className="flex-1 p-8">
           <div className="max-w-4xl mx-auto">
+            {/* Back Button */}
+            <div className="mb-6">
+              <Link to="/">
+                <Button variant="ghost" size="sm">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back
+                </Button>
+              </Link>
+            </div>
+
             {/* Hero Section */}
             <div className="text-center mb-16">
               <div className="p-4 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl inline-block mb-6">

@@ -161,7 +161,7 @@ const SharedSidebar = ({
       </div>
 
       {/* Social Media Icons - Fully visible with proper spacing */}
-      <div className="border-t border-slate-200 pt-4 mt-4 pb-4">
+      <div className="border-t border-slate-200 pt-4 mt-4">
         <h4 className="text-xs font-semibold text-slate-700 uppercase tracking-wide mb-3">
           Follow Us
         </h4>
