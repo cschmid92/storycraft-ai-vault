@@ -1,7 +1,19 @@
+
 import React, { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, BookmarkPlus, Edit, Trash2, Heart, Menu } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import BookCard from '../components/BookCard';
 import SharedSidebar from '../components/SharedSidebar';
 import CollectionModal from '../components/CollectionModal';
@@ -55,11 +67,10 @@ const Collections = () => {
     }
   };
 
-  const handleDeleteCollection = (collectionId: number | string) => {
-    console.log('Attempting to delete collection:', collectionId);
-    if (confirm('Are you sure you want to delete this collection?')) {
-      deleteCollection(collectionId);
-      console.log('Collection deleted, navigating to home');
+  const handleDeleteCollection = () => {
+    if (selectedCollection && typeof selectedCollection.id === 'number') {
+      console.log('Deleting collection:', selectedCollection.id);
+      deleteCollection(selectedCollection.id);
       navigate('/');
     }
   };
@@ -265,15 +276,35 @@ const Collections = () => {
                     <Edit className="h-4 w-4 sm:mr-2" />
                     <span className="hidden sm:inline">Edit</span>
                   </Button>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => handleDeleteCollection(selectedCollection.id as number)}
-                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                  >
-                    <Trash2 className="h-4 w-4 sm:mr-2" />
-                    <span className="hidden sm:inline">Delete</span>
-                  </Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      >
+                        <Trash2 className="h-4 w-4 sm:mr-2" />
+                        <span className="hidden sm:inline">Delete</span>
+                      </Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>Delete Collection</AlertDialogTitle>
+                        <AlertDialogDescription>
+                          Are you sure you want to delete "{selectedCollection.name}"? This action cannot be undone.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction 
+                          onClick={handleDeleteCollection}
+                          className="bg-red-600 hover:bg-red-700"
+                        >
+                          Delete
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </div>
               )}
             </div>
