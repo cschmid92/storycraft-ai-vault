@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { Library, Heart, BookOpen, Plus, DollarSign, ChevronDown, ChevronRight, ShoppingCart, Info, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { Library, Heart, BookOpen, Plus, DollarSign, ChevronDown, ChevronRight, ShoppingCart, Info, Facebook, Instagram, Linkedin, Twitter, Trash2 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import BooksForSale from '../BooksForSale';
@@ -47,6 +47,14 @@ const AppSidebar = ({
     { id: 'favorites', name: "Favorites ❤️", count: getCollectionCount('favorites'), color: "bg-red-500" },
     { id: 'books-read', name: "Books read 📖", count: getCollectionCount('books-read'), color: "bg-green-500" },
   ];
+
+  const handleDeleteCollection = (e: React.MouseEvent, collectionId: number | string) => {
+    e.stopPropagation();
+    if (onDeleteCollection) {
+      onDeleteCollection(collectionId);
+      console.log('Deleting collection:', collectionId);
+    }
+  };
 
   return (
     <aside className="w-64 bg-white/60 backdrop-blur-md border-r border-slate-200 p-4 h-full overflow-y-auto flex flex-col">
@@ -130,19 +138,31 @@ const AppSidebar = ({
 
             {/* User Collections */}
             {collections.map((collection) => (
-              <button
+              <div
                 key={collection.id}
-                onClick={() => onSelectCollection(collection)}
-                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
+                className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors group ${
                   String(selectedCollection?.id) === String(collection.id)
                     ? 'bg-blue-100 text-blue-800 border border-blue-200' 
                     : 'text-slate-600 hover:bg-slate-100'
                 }`}
               >
-                <div className={`w-3 h-3 rounded-full ${collection.color}`} />
-                <span className="text-sm flex-1 truncate text-left">{collection.name}</span>
-                <span className="text-xs text-slate-500">{getCollectionCount(collection.id)}</span>
-              </button>
+                <button
+                  onClick={() => onSelectCollection(collection)}
+                  className="flex items-center space-x-3 flex-1 text-left"
+                >
+                  <div className={`w-3 h-3 rounded-full ${collection.color}`} />
+                  <span className="text-sm flex-1 truncate">{collection.name}</span>
+                  <span className="text-xs text-slate-500">{getCollectionCount(collection.id)}</span>
+                </button>
+                {onDeleteCollection && (
+                  <button
+                    onClick={(e) => handleDeleteCollection(e, collection.id)}
+                    className="opacity-0 group-hover:opacity-100 p-1 hover:bg-red-100 rounded transition-all"
+                  >
+                    <Trash2 className="h-3 w-3 text-red-500" />
+                  </button>
+                )}
+              </div>
             ))}
             
             {/* New Collection Button */}

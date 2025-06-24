@@ -13,73 +13,7 @@ import BuyUsedBooksFilters from '../components/BuyUsedBooksFilters';
 import UsedBookGrid from '../components/UsedBookGrid';
 import { useCollections, Collection } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
-
-// Mock data - in a real app this would come from props or context
-const mockBooksForSale: Book[] = [
-  {
-    id: 3,
-    title: "1984",
-    author: "George Orwell",
-    cover: "https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=300&h=450&fit=crop",
-    rating: 4.4,
-    genre: "Dystopian Fiction",
-    year: 1949,
-    description: "A dystopian social science fiction novel about totalitarian control and surveillance.",
-    isFavorite: false,
-    isOwnedForSale: true,
-    salePrice: 12.99,
-    condition: "Good",
-    isbn10: "0452284236",
-    isbn13: "978-0452284234",
-    publisher: "Plume",
-    pages: 328,
-    language: "English",
-    distance: 3.7,
-    location: "Downtown"
-  },
-  {
-    id: 4,
-    title: "Pride and Prejudice",
-    author: "Jane Austen",
-    cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop",
-    rating: 4.3,
-    genre: "Classic Literature",
-    year: 1813,
-    description: "A romantic novel of manners set in Georgian England.",
-    isFavorite: false,
-    isOwnedForSale: true,
-    salePrice: 15.99,
-    condition: "Excellent",
-    isbn10: "0141439513",
-    isbn13: "978-0141439518",
-    publisher: "Penguin Classics",
-    pages: 432,
-    language: "English",
-    distance: 9.2,
-    location: "Uptown"
-  },
-  {
-    id: 5,
-    title: "The Great Gatsby",
-    author: "F. Scott Fitzgerald",
-    cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop",
-    rating: 4.2,
-    genre: "Classic Literature",
-    year: 1925,
-    description: "A classic American novel set in the Jazz Age, exploring themes of wealth, love, and the American Dream.",
-    isFavorite: false,
-    isOwnedForSale: true,
-    salePrice: 10.99,
-    condition: "Fair",
-    isbn10: "0743273567",
-    isbn13: "978-0743273565",
-    publisher: "Scribner",
-    pages: 180,
-    language: "English",
-    distance: 1.9,
-    location: "Midtown"
-  }
-];
+import { usedBooksForPurchase } from '../data/mockData';
 
 const BooksForSale = () => {
   const { collections, addCollection, addBookToCollection } = useCollections();
@@ -100,11 +34,11 @@ const BooksForSale = () => {
   // Calculate books read count from actual data
   const booksReadCount = books.filter(book => book.userRating && book.userRating > 0).length;
 
-  // Get unique genres for filtering
-  const genres = Array.from(new Set(mockBooksForSale.map(book => book.genre)));
+  // Get unique genres for filtering from the centralized data
+  const genres = Array.from(new Set(usedBooksForPurchase.map(book => book.genre)));
 
-  // Filter books based on search term, genre, and distance
-  const filteredBooks = mockBooksForSale.filter(book => {
+  // Filter books based on search term, genre, and distance using centralized data
+  const filteredBooks = usedBooksForPurchase.filter(book => {
     const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          book.genre.toLowerCase().includes(searchTerm.toLowerCase());

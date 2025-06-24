@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, DollarSign, Tag, Star, BookOpen, User, Menu } from 'lucide-react';
@@ -10,33 +9,12 @@ import AccountModal from '../components/AccountModal';
 import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import { useCollections } from '../hooks/useCollections';
-
-// Mock data - in a real app this would come from props or context
-const mockBooksForSale: Book[] = [
-  {
-    id: 3,
-    title: "1984",
-    author: "George Orwell",
-    cover: "https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=300&h=450&fit=crop",
-    rating: 4.4,
-    genre: "Dystopian Fiction",
-    year: 1949,
-    description: "A dystopian social science fiction novel about totalitarian control and surveillance.",
-    isFavorite: false,
-    isOwnedForSale: true,
-    salePrice: 12.99,
-    isbn10: "0452284236",
-    isbn13: "978-0452284234",
-    publisher: "Plume",
-    pages: 328,
-    language: "English"
-  }
-];
+import { myBooksForSale } from '../data/mockData';
 
 const BooksForSale = () => {
   const { collections, addCollection } = useCollections();
   const navigate = useNavigate();
-  const [books] = useState(mockBooksForSale);
+  const [books] = useState(myBooksForSale);
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
@@ -166,11 +144,11 @@ const BooksForSale = () => {
             </div>
 
             <div className="mb-8">
-              <p className="text-slate-600">{mockBooksForSale.length} books available for purchase</p>
+              <p className="text-slate-600">{myBooksForSale.length} books available for purchase</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {mockBooksForSale.map(book => (
+              {myBooksForSale.map(book => (
                 <div 
                   key={book.id} 
                   className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
@@ -221,7 +199,7 @@ const BooksForSale = () => {
               ))}
             </div>
 
-            {mockBooksForSale.length === 0 && (
+            {myBooksForSale.length === 0 && (
               <div className="text-center py-12">
                 <DollarSign className="h-16 w-16 text-slate-400 mx-auto mb-4 opacity-50" />
                 <h3 className="text-xl font-semibold text-slate-700 mb-2">No books for sale</h3>

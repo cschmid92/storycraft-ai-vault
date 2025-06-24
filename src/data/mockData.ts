@@ -160,9 +160,52 @@ export const mockBooks: Book[] = [
   }
 ];
 
-export const mockUsedBooksForSale: Book[] = [
+// My books for sale - books owned by the current user that are available for sale
+export const myBooksForSale: Book[] = [
   {
-    id: 9,
+    id: 101,
+    title: "1984",
+    author: "George Orwell",
+    cover: "https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=300&h=450&fit=crop",
+    rating: 4.4,
+    genre: "Dystopian Fiction",
+    year: 1949,
+    description: "A dystopian social science fiction novel about totalitarian control and surveillance.",
+    isFavorite: false,
+    isOwnedForSale: true,
+    salePrice: 12.99,
+    condition: "Good",
+    isbn10: "0452284236",
+    isbn13: "978-0452284234",
+    publisher: "Plume",
+    pages: 328,
+    language: "English"
+  },
+  {
+    id: 102,
+    title: "The Hobbit",
+    author: "J.R.R. Tolkien",
+    cover: "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=300&h=450&fit=crop",
+    rating: 4.6,
+    genre: "Fantasy",
+    year: 1937,
+    description: "A children's fantasy novel about the adventures of a hobbit named Bilbo Baggins.",
+    isFavorite: false,
+    isOwnedForSale: true,
+    salePrice: 8.99,
+    condition: "Fair",
+    isbn10: "0547928227",
+    isbn13: "978-0547928227",
+    publisher: "Houghton Mifflin Harcourt",
+    pages: 310,
+    language: "English"
+  }
+];
+
+// Used books available for purchase from other users in the community
+export const usedBooksForPurchase: Book[] = [
+  {
+    id: 201,
     title: "1984",
     author: "George Orwell",
     cover: "https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=300&h=450&fit=crop",
@@ -183,7 +226,7 @@ export const mockUsedBooksForSale: Book[] = [
     location: "Downtown"
   },
   {
-    id: 10,
+    id: 202,
     title: "Pride and Prejudice",
     author: "Jane Austen",
     cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop",
@@ -204,7 +247,7 @@ export const mockUsedBooksForSale: Book[] = [
     location: "Uptown"
   },
   {
-    id: 11,
+    id: 203,
     title: "The Great Gatsby",
     author: "F. Scott Fitzgerald",
     cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop",
@@ -223,11 +266,33 @@ export const mockUsedBooksForSale: Book[] = [
     language: "English",
     distance: 1.9,
     location: "Midtown"
+  },
+  {
+    id: 204,
+    title: "Dune",
+    author: "Frank Herbert",
+    cover: "https://images.unsplash.com/photo-1518373714866-3f1478910cc0?w=300&h=450&fit=crop",
+    rating: 4.6,
+    genre: "Science Fiction",
+    year: 1965,
+    description: "An epic science fiction novel set on the desert planet Arrakis.",
+    isFavorite: false,
+    isOwnedForSale: true,
+    salePrice: 18.50,
+    condition: "Like New",
+    isbn10: "0441013597",
+    isbn13: "978-0441013593",
+    publisher: "Ace",
+    pages: 688,
+    language: "English",
+    distance: 5.1,
+    location: "Westside"
   }
 ];
 
-// Export mockUsedBooks as an alias for consistency
-export const mockUsedBooks = mockUsedBooksForSale;
+// Legacy exports for backward compatibility
+export const mockUsedBooksForSale = usedBooksForPurchase;
+export const mockUsedBooks = usedBooksForPurchase;
 
 export const mockCollections: Collection[] = [
   {

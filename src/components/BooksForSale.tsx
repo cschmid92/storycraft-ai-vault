@@ -1,6 +1,8 @@
+
 import React from 'react';
 import { DollarSign, Tag } from 'lucide-react';
 import { Book } from '../types/entities';
+import { myBooksForSale } from '../data/mockData';
 
 interface BooksForSaleProps {
   books: Book[];
@@ -8,9 +10,10 @@ interface BooksForSaleProps {
 }
 
 const BooksForSale = ({ books, onBookClick }: BooksForSaleProps) => {
-  const booksForSale = books.filter(book => book.isOwnedForSale && book.salePrice);
+  // Use books prop if provided, otherwise use centralized data
+  const booksToShow = books.length > 0 ? books.filter(book => book.isOwnedForSale && book.salePrice) : myBooksForSale;
 
-  if (booksForSale.length === 0) {
+  if (booksToShow.length === 0) {
     return (
       <div className="p-4 text-center">
         <DollarSign className="h-8 w-8 text-slate-400 mx-auto mb-2" />
@@ -21,7 +24,7 @@ const BooksForSale = ({ books, onBookClick }: BooksForSaleProps) => {
 
   return (
     <div className="space-y-3">
-      {booksForSale.map((book) => (
+      {booksToShow.map((book) => (
         <div
           key={book.id}
           className="flex items-center gap-3 p-3 bg-white/60 rounded-lg border border-slate-200 hover:bg-white/80 cursor-pointer transition-colors"
