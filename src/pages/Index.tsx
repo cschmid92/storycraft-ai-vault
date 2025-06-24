@@ -27,7 +27,6 @@ const Index = () => {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
 
   // Calculate books read count from actual data
   const booksReadCount = books.filter(book => book.userRating && book.userRating > 0).length;
@@ -49,23 +48,6 @@ const Index = () => {
   const handleAddToCollection = (book: Book) => {
     setSelectedBookForCollection(book);
     setIsCollectionSelectionModalOpen(true);
-  };
-
-  const handleAddToCollectionById = (bookId: number) => {
-    const book = books.find(b => b.id === bookId);
-    if (book) {
-      handleAddToCollection(book);
-    }
-  };
-
-  const handleAddToBooksRead = (bookId: number) => {
-    // This could trigger a rating modal or directly mark as read
-    console.log(`Adding book ${bookId} to books read`);
-  };
-
-  const isInBooksRead = (bookId: number) => {
-    const book = books.find(b => b.id === bookId);
-    return book ? (book.userRating && book.userRating > 0) : false;
   };
 
   const handleCollectionSelection = (collection: Collection) => {
@@ -153,32 +135,15 @@ const Index = () => {
               
               {/* Search Bar */}
               <div className="max-w-2xl mx-auto">
-                <SearchBar 
-                  searchTerm={searchTerm}
-                  onSearchChange={setSearchTerm}
-                />
+                <SearchBar />
               </div>
             </div>
 
             {/* Popular Reads */}
-            <PopularReads 
-              books={books}
-              onBookClick={handleBookClick}
-              onToggleFavorite={toggleFavorite}
-              onAddToCollection={handleAddToCollectionById}
-              onAddToBooksRead={handleAddToBooksRead}
-              isInBooksRead={isInBooksRead}
-            />
+            <PopularReads />
 
             {/* Recommendations */}
-            <Recommendations 
-              books={books}
-              onBookClick={handleBookClick}
-              onToggleFavorite={toggleFavorite}
-              onAddToCollection={handleAddToCollectionById}
-              onAddToBooksRead={handleAddToBooksRead}
-              isInBooksRead={isInBooksRead}
-            />
+            <Recommendations />
           </div>
         </main>
       </div>
