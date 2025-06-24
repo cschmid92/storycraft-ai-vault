@@ -16,11 +16,7 @@ interface SharedLayoutProps {
 const SharedLayout = ({ children }: SharedLayoutProps) => {
   const { 
     books, 
-    favorites, 
-    booksRead, 
-    booksReadCount,
     toggleFavorite, 
-    addBookToCollection: addToUserCollection,
     toggleOwnedForSale,
     rateBook
   } = useBooks();
@@ -31,6 +27,11 @@ const SharedLayout = ({ children }: SharedLayoutProps) => {
     deleteCollection,
     addBookToCollection 
   } = useCollections();
+
+  // Compute derived values from books
+  const favorites = books.filter(book => book.isFavorite);
+  const booksRead = books.filter(book => book.userRating && book.userRating > 0);
+  const booksReadCount = booksRead.length;
 
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
@@ -61,13 +62,9 @@ const SharedLayout = ({ children }: SharedLayoutProps) => {
     setIsSelectionModalOpen(true);
   };
 
-  const handleConfirmAddToCollection = (collectionId: number | string) => {
+  const handleConfirmAddToCollection = (collection: Collection) => {
     if (selectedBookId) {
-      if (typeof collectionId === 'number') {
-        addBookToCollection(collectionId, selectedBookId);
-      } else {
-        addToUserCollection(selectedBookId, collectionId);
-      }
+      addBookToCollection(collection.id, selectedBookId);
       setIsSelectionModalOpen(false);
       setSelectedBookId(null);
     }
@@ -82,6 +79,8 @@ const SharedLayout = ({ children }: SharedLayoutProps) => {
     setIsBookDetailOpen(false);
     setSelectedBook(null);
   };
+
+  const selectedBookTitle = selectedBookId ? books.find(book => book.id === selectedBookId)?.title || '' : '';
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex w-full">
@@ -103,7 +102,7 @@ const SharedLayout = ({ children }: SharedLayoutProps) => {
       <CollectionModal
         isOpen={isCollectionModalOpen}
         onClose={handleCloseCollectionModal}
-        onSave={handleAddCollection}
+        onCreateCollection={handleAddCollection}
       />
 
       <CollectionSelectionModal
@@ -111,6 +110,7 @@ const SharedLayout = ({ children }: SharedLayoutProps) => {
         onClose={() => setIsSelectionModalOpen(false)}
         onSelectCollection={handleConfirmAddToCollection}
         collections={collections}
+        bookTitle={selectedBookTitle}
       />
 
       <BookDetailModal
