@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { BookOpen, User, Award, Target, Users, Globe, ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -55,7 +54,7 @@ const About = () => {
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isCollectionSelectionModalOpen, setIsCollectionSelectionModalOpen] = useState(false);
-  const [selectedBookIdForCollection, setSelectedBookIdForCollection] = useState<number | null>(null);
+  const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
   const [booksReadList] = useState<number[]>([1, 2]);
 
   const handleCollectionSelect = (collection: any) => {
@@ -70,6 +69,18 @@ const About = () => {
 
   const handleCreateCollection = (name: string, color: string) => {
     addCollection(name, color);
+  };
+
+  const handleAddToCollection = (book: Book) => {
+    setSelectedBookForCollection(book);
+    setIsCollectionSelectionModalOpen(true);
+  };
+
+  const handleCollectionSelection = (collection: any) => {
+    if (collection && selectedBookForCollection) {
+      console.log(`Added "${selectedBookForCollection.title}" to collection "${collection.name}"`);
+    }
+    setSelectedBookForCollection(null);
   };
 
   return (
@@ -216,7 +227,8 @@ const About = () => {
         isOpen={isCollectionSelectionModalOpen}
         onClose={() => setIsCollectionSelectionModalOpen(false)}
         collections={collections}
-        bookId={selectedBookIdForCollection}
+        onSelectCollection={handleCollectionSelection}
+        bookTitle={selectedBookForCollection?.title || ""}
       />
       
       <AccountModal 

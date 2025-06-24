@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { BookOpen, User, ShoppingCart, Filter, DollarSign, MapPin, Star, ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
@@ -80,7 +79,7 @@ const BuyUsedBooks = () => {
   const [isBookDetailModalOpen, setIsBookDetailModalOpen] = useState(false);
   const [isCollectionSelectionModalOpen, setIsCollectionSelectionModalOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-  const [selectedBookIdForCollection, setSelectedBookIdForCollection] = useState<number | null>(null);
+  const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [selectedCondition, setSelectedCondition] = useState("");
@@ -113,8 +112,18 @@ const BuyUsedBooks = () => {
   };
 
   const handleAddToCollection = (bookId: number) => {
-    setSelectedBookIdForCollection(bookId);
-    setIsCollectionSelectionModalOpen(true);
+    const book = books.find(b => b.id === bookId);
+    if (book) {
+      setSelectedBookForCollection(book);
+      setIsCollectionSelectionModalOpen(true);
+    }
+  };
+
+  const handleCollectionSelection = (collection: any) => {
+    if (collection && selectedBookForCollection) {
+      console.log(`Added "${selectedBookForCollection.title}" to collection "${collection.name}"`);
+    }
+    setSelectedBookForCollection(null);
   };
 
   const handleAddToBooksRead = (bookId: number) => {
@@ -314,7 +323,8 @@ const BuyUsedBooks = () => {
         isOpen={isCollectionSelectionModalOpen}
         onClose={() => setIsCollectionSelectionModalOpen(false)}
         collections={collections}
-        bookId={selectedBookIdForCollection}
+        onSelectCollection={handleCollectionSelection}
+        bookTitle={selectedBookForCollection?.title || ""}
       />
       
       <AccountModal 
