@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft, ShoppingCart, Star, DollarSign, BookOpen, User, Menu, Library } from 'lucide-react';
@@ -8,6 +9,7 @@ import CollectionModal from '../components/CollectionModal';
 import AccountModal from '../components/AccountModal';
 import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
+import SearchBar from '../components/SearchBar';
 import { useCollections, Collection } from '../hooks/useCollections';
 
 // Mock data - in a real app this would come from props or context
@@ -24,6 +26,7 @@ const mockBooksForSale: Book[] = [
     isFavorite: false,
     isOwnedForSale: true,
     salePrice: 12.99,
+    condition: "Good",
     isbn10: "0452284236",
     isbn13: "978-0452284234",
     publisher: "Plume",
@@ -36,6 +39,7 @@ const BooksForSale = () => {
   const { collections, addCollection, addBookToCollection } = useCollections();
   const navigate = useNavigate();
   const [books] = useState(mockBooksForSale);
+  const [searchTerm, setSearchTerm] = useState('');
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isBookDetailModalOpen, setIsBookDetailModalOpen] = useState(false);
@@ -44,6 +48,13 @@ const BooksForSale = () => {
   const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
   const [booksReadList] = useState<number[]>([3]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Filter books based on search term
+  const filteredBooks = books.filter(book => 
+    book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    book.genre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleCollectionSelect = (collection: any) => {
     if (collection && typeof collection.id !== 'undefined') {
@@ -154,12 +165,20 @@ const BooksForSale = () => {
               <h2 className="text-2xl font-bold text-slate-800 ml-2 inline-block">Buy Used Books</h2>
             </div>
 
+            {/* Search Bar */}
+            <div className="mb-6">
+              <SearchBar 
+                searchTerm={searchTerm}
+                onSearchChange={setSearchTerm}
+              />
+            </div>
+
             <div className="mb-8">
-              <p className="text-slate-600">{mockBooksForSale.length} books available from the community</p>
+              <p className="text-slate-600">{filteredBooks.length} books available from the community</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {mockBooksForSale.map(book => (
+              {filteredBooks.map(book => (
                 <div 
                   key={book.id} 
                   className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
@@ -175,6 +194,11 @@ const BooksForSale = () => {
                       <DollarSign className="h-3 w-3" />
                       ${book.salePrice}
                     </div>
+                    {book.condition && (
+                      <div className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">
+                        {book.condition}
+                      </div>
+                    )}
                     <div className="absolute bottom-2 left-2 flex items-center space-x-1 bg-white/80 backdrop-blur-sm rounded-full px-2 py-1">
                       <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
                       <span className="text-xs font-medium text-slate-700">{book.rating}</span>
@@ -209,11 +233,11 @@ const BooksForSale = () => {
               ))}
             </div>
 
-            {mockBooksForSale.length === 0 && (
+            {filteredBooks.length === 0 && (
               <div className="text-center py-12">
                 <DollarSign className="h-16 w-16 text-slate-400 mx-auto mb-4 opacity-50" />
-                <h3 className="text-xl font-semibold text-slate-700 mb-2">No books for sale</h3>
-                <p className="text-slate-500">Check back later for new listings</p>
+                <h3 className="text-xl font-semibold text-slate-700 mb-2">No books found</h3>
+                <p className="text-slate-500">Try adjusting your search terms</p>
               </div>
             )}
           </div>
