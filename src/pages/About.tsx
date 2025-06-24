@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { BookOpen, User, Award, Target, Users, Globe, ArrowLeft, Menu, Info, Heart, Star, ShoppingCart, Search, Quote, Library } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import SharedSidebar from '../components/SharedSidebar';
+import UnifiedSidebar from '../components/UnifiedSidebar';
 import CollectionModal from '../components/CollectionModal';
 import AccountModal from '../components/AccountModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
@@ -139,7 +139,7 @@ const About = () => {
         
         {/* Sidebar */}
         <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-50 md:z-auto`}>
-          <SharedSidebar 
+          <UnifiedSidebar 
             collections={collections}
             selectedCollection={null}
             onSelectCollection={handleCollectionSelect}

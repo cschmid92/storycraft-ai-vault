@@ -5,7 +5,7 @@ import BookCard from '../components/BookCard';
 import CollectionModal from '../components/CollectionModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import SearchBar from '../components/SearchBar';
-import SharedSidebar from '../components/SharedSidebar';
+import UnifiedSidebar from '../components/UnifiedSidebar';
 import BookDetailModal from '../components/BookDetailModal';
 import AccountModal from '../components/AccountModal';
 import PopularReads from '../components/PopularReads';
@@ -308,7 +308,7 @@ const Index = () => {
         
         {/* Sidebar */}
         <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-50 md:z-auto`}>
-          <SharedSidebar 
+          <UnifiedSidebar 
             collections={collections}
             selectedCollection={selectedCollection}
             onSelectCollection={handleCollectionSelect}
