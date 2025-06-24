@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { BookOpen, User, Menu, ArrowLeft, Info, Library, Heart, TrendingUp, DollarSign, Users, Search } from 'lucide-react';
@@ -30,6 +31,11 @@ const About = () => {
   const handleSelectCollection = (collection: Collection | null) => {
     setSelectedCollection(collection);
     setIsSidebarOpen(false);
+    
+    // Navigate to collection page if it's a real collection
+    if (collection && typeof collection.id === 'number') {
+      window.location.href = `/collections/${collection.id}`;
+    }
   };
 
   const handleBookClick = (book: Book) => {
@@ -68,14 +74,6 @@ const About = () => {
               >
                 <Menu className="h-5 w-5" />
               </Button>
-              
-              {/* Back button */}
-              <Link to="/">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back
-                </Button>
-              </Link>
               
               <div className="flex items-center space-x-3">
                 <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
@@ -127,21 +125,16 @@ const About = () => {
 
         {/* Main Content */}
         <main className="flex-1 p-4 md:p-6">
-          {/* Page Header */}
-          <div className="mb-8">
-            <div className="flex items-center space-x-3 mb-4">
-              <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
-                <Info className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl font-bold text-slate-800">About Bacondo</h1>
-                <p className="text-sm text-slate-600">Your Digital Library</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Welcome Section */}
+          {/* Welcome Section with Back Button */}
           <div className="text-center mb-12">
+            <div className="flex items-center justify-center mb-6">
+              <Link to="/">
+                <Button variant="ghost" size="sm" className="mr-4">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back
+                </Button>
+              </Link>
+            </div>
             <h2 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4">
               Welcome to Bacondo
             </h2>
