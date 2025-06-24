@@ -66,11 +66,12 @@ const BooksForSale = () => {
     setIsCollectionSelectionModalOpen(true);
   };
 
-  const handleCollectionSelection = (collection: any) => {
+  const handleCollectionSelection = (collection: Collection) => {
     if (collection && selectedBookForCollection) {
       console.log(`Added "${selectedBookForCollection.title}" to collection "${collection.name}"`);
     }
     setSelectedBookForCollection(null);
+    setIsCollectionSelectionModalOpen(false);
   };
 
   const handleCardClick = (book: Book) => {

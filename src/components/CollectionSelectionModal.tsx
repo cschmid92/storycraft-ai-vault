@@ -8,7 +8,7 @@ interface CollectionSelectionModalProps {
   isOpen: boolean;
   onClose: () => void;
   collections: Collection[];
-  onSelectCollection: (collection: Collection | null) => void;
+  onSelectCollection: (collection: Collection) => void;
   bookTitle: string;
 }
 
@@ -20,6 +20,11 @@ const CollectionSelectionModal = ({
   bookTitle 
 }: CollectionSelectionModalProps) => {
   if (!isOpen) return null;
+
+  const handleCollectionClick = (collection: Collection) => {
+    onSelectCollection(collection);
+    onClose();
+  };
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[80] flex items-center justify-center p-4">
@@ -44,10 +49,7 @@ const CollectionSelectionModal = ({
           {collections.map((collection) => (
             <button
               key={collection.id}
-              onClick={() => {
-                onSelectCollection(collection);
-                onClose();
-              }}
+              onClick={() => handleCollectionClick(collection)}
               className="w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left hover:bg-slate-50 transition-colors border border-slate-200"
             >
               <div className={`w-3 h-3 rounded-full ${collection.color}`} />

@@ -216,6 +216,16 @@ const Index = () => {
     setIsSidebarOpen(false); // Close sidebar on mobile after selection
   };
 
+  const handleCollectionSelection = (collection: Collection) => {
+    if (collection && selectedBookForCollection) {
+      console.log(`Added "${books.find(b => b.id === selectedBookForCollection)?.title}" to collection "${collection.name}"`);
+      // Here you would typically update the collection's book list
+      // For now, we'll just log the action
+    }
+    setSelectedBookForCollection(null);
+    setIsCollectionSelectionOpen(false);
+  };
+
   const handleRateBook = (bookId: number, rating: number) => {
     setBooks(books.map(book => 
       book.id === bookId ? { ...book, userRating: rating } : book
@@ -442,7 +452,7 @@ const Index = () => {
         isOpen={isCollectionSelectionOpen}
         onClose={() => setIsCollectionSelectionOpen(false)}
         collections={collections}
-        onSelectCollection={handleCollectionSelect}
+        onSelectCollection={handleCollectionSelection}
         bookTitle={selectedBookTitle}
       />
       
