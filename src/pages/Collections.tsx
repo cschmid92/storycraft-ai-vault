@@ -179,9 +179,11 @@ const Collections = () => {
                   <BookCard
                     key={book.id}
                     book={book}
-                    onClick={() => handleBookClick(book)}
+                    onBookClick={() => handleBookClick(book)}
                     onToggleFavorite={() => {}}
                     onAddToCollection={() => handleAddToCollection(book)}
+                    onAddToBooksRead={() => {}}
+                    isInBooksRead={booksReadList.includes(book.id)}
                   />
                 ))}
               </div>

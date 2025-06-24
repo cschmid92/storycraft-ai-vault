@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Menu, User, Library } from 'lucide-react';
@@ -31,6 +30,7 @@ const Index = () => {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Get popular books (highest rated)
   const popularBooks = books
@@ -78,6 +78,25 @@ const Index = () => {
     if (query.trim()) {
       navigate(`/search?q=${encodeURIComponent(query)}`);
     }
+  };
+
+  const handleToggleFavorite = (bookId: number) => {
+    console.log('Toggle favorite for book:', bookId);
+  };
+
+  const handleAddToCollectionById = (bookId: number) => {
+    const book = books.find(b => b.id === bookId);
+    if (book) {
+      handleAddToCollection(book);
+    }
+  };
+
+  const handleAddToBooksRead = (bookId: number) => {
+    console.log('Add to books read:', bookId);
+  };
+
+  const isInBooksRead = (bookId: number) => {
+    return booksReadList.includes(bookId);
   };
 
   return (
@@ -155,7 +174,10 @@ const Index = () => {
               
               {/* Search Bar */}
               <div className="max-w-2xl mx-auto">
-                <SearchBar onSearch={handleSearch} />
+                <SearchBar 
+                  searchTerm={searchTerm}
+                  onSearchChange={setSearchTerm}
+                />
               </div>
               
               {/* Quick Actions */}
@@ -177,6 +199,10 @@ const Index = () => {
             <PopularReads 
               books={popularBooks}
               onBookClick={handleBookClick}
+              onToggleFavorite={handleToggleFavorite}
+              onAddToCollection={handleAddToCollectionById}
+              onAddToBooksRead={handleAddToBooksRead}
+              isInBooksRead={isInBooksRead}
             />
 
             {/* Recommendations Section */}
