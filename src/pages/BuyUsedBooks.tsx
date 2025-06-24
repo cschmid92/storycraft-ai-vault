@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ShoppingCart, Star, DollarSign, BookOpen, User, Menu, Library, MapPin } from 'lucide-react';
+import { ArrowLeft, User, Menu, Library } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/Book';
 import SharedSidebar from '../components/SharedSidebar';
@@ -8,7 +9,8 @@ import CollectionModal from '../components/CollectionModal';
 import AccountModal from '../components/AccountModal';
 import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
-import SearchBar from '../components/SearchBar';
+import BuyUsedBooksFilters from '../components/BuyUsedBooksFilters';
+import UsedBookGrid from '../components/UsedBookGrid';
 import { useCollections, Collection } from '../hooks/useCollections';
 
 // Mock data - in a real app this would come from props or context
@@ -140,10 +142,6 @@ const BooksForSale = () => {
     setIsCollectionSelectionModalOpen(false);
   };
 
-  const handleCardClick = (book: Book) => {
-    handleBookClick(book);
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
       {/* Header */}
@@ -220,107 +218,24 @@ const BooksForSale = () => {
             </div>
 
             {/* Search and Filters */}
-            <div className="mb-6 space-y-4">
-              <SearchBar 
-                searchTerm={searchTerm}
-                onSearchChange={setSearchTerm}
-              />
-              
-              <div className="flex flex-wrap gap-4">
-                {/* Genre Filter */}
-                <div className="flex-1 min-w-48">
-                  <select
-                    value={selectedGenre}
-                    onChange={(e) => setSelectedGenre(e.target.value)}
-                    className="w-full px-3 py-2 bg-white/80 border border-slate-300 rounded-md text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  >
-                    <option value="">All Genres</option>
-                    {genres.map(genre => (
-                      <option key={genre} value={genre}>{genre}</option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* Distance Filter */}
-                <div className="flex-1 min-w-48">
-                  <input
-                    type="number"
-                    placeholder="Max distance (miles)"
-                    value={maxDistance || ''}
-                    onChange={(e) => setMaxDistance(e.target.value ? Number(e.target.value) : null)}
-                    className="w-full px-3 py-2 bg-white/80 border border-slate-300 rounded-md text-slate-800 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  />
-                </div>
-              </div>
-            </div>
+            <BuyUsedBooksFilters
+              searchTerm={searchTerm}
+              onSearchChange={setSearchTerm}
+              selectedGenre={selectedGenre}
+              onGenreChange={setSelectedGenre}
+              maxDistance={maxDistance}
+              onDistanceChange={setMaxDistance}
+              genres={genres}
+            />
 
             <div className="mb-8">
               <p className="text-slate-600">{filteredBooks.length} books available from the community</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {filteredBooks.map(book => (
-                <div 
-                  key={book.id} 
-                  className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
-                  onClick={() => handleCardClick(book)}
-                >
-                  <div className="relative aspect-[3/4] overflow-hidden">
-                    <img 
-                      src={book.cover} 
-                      alt={book.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute top-2 left-2 bg-orange-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
-                      <MapPin className="h-3 w-3" />
-                      {book.distance} mi
-                    </div>
-                    {book.condition && (
-                      <div className="absolute top-2 right-2 bg-blue-500 text-white text-xs font-bold px-2 py-1 rounded-full">
-                        {book.condition}
-                      </div>
-                    )}
-                    <div className="absolute bottom-2 left-2 flex items-center space-x-1 bg-white/80 backdrop-blur-sm rounded-full px-2 py-1">
-                      <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                      <span className="text-xs font-medium text-slate-700">{book.rating}</span>
-                    </div>
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-semibold text-slate-800 text-sm leading-tight line-clamp-2 mb-1">
-                      {book.title}
-                    </h3>
-                    <p className="text-slate-600 text-xs mb-2">{book.author}</p>
-                    <div className="flex items-center justify-between text-xs">
-                      <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full">
-                        {book.genre}
-                      </span>
-                      <span className="text-slate-500">{book.year}</span>
-                    </div>
-                    <p className="text-slate-600 text-xs mt-2 line-clamp-2">
-                      {book.description}
-                    </p>
-                    <Button 
-                      className="w-full mt-3" 
-                      size="sm"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        // Handle purchase logic here
-                      }}
-                    >
-                      Buy for ${book.salePrice}
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            {filteredBooks.length === 0 && (
-              <div className="text-center py-12">
-                <DollarSign className="h-16 w-16 text-slate-400 mx-auto mb-4 opacity-50" />
-                <h3 className="text-xl font-semibold text-slate-700 mb-2">No books found</h3>
-                <p className="text-slate-500">Try adjusting your search terms or filters</p>
-              </div>
-            )}
+            <UsedBookGrid
+              books={filteredBooks}
+              onBookClick={handleBookClick}
+            />
           </div>
         </main>
       </div>
