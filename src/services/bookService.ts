@@ -65,9 +65,9 @@ export class BookService {
 
 export class CollectionService {
   static getCollectionBooks(collection: Collection): Book[] {
-    if (collection.id === 'favorites') {
+    if (String(collection.id) === 'favorites') {
       return BookService.getFavoriteBooks();
-    } else if (collection.id === 'books-read') {
+    } else if (String(collection.id) === 'books-read') {
       return mockBooks.filter(book => book.userRating && book.userRating > 0);
     } else {
       return BookService.getBooksByIds(collection.bookIds);

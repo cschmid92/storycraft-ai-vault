@@ -113,7 +113,7 @@ const CollectionSidebar = ({
               <div
                 key={collection.id}
                 className={`group relative flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
-                  selectedCollection?.id === collection.id 
+                  String(selectedCollection?.id) === String(collection.id)
                     ? 'bg-blue-100 text-blue-800 border border-blue-200' 
                     : 'text-slate-600 hover:bg-slate-100'
                 }`}
@@ -134,7 +134,7 @@ const CollectionSidebar = ({
               <div
                 key={collection.id}
                 className={`group relative flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
-                  selectedCollection?.id === collection.id 
+                  String(selectedCollection?.id) === String(collection.id)
                     ? 'bg-blue-100 text-blue-800 border border-blue-200' 
                     : 'text-slate-600 hover:bg-slate-100'
                 }`}
