@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, ShoppingCart, Star, DollarSign, BookOpen, User, Menu } from 'lucide-react';
+import { ArrowLeft, ShoppingCart, Star, DollarSign, BookOpen, User, Menu, Library } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/Book';
 import SharedSidebar from '../components/SharedSidebar';
@@ -94,12 +93,12 @@ const BooksForSale = () => {
               >
                 <Menu className="h-5 w-5" />
               </Button>
-              <div className="p-2 bg-gradient-to-r from-emerald-600 to-green-600 rounded-xl">
-                <ShoppingCart className="h-6 w-6 text-white" />
+              <div className="p-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl">
+                <Library className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-800">Buy Used Books</h1>
-                <p className="text-xs text-slate-600 hidden sm:block">Discover great reads</p>
+                <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
+                <p className="text-xs text-slate-600 hidden sm:block">Your personal book collection</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -150,10 +149,10 @@ const BooksForSale = () => {
                   Back
                 </Button>
               </Link>
+              <h2 className="text-2xl font-bold text-slate-800 ml-2 inline-block">Buy Used Books</h2>
             </div>
 
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">Used Books for Sale</h2>
               <p className="text-slate-600">{mockBooksForSale.length} books available from the community</p>
             </div>
 

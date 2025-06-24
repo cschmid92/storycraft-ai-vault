@@ -1,11 +1,13 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, DollarSign, Tag, Star, BookOpen, User } from 'lucide-react';
+import { ArrowLeft, DollarSign, Tag, Star, BookOpen, User, Library, Menu } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/Book';
 import SharedSidebar from '../components/SharedSidebar';
 import CollectionModal from '../components/CollectionModal';
 import AccountModal from '../components/AccountModal';
+import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import { useCollections } from '../hooks/useCollections';
 
@@ -37,18 +39,23 @@ const BooksForSale = () => {
   const [books] = useState(mockBooksForSale);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
+  const [isBookDetailModalOpen, setIsBookDetailModalOpen] = useState(false);
   const [isCollectionSelectionModalOpen, setIsCollectionSelectionModalOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
   const [booksReadList] = useState<number[]>([3]);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleCollectionSelect = (collection: any) => {
     if (collection && typeof collection.id !== 'undefined') {
       navigate(`/collections/${collection.id}`);
     }
+    setIsSidebarOpen(false);
   };
 
   const handleBookClick = (book: Book) => {
-    console.log('Book clicked:', book);
+    setSelectedBook(book);
+    setIsBookDetailModalOpen(true);
   };
 
   const handleCreateCollection = (name: string, color: string) => {
@@ -67,6 +74,15 @@ const BooksForSale = () => {
     setSelectedBookForCollection(null);
   };
 
+  const handleCardClick = (book: Book) => {
+    handleBookClick(book);
+  };
+
+  const handleRemoveFromSale = (bookId: number) => {
+    console.log(`Removing book ${bookId} from sale`);
+    // In a real app, this would update the book's isOwnedForSale status
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
       {/* Header */}
@@ -74,28 +90,32 @@ const BooksForSale = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              <Link to="/">
-                <Button variant="ghost" size="sm">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back
-                </Button>
-              </Link>
-              <div className="p-2 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl">
-                <DollarSign className="h-6 w-6 text-white" />
+              {/* Mobile menu button */}
+              <Button
+                variant="ghost"
+                size="sm"
+                className="md:hidden"
+                onClick={() => setIsSidebarOpen(true)}
+              >
+                <Menu className="h-5 w-5" />
+              </Button>
+              <div className="p-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl">
+                <Library className="h-6 w-6 text-white" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-slate-800">My Books for Sale</h1>
-                <p className="text-xs text-slate-600">Browse available books</p>
+                <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
+                <p className="text-xs text-slate-600 hidden sm:block">Your personal book collection</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
               <Button 
                 variant="outline"
+                size="sm"
                 className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
                 onClick={() => setIsAccountModalOpen(true)}
               >
-                <User className="h-4 w-4 mr-2" />
-                Account
+                <User className="h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Account</span>
               </Button>
             </div>
           </div>
@@ -103,28 +123,52 @@ const BooksForSale = () => {
       </header>
 
       <div className="flex">
+        {/* Sidebar - Mobile overlay */}
+        {isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-50 md:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+        
         {/* Sidebar */}
-        <SharedSidebar 
-          collections={collections}
-          selectedCollection={null}
-          onSelectCollection={handleCollectionSelect}
-          onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
-          books={books}
-          onBookClick={handleBookClick}
-          booksReadCount={booksReadList.length}
-        />
+        <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-50 md:z-auto`}>
+          <SharedSidebar 
+            collections={collections}
+            selectedCollection={null}
+            onSelectCollection={handleCollectionSelect}
+            onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
+            books={books}
+            onBookClick={handleBookClick}
+            booksReadCount={booksReadList.length}
+          />
+        </div>
 
         {/* Main Content */}
-        <main className="flex-1 p-6">
+        <main className="flex-1 p-4 md:p-6">
           <div className="max-w-7xl mx-auto">
+            {/* Back Button */}
+            <div className="mb-4 md:mb-6">
+              <Link to="/">
+                <Button variant="ghost" size="sm" className="text-slate-600 hover:bg-slate-100">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back
+                </Button>
+              </Link>
+              <h2 className="text-2xl font-bold text-slate-800 ml-2 inline-block">My Books for Sale</h2>
+            </div>
+
             <div className="mb-8">
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">Available Books</h2>
               <p className="text-slate-600">{mockBooksForSale.length} books available for purchase</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
               {mockBooksForSale.map(book => (
-                <div key={book.id} className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-lg">
+                <div 
+                  key={book.id} 
+                  className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
+                  onClick={() => handleCardClick(book)}
+                >
                   <div className="relative aspect-[3/4] overflow-hidden">
                     <img 
                       src={book.cover} 
@@ -154,8 +198,16 @@ const BooksForSale = () => {
                     <p className="text-slate-600 text-xs mt-2 line-clamp-2">
                       {book.description}
                     </p>
-                    <Button className="w-full mt-3" size="sm">
-                      Buy for ${book.salePrice}
+                    <Button 
+                      variant="outline"
+                      className="w-full mt-3 border-red-500 text-red-600 hover:bg-red-50" 
+                      size="sm"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveFromSale(book.id);
+                      }}
+                    >
+                      Remove from Sale
                     </Button>
                   </div>
                 </div>
@@ -186,6 +238,16 @@ const BooksForSale = () => {
         collections={collections}
         onSelectCollection={handleCollectionSelection}
         bookTitle={selectedBookForCollection?.title || ""}
+      />
+
+      <BookDetailModal
+        book={selectedBook}
+        isOpen={isBookDetailModalOpen}
+        onClose={() => setIsBookDetailModalOpen(false)}
+        onToggleFavorite={() => {}}
+        onAddToCollection={() => selectedBook && handleAddToCollection(selectedBook)}
+        onToggleOwnedForSale={() => {}}
+        onRateBook={() => {}}
       />
       
       <AccountModal 
