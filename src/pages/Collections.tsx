@@ -1,27 +1,16 @@
 
 import React, { useState } from 'react';
-import { Link, useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, BookmarkPlus, Edit, Trash2, Heart, Menu } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
+import { BookmarkPlus } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
-import BookCard from '../components/BookCard';
+import CollectionsHeader from '../components/CollectionsHeader';
+import CollectionContentArea from '../components/CollectionContentArea';
 import SharedSidebar from '../components/SharedSidebar';
 import CollectionModal from '../components/CollectionModal';
 import AccountModal from '../components/AccountModal';
 import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import { Book, Collection } from '../types/entities';
-import { BookOpen, User } from 'lucide-react';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 
@@ -168,9 +157,7 @@ const Collections = () => {
           <div className="text-center">
             <BookmarkPlus className="h-16 w-16 text-slate-400 mx-auto mb-4" />
             <h2 className="text-xl font-semibold text-slate-700 mb-2">Collection not found</h2>
-            <Link to="/">
-              <Button>Go back to library</Button>
-            </Link>
+            <Button onClick={() => navigate('/')}>Go back to library</Button>
           </div>
         </div>
       </div>
@@ -181,44 +168,11 @@ const Collections = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
-      {/* Header */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-3">
-              {/* Mobile menu button */}
-              <Button
-                variant="ghost"
-                size="sm"
-                className="md:hidden"
-                onClick={() => setIsSidebarOpen(true)}
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
-              <Link to="/" className="flex items-center space-x-3">
-                <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
-                  <BookOpen className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
-                  <p className="text-xs text-slate-600 hidden sm:block">Your Digital Library</p>
-                </div>
-              </Link>
-            </div>
-            <div className="flex items-center gap-3">
-              <Button 
-                variant="outline"
-                size="sm"
-                className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
-                onClick={() => setIsAccountModalOpen(true)}
-              >
-                <User className="h-4 w-4 sm:mr-2" />
-                <span className="hidden sm:inline">Account</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <CollectionsHeader 
+        isSidebarOpen={isSidebarOpen}
+        setIsSidebarOpen={setIsSidebarOpen}
+        setIsAccountModalOpen={setIsAccountModalOpen}
+      />
 
       <div className="flex">
         {/* Sidebar - Mobile overlay */}
@@ -243,97 +197,19 @@ const Collections = () => {
           />
         </div>
 
-        {/* Main Content */}
-        <main className="flex-1 p-4 md:p-6">
-          <div className="mb-6 md:mb-8">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-3">
-                <Link to="/">
-                  <Button variant="ghost" size="sm">
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    <span className="hidden sm:inline">Back</span>
-                  </Button>
-                </Link>
-                <div className={`p-2 rounded-xl ${selectedCollection.color}`}>
-                  {selectedCollection.id === 'favorites' ? (
-                    <Heart className="h-6 w-6 text-white" />
-                  ) : (
-                    <BookmarkPlus className="h-6 w-6 text-white" />
-                  )}
-                </div>
-                <div>
-                  <h1 className="text-2xl md:text-3xl font-bold text-slate-800">{selectedCollection.name}</h1>
-                  <p className="text-xs text-slate-600">{collectionBooks.length} books</p>
-                </div>
-              </div>
-              {canEdit && (
-                <div className="flex gap-2">
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => handleEditCollection(selectedCollection.id as number)}
-                  >
-                    <Edit className="h-4 w-4 sm:mr-2" />
-                    <span className="hidden sm:inline">Edit</span>
-                  </Button>
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button 
-                        variant="outline" 
-                        size="sm"
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                      >
-                        <Trash2 className="h-4 w-4 sm:mr-2" />
-                        <span className="hidden sm:inline">Delete</span>
-                      </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Delete Collection</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          Are you sure you want to delete "{selectedCollection.name}"? This action cannot be undone.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction 
-                          onClick={handleDeleteCollection}
-                          className="bg-red-600 hover:bg-red-700"
-                        >
-                          Delete
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                </div>
-              )}
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
-            {collectionBooks.map(book => (
-              <BookCard 
-                key={book.id}
-                book={book}
-                onToggleFavorite={handleToggleFavorite}
-                onBookClick={handleBookClick}
-                onAddToCollection={handleAddToCollection}
-                onAddToBooksRead={handleAddToBooksRead}
-                isInBooksRead={booksReadList.includes(Number(book.id))}
-                onRemoveFromCollection={canEdit ? handleRemoveFromCollection : undefined}
-                showRemoveFromCollection={canEdit}
-              />
-            ))}
-          </div>
-
-          {collectionBooks.length === 0 && (
-            <div className="text-center py-12">
-              <BookmarkPlus className="h-16 w-16 text-slate-400 mx-auto mb-4 opacity-50" />
-              <h3 className="text-xl font-semibold text-slate-700 mb-2">No books in this collection</h3>
-              <p className="text-slate-500">Start adding books to build your collection</p>
-            </div>
-          )}
-        </main>
+        <CollectionContentArea
+          selectedCollection={selectedCollection}
+          collectionBooks={collectionBooks}
+          canEdit={canEdit}
+          booksReadList={booksReadList}
+          onToggleFavorite={handleToggleFavorite}
+          onBookClick={handleBookClick}
+          onAddToCollection={handleAddToCollection}
+          onAddToBooksRead={handleAddToBooksRead}
+          onRemoveFromCollection={canEdit ? handleRemoveFromCollection : undefined}
+          onEditCollection={handleEditCollection}
+          onDeleteCollection={handleDeleteCollection}
+        />
       </div>
 
       {/* Modals */}
