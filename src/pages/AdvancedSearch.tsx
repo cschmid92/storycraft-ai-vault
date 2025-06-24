@@ -1,10 +1,10 @@
+
 import React, { useState } from 'react';
 import { Search, Filter } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import SharedLayout from '../components/SharedLayout';
-import PageHeader from '../components/PageHeader';
+import AppLayout from '../components/layout/AppLayout';
 import { SearchService } from '../services/mockDataService';
 import { useNavigate } from 'react-router-dom';
 
@@ -71,14 +71,10 @@ const AdvancedSearch = () => {
   };
 
   return (
-    <SharedLayout>
-      <PageHeader
-        title="Advanced Search"
-        subtitle="Find books with detailed filters"
-        icon={Filter}
-        iconGradient="from-indigo-600 to-purple-600"
-      />
-
+    <AppLayout 
+      headerTitle="Advanced Search"
+      headerSubtitle="Find books with detailed filters"
+    >
       {/* Main Content */}
       <main className="max-w-4xl mx-auto p-6">
         <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 p-6">
@@ -259,7 +255,7 @@ const AdvancedSearch = () => {
           </div>
         </div>
       </main>
-    </SharedLayout>
+    </AppLayout>
   );
 };
 
