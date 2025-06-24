@@ -57,9 +57,11 @@ const Collections = () => {
 
   const handleDeleteCollection = (collectionId: number | string) => {
     console.log('Attempting to delete collection:', collectionId);
-    deleteCollection(collectionId);
-    console.log('Collection deleted, navigating to home');
-    navigate('/');
+    if (confirm('Are you sure you want to delete this collection?')) {
+      deleteCollection(collectionId);
+      console.log('Collection deleted, navigating to home');
+      navigate('/');
+    }
   };
 
   const handleCollectionSelect = (collection: Collection | { id: string; name: string; count: number; color: string } | null) => {
@@ -226,7 +228,7 @@ const Collections = () => {
             books={books}
             onBookClick={handleBookClick}
             booksReadCount={booksReadList.length}
-            onDeleteCollection={handleDeleteCollection}
+            onDeleteCollection={deleteCollection}
           />
         </div>
 
