@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, User, ArrowLeft } from 'lucide-react';
+import { BookOpen, User, ArrowLeft, Library, Heart, TrendingUp, DollarSign, Users, Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 
 const About = () => {
@@ -35,61 +35,101 @@ const About = () => {
       </header>
 
       {/* Main Content */}
-      <main className="max-w-4xl mx-auto p-6 md:p-8">
-        <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 p-6 md:p-8">
-          <h1 className="text-3xl font-bold text-slate-800 mb-6">About Bacondo</h1>
-          
-          <div className="prose prose-slate max-w-none">
-            <p className="text-lg text-slate-700 mb-6">
-              Welcome to Bacondo, your personal digital library where you can organize, track, and share your book collection with ease.
-            </p>
+      <main className="max-w-6xl mx-auto p-6 md:p-8">
+        {/* Welcome Section */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4">
+            Welcome to Bacondo
+          </h1>
+          <p className="text-xl text-slate-600 max-w-3xl mx-auto">
+            Your personal digital library where stories come alive and reading becomes an adventure.
+          </p>
+        </div>
 
-            <h2 className="text-2xl font-semibold text-slate-800 mb-4">What is Bacondo?</h2>
-            <p className="text-slate-700 mb-6">
-              Bacondo is a comprehensive book management platform designed for book lovers who want to keep track of their reading journey. Whether you're an avid reader with hundreds of books or just starting your collection, Bacondo helps you organize, discover, and connect with other readers in your community.
-            </p>
-
-            <h2 className="text-2xl font-semibold text-slate-800 mb-4">Key Features</h2>
-            <ul className="list-disc list-inside text-slate-700 mb-6 space-y-2">
-              <li><strong>Personal Library:</strong> Catalog your entire book collection with detailed information including ratings, reviews, and reading status.</li>
-              <li><strong>Custom Collections:</strong> Organize your books into personalized collections like "Favorites," "To Read," or any category you create.</li>
-              <li><strong>Book Marketplace:</strong> Buy and sell used books within your local community.</li>
-              <li><strong>Reading Tracking:</strong> Keep track of books you've read and rate them to remember your favorites.</li>
-              <li><strong>Discovery:</strong> Find new books through our recommendation system and popular reads section.</li>
-              <li><strong>Social Features:</strong> Connect with other readers and share your book recommendations.</li>
-            </ul>
-
-            <h2 className="text-2xl font-semibold text-slate-800 mb-4">Getting Started</h2>
-            <p className="text-slate-700 mb-4">
-              Getting started with Bacondo is simple:
-            </p>
-            <ol className="list-decimal list-inside text-slate-700 mb-6 space-y-2">
-              <li>Browse our collection of books or search for specific titles</li>
-              <li>Add books to your personal library and organize them into collections</li>
-              <li>Rate and review books you've read</li>
-              <li>Explore the marketplace to buy or sell used books</li>
-              <li>Discover new reads through our recommendation engine</li>
-            </ol>
-
-            <h2 className="text-2xl font-semibold text-slate-800 mb-4">Community</h2>
-            <p className="text-slate-700 mb-6">
-              Bacondo is more than just a personal library—it's a community of book lovers. Share your reading experiences, discover what others are reading, and participate in our local book marketplace to give your books a new home while finding new treasures for your collection.
-            </p>
-
-            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-              <p className="text-blue-800">
-                <strong>Have questions or feedback?</strong> We'd love to hear from you! Connect with us through our social media channels or reach out to our support team.
-              </p>
+        {/* Features Grid */}
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
+          <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 p-6 text-center">
+            <div className="p-3 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl w-fit mx-auto mb-4">
+              <Library className="h-6 w-6 text-white" />
             </div>
-
-            <div className="text-center mt-8">
-              <Link to="/">
-                <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700">
-                  Start Building Your Library
-                </Button>
-              </Link>
-            </div>
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">Digital Library</h3>
+            <p className="text-slate-600">
+              Organize your books digitally with our intuitive library management system.
+            </p>
           </div>
+
+          <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 p-6 text-center">
+            <div className="p-3 bg-gradient-to-r from-purple-600 to-pink-600 rounded-xl w-fit mx-auto mb-4">
+              <Heart className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">Personal Collections</h3>
+            <p className="text-slate-600">
+              Create custom collections and organize your favorite books by genre, mood, or theme.
+            </p>
+          </div>
+
+          <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 p-6 text-center">
+            <div className="p-3 bg-gradient-to-r from-green-600 to-emerald-600 rounded-xl w-fit mx-auto mb-4">
+              <TrendingUp className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">Reading Tracking</h3>
+            <p className="text-slate-600">
+              Track your reading progress and discover new books based on your preferences.
+            </p>
+          </div>
+
+          <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 p-6 text-center">
+            <div className="p-3 bg-gradient-to-r from-orange-600 to-red-600 rounded-xl w-fit mx-auto mb-4">
+              <DollarSign className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">Buy & Sell</h3>
+            <p className="text-slate-600">
+              Trade books with other readers in our community marketplace.
+            </p>
+          </div>
+
+          <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 p-6 text-center">
+            <div className="p-3 bg-gradient-to-r from-cyan-600 to-blue-600 rounded-xl w-fit mx-auto mb-4">
+              <Users className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">Community</h3>
+            <p className="text-slate-600">
+              Connect with fellow book lovers and share your reading journey.
+            </p>
+          </div>
+
+          <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 p-6 text-center">
+            <div className="p-3 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-xl w-fit mx-auto mb-4">
+              <Search className="h-6 w-6 text-white" />
+            </div>
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">Smart Search</h3>
+            <p className="text-slate-600">
+              Find books quickly with our advanced search and filtering options.
+            </p>
+          </div>
+        </div>
+
+        {/* Mission Section */}
+        <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 p-8 mb-8 text-center">
+          <h2 className="text-3xl font-bold text-slate-800 mb-4">Our Mission</h2>
+          <p className="text-lg text-slate-700 max-w-4xl mx-auto">
+            At Bacondo, we believe that every book has the power to transform lives. Our mission is to create a seamless digital reading experience that brings together book lovers from around the world, making it easier to discover, organize, and share the stories that matter most to you.
+          </p>
+        </div>
+
+        {/* CTA Section */}
+        <div className="text-center">
+          <h2 className="text-2xl font-bold text-slate-800 mb-4">
+            Ready to Start Your Reading Journey?
+          </h2>
+          <p className="text-slate-600 mb-6">
+            Join thousands of readers who have already made Bacondo their digital home.
+          </p>
+          <Link to="/">
+            <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-lg px-8 py-3">
+              Start Building Your Library
+            </Button>
+          </Link>
         </div>
       </main>
     </div>
