@@ -1,11 +1,12 @@
 
 import React, { useState } from 'react';
-import { BookOpen, User, Award, Target, Users, Globe } from 'lucide-react';
+import { BookOpen, User, Award, Target, Users, Globe, ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import SharedSidebar from '../components/SharedSidebar';
 import CollectionModal from '../components/CollectionModal';
 import AccountModal from '../components/AccountModal';
-import { Link } from 'react-router-dom';
+import CollectionSelectionModal from '../components/CollectionSelectionModal';
+import { Link, useNavigate } from 'react-router-dom';
 import { Book } from '../types/Book';
 import { useCollections } from '../hooks/useCollections';
 
@@ -49,13 +50,18 @@ const mockBooks: Book[] = [
 
 const About = () => {
   const { collections, addCollection } = useCollections();
+  const navigate = useNavigate();
   const [books] = useState(mockBooks);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
+  const [isCollectionSelectionModalOpen, setIsCollectionSelectionModalOpen] = useState(false);
+  const [selectedBookIdForCollection, setSelectedBookIdForCollection] = useState<number | null>(null);
   const [booksReadList] = useState<number[]>([1, 2]);
 
   const handleCollectionSelect = (collection: any) => {
-    console.log('Selected collection:', collection);
+    if (collection && typeof collection.id !== 'undefined') {
+      navigate(`/collections/${collection.id}`);
+    }
   };
 
   const handleBookClick = (book: Book) => {
@@ -72,7 +78,13 @@ const About = () => {
       <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link to="/" className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3">
+              <Link to="/">
+                <Button variant="ghost" size="sm">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back
+                </Button>
+              </Link>
               <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
                 <BookOpen className="h-6 w-6 text-white" />
               </div>
@@ -80,7 +92,7 @@ const About = () => {
                 <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
                 <p className="text-xs text-slate-600">Your Digital Library</p>
               </div>
-            </Link>
+            </div>
             <div className="flex items-center gap-3">
               <Button 
                 variant="outline"
@@ -198,6 +210,13 @@ const About = () => {
         isOpen={isCollectionModalOpen}
         onClose={() => setIsCollectionModalOpen(false)}
         onCreateCollection={handleCreateCollection}
+      />
+
+      <CollectionSelectionModal
+        isOpen={isCollectionSelectionModalOpen}
+        onClose={() => setIsCollectionSelectionModalOpen(false)}
+        collections={collections}
+        bookId={selectedBookIdForCollection}
       />
       
       <AccountModal 

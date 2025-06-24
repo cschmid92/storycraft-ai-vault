@@ -1,12 +1,14 @@
 
 import React, { useState } from 'react';
-import { BookOpen, User, ShoppingCart, Filter, DollarSign, MapPin, Star } from 'lucide-react';
+import { BookOpen, User, ShoppingCart, Filter, DollarSign, MapPin, Star, ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import SharedSidebar from '../components/SharedSidebar';
 import CollectionModal from '../components/CollectionModal';
 import AccountModal from '../components/AccountModal';
-import { Link } from 'react-router-dom';
+import BookDetailModal from '../components/BookDetailModal';
+import CollectionSelectionModal from '../components/CollectionSelectionModal';
+import { Link, useNavigate } from 'react-router-dom';
 import { Book } from '../types/Book';
 import { useCollections } from '../hooks/useCollections';
 
@@ -50,43 +52,52 @@ const booksForSale = [
   }
 ];
 
-// Mock books data for sidebar
-const mockBooks: Book[] = [
-  {
-    id: 1,
-    title: "The Great Gatsby",
-    author: "F. Scott Fitzgerald",
-    cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop",
-    rating: 4.2,
-    genre: "Classic Literature",
-    year: 1925,
-    description: "A classic American novel set in the Jazz Age, exploring themes of wealth, love, and the American Dream.",
-    isFavorite: true,
-    isOwnedForSale: false,
-    isbn10: "0743273567",
-    isbn13: "978-0743273565",
-    publisher: "Scribner",
-    pages: 180,
-    language: "English"
-  }
-];
+// Mock books data for sidebar - convert sale books to Book type
+const mockBooks: Book[] = booksForSale.map(book => ({
+  id: book.id,
+  title: book.title,
+  author: book.author,
+  cover: book.cover,
+  rating: book.rating,
+  genre: "Fiction",
+  year: 2000,
+  description: "A classic novel",
+  isFavorite: false,
+  isOwnedForSale: false,
+  isbn10: "0000000000",
+  isbn13: "000-0000000000",
+  publisher: "Publisher",
+  pages: 200,
+  language: "English"
+}));
 
 const BuyUsedBooks = () => {
   const { collections, addCollection } = useCollections();
+  const navigate = useNavigate();
   const [books] = useState(mockBooks);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
+  const [isBookDetailModalOpen, setIsBookDetailModalOpen] = useState(false);
+  const [isCollectionSelectionModalOpen, setIsCollectionSelectionModalOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [selectedBookIdForCollection, setSelectedBookIdForCollection] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [selectedCondition, setSelectedCondition] = useState("");
   const [booksReadList] = useState<number[]>([1]);
 
   const handleCollectionSelect = (collection: any) => {
-    console.log('Selected collection:', collection);
+    if (collection && typeof collection.id !== 'undefined') {
+      navigate(`/collections/${collection.id}`);
+    }
   };
 
-  const handleBookClick = (book: Book) => {
-    console.log('Book clicked:', book);
+  const handleBookClick = (bookId: number) => {
+    const book = books.find(b => b.id === bookId);
+    if (book) {
+      setSelectedBook(book);
+      setIsBookDetailModalOpen(true);
+    }
   };
 
   const handleCreateCollection = (name: string, color: string) => {
@@ -95,6 +106,19 @@ const BuyUsedBooks = () => {
 
   const handleContactSeller = (seller: string) => {
     alert(`Contacting ${seller}...`);
+  };
+
+  const handleToggleFavorite = (bookId: number) => {
+    console.log('Toggle favorite for book:', bookId);
+  };
+
+  const handleAddToCollection = (bookId: number) => {
+    setSelectedBookIdForCollection(bookId);
+    setIsCollectionSelectionModalOpen(true);
+  };
+
+  const handleAddToBooksRead = (bookId: number) => {
+    console.log('Add to books read:', bookId);
   };
 
   const filteredBooks = booksForSale.filter(book => {
@@ -111,7 +135,13 @@ const BuyUsedBooks = () => {
       <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
-            <Link to="/" className="flex items-center space-x-3">
+            <div className="flex items-center space-x-3">
+              <Link to="/">
+                <Button variant="ghost" size="sm">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back
+                </Button>
+              </Link>
               <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
                 <BookOpen className="h-6 w-6 text-white" />
               </div>
@@ -119,7 +149,7 @@ const BuyUsedBooks = () => {
                 <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
                 <p className="text-xs text-slate-600">Your Digital Library</p>
               </div>
-            </Link>
+            </div>
             <div className="flex items-center gap-3">
               <Button 
                 variant="outline"
@@ -142,7 +172,7 @@ const BuyUsedBooks = () => {
           onSelectCollection={handleCollectionSelect}
           onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
           books={books}
-          onBookClick={handleBookClick}
+          onBookClick={(book) => handleBookClick(book.id)}
           booksReadCount={booksReadList.length}
         />
 
@@ -198,7 +228,7 @@ const BuyUsedBooks = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredBooks.map(book => (
                 <div key={book.id} className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden hover:shadow-lg transition-shadow">
-                  <div className="aspect-[3/4] relative">
+                  <div className="aspect-[3/4] relative cursor-pointer" onClick={() => handleBookClick(book.id)}>
                     <img 
                       src={book.cover} 
                       alt={book.title}
@@ -212,7 +242,12 @@ const BuyUsedBooks = () => {
                     </div>
                   </div>
                   <div className="p-4">
-                    <h3 className="font-semibold text-slate-800 mb-1 line-clamp-2">{book.title}</h3>
+                    <h3 
+                      className="font-semibold text-slate-800 mb-1 line-clamp-2 cursor-pointer hover:text-blue-600 transition-colors"
+                      onClick={() => handleBookClick(book.id)}
+                    >
+                      {book.title}
+                    </h3>
                     <p className="text-slate-600 text-sm mb-2">{book.author}</p>
                     
                     <div className="flex items-center justify-between mb-3">
@@ -263,6 +298,23 @@ const BuyUsedBooks = () => {
         isOpen={isCollectionModalOpen}
         onClose={() => setIsCollectionModalOpen(false)}
         onCreateCollection={handleCreateCollection}
+      />
+      
+      <BookDetailModal
+        book={selectedBook}
+        isOpen={isBookDetailModalOpen}
+        onClose={() => setIsBookDetailModalOpen(false)}
+        onToggleFavorite={handleToggleFavorite}
+        onAddToCollection={handleAddToCollection}
+        onToggleOwnedForSale={() => {}}
+        onRateBook={() => {}}
+      />
+
+      <CollectionSelectionModal
+        isOpen={isCollectionSelectionModalOpen}
+        onClose={() => setIsCollectionSelectionModalOpen(false)}
+        collections={collections}
+        bookId={selectedBookIdForCollection}
       />
       
       <AccountModal 
