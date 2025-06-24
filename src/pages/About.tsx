@@ -8,7 +8,7 @@ import AppLayout from '../components/layout/AppLayout';
 const About = () => {
   return (
     <AppLayout headerTitle="About Bacondo" headerSubtitle="Learn more about your digital library">
-      <div className="p-6 md:p-8">
+      <div className="max-w-6xl mx-auto p-6 md:p-8">
         {/* Welcome Section */}
         <div className="text-center mb-12">
           <h1 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4">
