@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Link, useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, BookmarkPlus, Edit, Trash2, Heart, Menu } from 'lucide-react';
@@ -17,7 +16,7 @@ import { useBooks } from '../hooks/useBooks';
 const Collections = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const { collections, addCollection, deleteCollection, updateCollection, addBookToCollection } = useCollections();
+  const { collections, addCollection, deleteCollection, updateCollection, addBookToCollection, removeBookFromCollection } = useCollections();
   const { books, toggleFavorite, toggleOwnedForSale, rateBook } = useBooks();
   const [booksReadList, setBooksReadList] = useState<number[]>([1, 2]);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
@@ -56,7 +55,7 @@ const Collections = () => {
     }
   };
 
-  const handleDeleteCollection = (collectionId: number) => {
+  const handleDeleteCollection = (collectionId: number | string) => {
     if (window.confirm('Are you sure you want to delete this collection? This action cannot be undone.')) {
       deleteCollection(collectionId);
       navigate('/');
@@ -98,6 +97,13 @@ const Collections = () => {
     }
     setSelectedBookForCollection(null);
     setIsCollectionSelectionModalOpen(false);
+  };
+
+  const handleRemoveFromCollection = (bookId: number) => {
+    if (selectedCollection && typeof selectedCollection.id === 'number') {
+      removeBookFromCollection(selectedCollection.id, bookId);
+      console.log(`Removed book ${bookId} from collection ${selectedCollection.name}`);
+    }
   };
 
   const handleAddToBooksRead = (bookId: number) => {
@@ -176,13 +182,15 @@ const Collections = () => {
               >
                 <Menu className="h-5 w-5" />
               </Button>
-              <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
-                <BookOpen className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
-                <p className="text-xs text-slate-600 hidden sm:block">Your Digital Library</p>
-              </div>
+              <Link to="/" className="flex items-center space-x-3">
+                <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
+                  <BookOpen className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
+                  <p className="text-xs text-slate-600 hidden sm:block">Your Digital Library</p>
+                </div>
+              </Link>
             </div>
             <div className="flex items-center gap-3">
               <Button 
@@ -279,6 +287,8 @@ const Collections = () => {
                 onAddToCollection={handleAddToCollection}
                 onAddToBooksRead={handleAddToBooksRead}
                 isInBooksRead={booksReadList.includes(Number(book.id))}
+                onRemoveFromCollection={canEdit ? handleRemoveFromCollection : undefined}
+                showRemoveFromCollection={canEdit}
               />
             ))}
           </div>
