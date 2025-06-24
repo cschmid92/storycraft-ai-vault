@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, User, Menu, Library } from 'lucide-react';
+import { ArrowLeft, User, Menu, BookOpen } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/entities';
 import SharedSidebar from '../components/SharedSidebar';
@@ -87,6 +87,7 @@ const BooksForSale = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('');
   const [maxDistance, setMaxDistance] = useState<number | null>(null);
+  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isBookDetailModalOpen, setIsBookDetailModalOpen] = useState(false);
@@ -113,7 +114,12 @@ const BooksForSale = () => {
   });
 
   const handleCollectionSelect = (collection: any) => {
-    if (collection && typeof collection.id !== 'undefined') {
+    setSelectedCollection(collection);
+    if (String(collection?.id) === 'favorites') {
+      navigate('/collections/favorites');
+    } else if (String(collection?.id) === 'books-read') {
+      navigate('/collections/books-read');
+    } else if (collection && typeof collection.id === 'number') {
       navigate(`/collections/${collection.id}`);
     }
     setIsSidebarOpen(false);
@@ -149,7 +155,6 @@ const BooksForSale = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              {/* Mobile menu button */}
               <Button
                 variant="ghost"
                 size="sm"
@@ -158,13 +163,15 @@ const BooksForSale = () => {
               >
                 <Menu className="h-5 w-5" />
               </Button>
-              <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
-                <Library className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
-                <p className="text-xs text-slate-600 hidden sm:block">Your Digital Library</p>
-              </div>
+              <Link to="/" className="flex items-center space-x-3">
+                <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
+                  <BookOpen className="h-6 w-6 text-white" />
+                </div>
+                <div>
+                  <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
+                  <p className="text-xs text-slate-600 hidden sm:block">Your Digital Library</p>
+                </div>
+              </Link>
             </div>
             <div className="flex items-center gap-3">
               <Button 
@@ -194,7 +201,7 @@ const BooksForSale = () => {
         <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-50 md:z-auto`}>
           <SharedSidebar 
             collections={collections}
-            selectedCollection={null}
+            selectedCollection={selectedCollection}
             onSelectCollection={handleCollectionSelect}
             onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
             books={books}
