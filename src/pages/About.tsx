@@ -1,7 +1,6 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Library, Heart, TrendingUp, DollarSign, Users, Search, Info, User, Menu } from 'lucide-react';
+import { BookOpen, User, Menu, ArrowLeft, Info } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import SharedSidebar from '../components/SharedSidebar';
 import AccountModal from '../components/AccountModal';
@@ -69,15 +68,24 @@ const About = () => {
               >
                 <Menu className="h-5 w-5" />
               </Button>
-              <Link to="/" className="flex items-center space-x-3">
+              
+              {/* Back button */}
+              <Link to="/">
+                <Button variant="ghost" size="sm">
+                  <ArrowLeft className="h-4 w-4 mr-2" />
+                  Back
+                </Button>
+              </Link>
+              
+              <div className="flex items-center space-x-3">
                 <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
-                  <BookOpen className="h-6 w-6 text-white" />
+                  <Info className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
+                  <h1 className="text-xl font-bold text-slate-800">About Bacondo</h1>
                   <p className="text-xs text-slate-600 hidden sm:block">Your Digital Library</p>
                 </div>
-              </Link>
+              </div>
             </div>
             <div className="flex items-center gap-3">
               <Button 
