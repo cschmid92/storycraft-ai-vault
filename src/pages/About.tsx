@@ -23,8 +23,10 @@ const About = () => {
   const [isCollectionSelectionModalOpen, setIsCollectionSelectionModalOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
   const [selectedBookForCollection, setSelectedBookForCollection] = useState(null);
-  const [booksReadList] = useState([1, 2, 3, 4, 5]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+
+  // Calculate books read count from actual data
+  const booksReadCount = books.filter(book => book.userRating && book.userRating > 0).length;
 
   const handleCollectionSelect = (collection) => {
     setSelectedCollection(collection);
@@ -118,7 +120,7 @@ const About = () => {
             onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
             books={books}
             onBookClick={handleBookClick}
-            booksReadCount={booksReadList.length}
+            booksReadCount={booksReadCount}
           />
         </div>
 

@@ -12,6 +12,7 @@ import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import BuyUsedBooksFilters from '../components/BuyUsedBooksFilters';
 import UsedBookGrid from '../components/UsedBookGrid';
 import { useCollections, Collection } from '../hooks/useCollections';
+import { useBooks } from '../hooks/useBooks';
 
 // Mock data - in a real app this would come from props or context
 const mockBooksForSale: Book[] = [
@@ -82,8 +83,8 @@ const mockBooksForSale: Book[] = [
 
 const BooksForSale = () => {
   const { collections, addCollection, addBookToCollection } = useCollections();
+  const { books, toggleFavorite, toggleOwnedForSale, rateBook } = useBooks();
   const navigate = useNavigate();
-  const [books] = useState(mockBooksForSale);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('');
   const [maxDistance, setMaxDistance] = useState<number | null>(null);
@@ -94,14 +95,16 @@ const BooksForSale = () => {
   const [isCollectionSelectionModalOpen, setIsCollectionSelectionModalOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
-  const [booksReadList] = useState<number[]>([3]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
+  // Calculate books read count from actual data
+  const booksReadCount = books.filter(book => book.userRating && book.userRating > 0).length;
+
   // Get unique genres for filtering
-  const genres = Array.from(new Set(books.map(book => book.genre)));
+  const genres = Array.from(new Set(mockBooksForSale.map(book => book.genre)));
 
   // Filter books based on search term, genre, and distance
-  const filteredBooks = books.filter(book => {
+  const filteredBooks = mockBooksForSale.filter(book => {
     const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          book.genre.toLowerCase().includes(searchTerm.toLowerCase());
@@ -206,7 +209,7 @@ const BooksForSale = () => {
             onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
             books={books}
             onBookClick={handleBookClick}
-            booksReadCount={booksReadList.length}
+            booksReadCount={booksReadCount}
           />
         </div>
 
@@ -266,10 +269,10 @@ const BooksForSale = () => {
         book={selectedBook}
         isOpen={isBookDetailModalOpen}
         onClose={() => setIsBookDetailModalOpen(false)}
-        onToggleFavorite={() => {}}
+        onToggleFavorite={toggleFavorite}
         onAddToCollection={() => selectedBook && handleAddToCollection(selectedBook)}
-        onToggleOwnedForSale={() => {}}
-        onRateBook={() => {}}
+        onToggleOwnedForSale={toggleOwnedForSale}
+        onRateBook={rateBook}
       />
       
       <AccountModal 
