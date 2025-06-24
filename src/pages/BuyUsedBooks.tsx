@@ -8,7 +8,7 @@ import CollectionModal from '../components/CollectionModal';
 import AccountModal from '../components/AccountModal';
 import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
-import { useCollections } from '../hooks/useCollections';
+import { useCollections, Collection } from '../hooks/useCollections';
 
 // Mock data - in a real app this would come from props or context
 const mockBooksForSale: Book[] = [
