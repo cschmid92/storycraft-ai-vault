@@ -4,6 +4,7 @@ import { Library, Heart, BookOpen, Plus, DollarSign, ChevronDown, ChevronRight, 
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import BooksForSale from './BooksForSale';
+import { useBooksForSale } from '../hooks/useBooksForSale';
 import { Book, Collection } from '../types/entities';
 
 interface SharedSidebarProps {
@@ -28,7 +29,8 @@ const SharedSidebar = ({
   onDeleteCollection
 }: SharedSidebarProps) => {
   const [showBooksForSale, setShowBooksForSale] = useState(false);
-  const booksForSaleCount = books.filter(book => book.isOwnedForSale && book.salePrice).length;
+  const { getMyBooksForSale } = useBooksForSale();
+  const booksForSaleCount = getMyBooksForSale().length;
 
   // Calculate actual counts for collections
   const getCollectionCount = (collectionId: number | string) => {
