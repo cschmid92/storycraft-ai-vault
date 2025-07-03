@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from 'react-router-dom';
-import SharedSidebar from '../components/SharedSidebar';
+import UnifiedSidebar from '../components/UnifiedSidebar';
 import CollectionModal from '../components/CollectionModal';
 import AccountModal from '../components/AccountModal';
 import BookDetailModal from '../components/BookDetailModal';
@@ -177,7 +177,7 @@ const AdvancedSearch = () => {
         
         {/* Sidebar */}
         <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:sticky md:top-16 z-50 md:z-auto h-screen md:h-[calc(100vh-4rem)]`}>
-          <SharedSidebar 
+          <UnifiedSidebar 
             collections={collections}
             selectedCollection={null}
             onSelectCollection={handleCollectionSelect}
@@ -185,7 +185,6 @@ const AdvancedSearch = () => {
             books={books}
             onBookClick={handleBookClick}
             booksReadCount={booksReadList.length}
-            onDeleteCollection={deleteCollection}
           />
         </div>
 

@@ -25,7 +25,7 @@ const UnifiedSidebar = ({
   onBookClick,
   booksReadCount
 }: UnifiedSidebarProps) => {
-  const [showCollections, setShowCollections] = useState(false);
+  const [showCollections, setShowCollections] = useState(true); // Show collections by default
   const [showBooksForSale, setShowBooksForSale] = useState(false);
   const { getMyBooksForSale } = useBooksForSale();
   const booksForSaleCount = getMyBooksForSale().length;
