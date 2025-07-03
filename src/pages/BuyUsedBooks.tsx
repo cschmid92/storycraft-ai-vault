@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, User, Menu, BookOpen } from 'lucide-react';
+import { ArrowLeft, User, Menu, BookOpen, MessageSquare } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/entities';
 import SharedSidebar from '../components/SharedSidebar';
@@ -11,6 +11,7 @@ import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import BuyUsedBooksFilters from '../components/BuyUsedBooksFilters';
 import UsedBookGrid from '../components/UsedBookGrid';
+import ContactSellerModal from '../components/ContactSellerModal';
 import { useCollections, Collection } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { usedBooksForPurchase } from '../data/mockData';
@@ -30,6 +31,8 @@ const BooksForSale = () => {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isContactSellerModalOpen, setIsContactSellerModalOpen] = useState(false);
+  const [selectedBookForContact, setSelectedBookForContact] = useState<Book | null>(null);
 
   // Calculate books read count from actual data
   const booksReadCount = books.filter(book => book.userRating && book.userRating > 0).length;
@@ -85,6 +88,11 @@ const BooksForSale = () => {
     setIsCollectionSelectionModalOpen(false);
   };
 
+  const handleContactSeller = (book: Book) => {
+    setSelectedBookForContact(book);
+    setIsContactSellerModalOpen(true);
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
       {/* Header */}
@@ -111,6 +119,14 @@ const BooksForSale = () => {
               </Link>
             </div>
             <div className="flex items-center gap-3">
+              <Button 
+                variant="outline"
+                size="sm"
+                className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
+              >
+                <MessageSquare className="h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Messages</span>
+              </Button>
               <Button 
                 variant="outline"
                 size="sm"
@@ -179,6 +195,7 @@ const BooksForSale = () => {
             <UsedBookGrid
               books={filteredBooks}
               onBookClick={handleBookClick}
+              onContactSeller={handleContactSeller}
             />
           </div>
         </main>
@@ -212,6 +229,12 @@ const BooksForSale = () => {
       <AccountModal 
         isOpen={isAccountModalOpen}
         onClose={() => setIsAccountModalOpen(false)}
+      />
+
+      <ContactSellerModal
+        book={selectedBookForContact}
+        isOpen={isContactSellerModalOpen}
+        onClose={() => setIsContactSellerModalOpen(false)}
       />
     </div>
   );

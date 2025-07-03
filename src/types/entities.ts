@@ -6,6 +6,15 @@ export interface BaseEntity {
   updatedAt?: Date;
 }
 
+// Seller entity
+export interface Seller {
+  name: string;
+  rating: number;
+  totalSales: number;
+  responseTime: string;
+  avatar: string;
+}
+
 // Book entity
 export interface Book extends BaseEntity {
   title: string;
@@ -32,6 +41,7 @@ export interface Book extends BaseEntity {
   condition?: BookCondition;
   distance?: number;
   location?: string;
+  seller?: Seller;
 }
 
 // Collection entity

@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, User } from 'lucide-react';
+import { BookOpen, User, MessageSquare } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import AccountModal from '../AccountModal';
 
@@ -28,6 +28,14 @@ const AppHeader = ({ title = "Bacondo", subtitle = "Your Digital Library" }: App
               </div>
             </Link>
             <div className="flex items-center gap-3">
+              <Button 
+                variant="outline"
+                size="sm"
+                className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
+              >
+                <MessageSquare className="h-4 w-4 sm:mr-2" />
+                <span className="hidden sm:inline">Messages</span>
+              </Button>
               <Button 
                 variant="outline"
                 size="sm"

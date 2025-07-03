@@ -3,7 +3,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowLeft, BookmarkPlus, Heart, Menu } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { BookOpen, User } from 'lucide-react';
+import { BookOpen, User, MessageSquare } from 'lucide-react';
 
 interface CollectionsHeaderProps {
   isSidebarOpen: boolean;
@@ -41,6 +41,14 @@ const CollectionsHeader = ({
             </Link>
           </div>
           <div className="flex items-center gap-3">
+            <Button 
+              variant="outline"
+              size="sm"
+              className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
+            >
+              <MessageSquare className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Messages</span>
+            </Button>
             <Button 
               variant="outline"
               size="sm"

@@ -1,14 +1,15 @@
 import React from 'react';
-import { Star, MapPin } from 'lucide-react';
+import { Star, MapPin, User } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/entities';
 
 interface UsedBookCardProps {
   book: Book;
   onBookClick: (book: Book) => void;
+  onContactSeller: (book: Book) => void;
 }
 
-const UsedBookCard = ({ book, onBookClick }: UsedBookCardProps) => {
+const UsedBookCard = ({ book, onBookClick, onContactSeller }: UsedBookCardProps) => {
   return (
     <div 
       className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
@@ -48,15 +49,35 @@ const UsedBookCard = ({ book, onBookClick }: UsedBookCardProps) => {
         <p className="text-slate-600 text-xs mt-2 line-clamp-2">
           {book.description}
         </p>
+        
+        {/* Seller Info */}
+        {book.seller && (
+          <div className="flex items-center space-x-2 mt-3 p-2 bg-slate-50 rounded-lg">
+            <img 
+              src={book.seller.avatar} 
+              alt={book.seller.name}
+              className="w-6 h-6 rounded-full object-cover"
+            />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium text-slate-700 truncate">{book.seller.name}</p>
+              <div className="flex items-center space-x-1">
+                <Star className="h-2.5 w-2.5 text-yellow-500 fill-yellow-500" />
+                <span className="text-xs text-slate-600">{book.seller.rating}</span>
+              </div>
+            </div>
+            <User className="h-3 w-3 text-slate-400" />
+          </div>
+        )}
+        
         <Button 
           className="w-full mt-3" 
           size="sm"
           onClick={(e) => {
             e.stopPropagation();
-            // Handle purchase logic here
+            onContactSeller(book);
           }}
         >
-          Buy for ${book.salePrice}
+          Contact Seller - ${book.salePrice}
         </Button>
       </div>
     </div>

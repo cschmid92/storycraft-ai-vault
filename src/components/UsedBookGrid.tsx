@@ -7,9 +7,10 @@ import UsedBookCard from './UsedBookCard';
 interface UsedBookGridProps {
   books: Book[];
   onBookClick: (book: Book) => void;
+  onContactSeller: (book: Book) => void;
 }
 
-const UsedBookGrid = ({ books, onBookClick }: UsedBookGridProps) => {
+const UsedBookGrid = ({ books, onBookClick, onContactSeller }: UsedBookGridProps) => {
   if (books.length === 0) {
     return (
       <div className="text-center py-12">
@@ -27,6 +28,7 @@ const UsedBookGrid = ({ books, onBookClick }: UsedBookGridProps) => {
           key={book.id}
           book={book}
           onBookClick={onBookClick}
+          onContactSeller={onContactSeller}
         />
       ))}
     </div>

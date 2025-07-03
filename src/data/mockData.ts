@@ -223,7 +223,14 @@ export const usedBooksForPurchase: Book[] = [
     pages: 328,
     language: "English",
     distance: 3.7,
-    location: "Downtown"
+    location: "Downtown",
+    seller: {
+      name: "Sarah Chen",
+      rating: 4.8,
+      totalSales: 23,
+      responseTime: "Usually responds within 2 hours",
+      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=100&h=100&fit=crop&crop=face"
+    }
   },
   {
     id: 202,
@@ -244,7 +251,14 @@ export const usedBooksForPurchase: Book[] = [
     pages: 432,
     language: "English",
     distance: 9.2,
-    location: "Uptown"
+    location: "Uptown",
+    seller: {
+      name: "Mike Rodriguez",
+      rating: 4.5,
+      totalSales: 15,
+      responseTime: "Usually responds within 4 hours",
+      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
+    }
   },
   {
     id: 203,
@@ -265,7 +279,14 @@ export const usedBooksForPurchase: Book[] = [
     pages: 180,
     language: "English",
     distance: 1.9,
-    location: "Midtown"
+    location: "Midtown",
+    seller: {
+      name: "Emma Thompson",
+      rating: 4.9,
+      totalSales: 41,
+      responseTime: "Usually responds within 1 hour",
+      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face"
+    }
   },
   {
     id: 204,
@@ -286,7 +307,14 @@ export const usedBooksForPurchase: Book[] = [
     pages: 688,
     language: "English",
     distance: 5.1,
-    location: "Westside"
+    location: "Westside",
+    seller: {
+      name: "David Kim",
+      rating: 4.7,
+      totalSales: 32,
+      responseTime: "Usually responds within 3 hours",
+      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
+    }
   }
 ];
 
