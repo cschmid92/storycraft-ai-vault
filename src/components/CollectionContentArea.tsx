@@ -1,6 +1,7 @@
+
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, BookmarkPlus, Heart, Share } from 'lucide-react';
+import { ArrowLeft, BookmarkPlus, Heart } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import BookCard from './BookCard';
 import CollectionActions from './CollectionActions';
@@ -33,16 +34,6 @@ const CollectionContentArea = ({
   onEditCollection,
   onDeleteCollection
 }: CollectionContentAreaProps) => {
-  const handleShareCollection = () => {
-    const currentUrl = window.location.href;
-    navigator.clipboard.writeText(currentUrl).then(() => {
-      console.log('Collection link copied to clipboard');
-    });
-  };
-
-  const collection = selectedCollection as Collection;
-  const hasDescription = collection?.description && collection.description.trim().length > 0;
-
   return (
     <main className="flex-1 p-4 md:p-6">
       <div className="mb-6 md:mb-8">
@@ -63,31 +54,15 @@ const CollectionContentArea = ({
             </div>
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-slate-800">{selectedCollection.name}</h1>
-              {hasDescription && (
-                <p className="text-sm text-slate-600 mt-1">{collection.description}</p>
-              )}
-              <p className="text-xs text-slate-500 mt-1">{collectionBooks.length} books</p>
+              <p className="text-xs text-slate-600">{collectionBooks.length} books</p>
             </div>
           </div>
-          <div className="flex gap-2">
-            {canEdit && (
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleShareCollection}
-                className="text-slate-600 hover:text-slate-700"
-              >
-                <Share className="h-4 w-4 sm:mr-2" />
-                <span className="hidden sm:inline">Share</span>
-              </Button>
-            )}
-            <CollectionActions
-              selectedCollection={selectedCollection}
-              canEdit={canEdit}
-              onEdit={onEditCollection}
-              onDelete={onDeleteCollection}
-            />
-          </div>
+          <CollectionActions
+            selectedCollection={selectedCollection}
+            canEdit={canEdit}
+            onEdit={onEditCollection}
+            onDelete={onDeleteCollection}
+          />
         </div>
       </div>
 

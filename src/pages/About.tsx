@@ -58,10 +58,6 @@ const About = () => {
     }
   };
 
-  const handleCreateCollection = (name: string, color: string, description?: string) => {
-    addCollection(name, color, description);
-  };
-
   const selectedBookTitle = selectedBookId ? books.find(book => book.id === selectedBookId)?.title || '' : '';
 
   return (
@@ -207,7 +203,7 @@ const About = () => {
       <CollectionModal
         isOpen={isCollectionModalOpen}
         onClose={() => setIsCollectionModalOpen(false)}
-        onCreateCollection={handleCreateCollection}
+        onCreateCollection={addCollection}
       />
 
       <CollectionSelectionModal

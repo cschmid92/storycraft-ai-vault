@@ -75,8 +75,8 @@ const BooksForSale = () => {
     setIsBookDetailModalOpen(true);
   };
 
-  const handleCreateCollection = (name: string, color: string, description?: string) => {
-    addCollection(name, color, description);
+  const handleCreateCollection = (name: string, color: string) => {
+    addCollection(name, color);
   };
 
   const handleAddToCollection = (book: Book) => {
@@ -124,7 +124,6 @@ const BooksForSale = () => {
             books={books}
             onBookClick={(book) => handleBookClick({ book, sellerId: 0, bookId: book.id, price: 0, condition: 'Good', isActive: true } as BookForSale)}
             booksReadCount={booksReadCount}
-            onDeleteCollection={(id) => console.log('Delete not supported in this page:', id)}
           />
         </div>
 
