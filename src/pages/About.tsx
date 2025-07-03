@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { BookOpen, User, Menu, ArrowLeft, Library, Heart, TrendingUp, DollarSign, Users, Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import UnifiedHeader from '../components/layout/UnifiedHeader';
-import AppSidebar from '../components/layout/AppSidebar';
+import UnifiedSidebar from '../components/UnifiedSidebar';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import CollectionModal from '../components/CollectionModal';
@@ -82,7 +82,7 @@ const About = () => {
         
         {/* Sidebar */}
         <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-50 md:z-auto`}>
-          <AppSidebar 
+          <UnifiedSidebar 
             collections={collections}
             selectedCollection={selectedCollection}
             onSelectCollection={handleSelectCollection}
@@ -90,7 +90,6 @@ const About = () => {
             books={books}
             onBookClick={handleBookClick}
             booksReadCount={booksReadCount}
-            
           />
         </div>
 
