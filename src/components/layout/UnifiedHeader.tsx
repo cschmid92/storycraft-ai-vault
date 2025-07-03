@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { BookOpen, User, MessageSquare, Menu } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import AccountModal from '../AccountModal';
+import MessengerModal from '../MessengerModal';
 
 interface UnifiedHeaderProps {
   title?: string;
@@ -18,6 +19,7 @@ const UnifiedHeader = ({
   onMobileMenuClick
 }: UnifiedHeaderProps) => {
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+  const [isMessengerModalOpen, setIsMessengerModalOpen] = useState(false);
 
   return (
     <>
@@ -51,6 +53,7 @@ const UnifiedHeader = ({
                 variant="outline"
                 size="sm"
                 className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
+                onClick={() => setIsMessengerModalOpen(true)}
               >
                 <MessageSquare className="h-4 w-4 sm:mr-2" />
                 <span className="hidden sm:inline">Messages</span>
@@ -72,6 +75,11 @@ const UnifiedHeader = ({
       <AccountModal 
         isOpen={isAccountModalOpen}
         onClose={() => setIsAccountModalOpen(false)}
+      />
+
+      <MessengerModal 
+        isOpen={isMessengerModalOpen}
+        onClose={() => setIsMessengerModalOpen(false)}
       />
     </>
   );

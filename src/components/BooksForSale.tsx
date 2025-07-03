@@ -10,9 +10,8 @@ interface BooksForSaleProps {
 }
 
 const BooksForSale = ({ books, onBookClick }: BooksForSaleProps) => {
-  // Use books prop if provided, otherwise use centralized data
-  const myBooks = booksForSale.filter(sale => sale.sellerId === 999);
-  const booksToShow = books.length > 0 ? books.filter(book => book.isOwnedForSale && book.salePrice) : myBooks;
+  // Filter books that are marked for sale from the books prop
+  const booksToShow = books.filter(book => book.isOwnedForSale && book.salePrice);
 
   if (booksToShow.length === 0) {
     return (
