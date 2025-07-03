@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { BookOpen, User, Menu, ArrowLeft, Library, Heart, TrendingUp, DollarSign, Users, Search } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import SharedSidebar from '../components/SharedSidebar';
-import AccountModal from '../components/AccountModal';
+import UnifiedHeader from '../components/layout/UnifiedHeader';
+import AppSidebar from '../components/layout/AppSidebar';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import CollectionModal from '../components/CollectionModal';
@@ -14,6 +14,7 @@ import { Book, Collection } from '../types/entities';
 const About = () => {
   const { books, toggleFavorite, toggleOwnedForSale, rateBook } = useBooks();
   const { collections, addCollection, deleteCollection, addBookToCollection } = useCollections();
+  const navigate = useNavigate();
   
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
@@ -21,7 +22,6 @@ const About = () => {
   const [selectedBookId, setSelectedBookId] = useState<number | null>(null);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [isBookDetailOpen, setIsBookDetailOpen] = useState(false);
-  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const booksRead = books.filter(book => book.userRating && book.userRating > 0);
@@ -32,11 +32,11 @@ const About = () => {
     setIsSidebarOpen(false);
     
     if (collection && String(collection.id) === 'favorites') {
-      window.location.href = `/collections/favorites`;
+      navigate('/collections/favorites');
     } else if (collection && String(collection.id) === 'books-read') {
-      window.location.href = `/collections/books-read`;
+      navigate('/collections/books-read');
     } else if (collection && typeof collection.id === 'number') {
-      window.location.href = `/collections/${collection.id}`;
+      navigate(`/collections/${collection.id}`);
     }
   };
 
@@ -62,45 +62,10 @@ const About = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
-      {/* Header - matching other pages */}
-      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 sticky top-0 z-40">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-3">
-              {/* Mobile menu button */}
-              <Button
-                variant="ghost"
-                size="sm"
-                className="md:hidden"
-                onClick={() => setIsSidebarOpen(true)}
-              >
-                <Menu className="h-5 w-5" />
-              </Button>
-              
-              <Link to="/" className="flex items-center space-x-3">
-                <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
-                  <BookOpen className="h-6 w-6 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
-                  <p className="text-xs text-slate-600 hidden sm:block">Your Digital Library</p>
-                </div>
-              </Link>
-            </div>
-            <div className="flex items-center gap-3">
-              <Button 
-                variant="outline"
-                size="sm"
-                className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
-                onClick={() => setIsAccountModalOpen(true)}
-              >
-                <User className="h-4 w-4 sm:mr-2" />
-                <span className="hidden sm:inline">Account</span>
-              </Button>
-            </div>
-          </div>
-        </div>
-      </header>
+      <UnifiedHeader 
+        showMobileMenu={true}
+        onMobileMenuClick={() => setIsSidebarOpen(true)}
+      />
 
       <div className="flex">
         {/* Sidebar - Mobile overlay */}
@@ -113,7 +78,7 @@ const About = () => {
         
         {/* Sidebar */}
         <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-50 md:z-auto`}>
-          <SharedSidebar 
+          <AppSidebar 
             collections={collections}
             selectedCollection={selectedCollection}
             onSelectCollection={handleSelectCollection}

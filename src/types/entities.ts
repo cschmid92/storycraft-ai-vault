@@ -94,6 +94,16 @@ export interface SearchFilters {
   maxDistance?: number;
 }
 
+// Book for sale entity
+export interface BookForSale extends BaseEntity {
+  sellerId: number;
+  bookId: number;
+  price: number;
+  condition: BookCondition;
+  description?: string;
+  isActive: boolean;
+}
+
 // API response types
 export interface ApiResponse<T> {
   data: T;

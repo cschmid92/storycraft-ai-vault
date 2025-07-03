@@ -5,7 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/entities';
 import UnifiedHeader from '../components/layout/UnifiedHeader';
-import SharedSidebar from '../components/SharedSidebar';
+import AppSidebar from '../components/layout/AppSidebar';
 import CollectionModal from '../components/CollectionModal';
 import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
@@ -25,6 +25,7 @@ const BooksForSale = () => {
   const [maxDistance, setMaxDistance] = useState<number | null>(null);
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [isBookDetailModalOpen, setIsBookDetailModalOpen] = useState(false);
+  const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isCollectionSelectionModalOpen, setIsCollectionSelectionModalOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
@@ -109,11 +110,11 @@ const BooksForSale = () => {
         
         {/* Sidebar */}
         <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-50 md:z-auto`}>
-          <SharedSidebar 
-            collections={[]}
-            selectedCollection={null}
-            onSelectCollection={() => {}}
-            onOpenCollectionModal={() => {}}
+          <AppSidebar 
+            collections={collections}
+            selectedCollection={selectedCollection}
+            onSelectCollection={handleCollectionSelect}
+            onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
             books={books}
             onBookClick={handleBookClick}
             booksReadCount={booksReadCount}
@@ -160,8 +161,8 @@ const BooksForSale = () => {
 
       {/* Modals */}
       <CollectionModal 
-        isOpen={false}
-        onClose={() => {}}
+        isOpen={isCollectionModalOpen}
+        onClose={() => setIsCollectionModalOpen(false)}
         onCreateCollection={handleCreateCollection}
       />
 
