@@ -136,13 +136,13 @@ const Collections = () => {
     rateBook(bookId, rating);
   };
 
-  const handleCreateCollection = (name: string, color: string) => {
-    addCollection(name, color);
+  const handleCreateCollection = (name: string, color: string, description?: string) => {
+    addCollection(name, color, description);
   };
 
-  const handleUpdateCollection = (name: string, color: string) => {
+  const handleUpdateCollection = (name: string, color: string, description?: string) => {
     if (editingCollection) {
-      updateCollection(editingCollection.id, { name, color });
+      updateCollection(editingCollection.id, { name, color, description });
       setIsEditModalOpen(false);
       setEditingCollection(null);
     }
@@ -226,6 +226,7 @@ const Collections = () => {
         editMode={true}
         initialName={editingCollection?.name}
         initialColor={editingCollection?.color}
+        initialDescription={editingCollection?.description}
       />
 
       <CollectionSelectionModal

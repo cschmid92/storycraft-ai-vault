@@ -7,10 +7,11 @@ import { Input } from "@/components/ui/input";
 interface CollectionModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onCreateCollection: (name: string, color: string) => void;
+  onCreateCollection: (name: string, color: string, description?: string) => void;
   editMode?: boolean;
   initialName?: string;
   initialColor?: string;
+  initialDescription?: string;
 }
 
 const colorOptions = [
@@ -30,30 +31,35 @@ const CollectionModal = ({
   onCreateCollection, 
   editMode = false, 
   initialName = '', 
-  initialColor = 'bg-blue-500' 
+  initialColor = 'bg-blue-500',
+  initialDescription = ''
 }: CollectionModalProps) => {
   const [name, setName] = useState('');
   const [selectedColor, setSelectedColor] = useState('bg-blue-500');
+  const [description, setDescription] = useState('');
 
   useEffect(() => {
     if (editMode && isOpen) {
       setName(initialName);
       setSelectedColor(initialColor);
+      setDescription(initialDescription);
     } else if (!editMode && isOpen) {
       setName('');
       setSelectedColor('bg-blue-500');
+      setDescription('');
     }
-  }, [editMode, initialName, initialColor, isOpen]);
+  }, [editMode, initialName, initialColor, initialDescription, isOpen]);
 
   if (!isOpen) return null;
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (name.trim()) {
-      onCreateCollection(name.trim(), selectedColor);
+      onCreateCollection(name.trim(), selectedColor, description.trim() || undefined);
       if (!editMode) {
         setName('');
         setSelectedColor('bg-blue-500');
+        setDescription('');
       }
       onClose();
     }
@@ -88,6 +94,19 @@ const CollectionModal = ({
               placeholder="Enter collection name..."
               className="bg-white/10 border-white/20 text-white placeholder:text-blue-300 focus:ring-blue-500"
               required
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-blue-200 mb-2">
+              Description (Optional)
+            </label>
+            <Input
+              type="text"
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Enter collection description..."
+              className="bg-white/10 border-white/20 text-white placeholder:text-blue-300 focus:ring-blue-500"
             />
           </div>
 
