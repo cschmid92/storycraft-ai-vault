@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import { Book } from '../types/entities';
+import { Book, BookForSale } from '../types/entities';
 import UnifiedHeader from '../components/layout/UnifiedHeader';
 import AppSidebar from '../components/layout/AppSidebar';
 import CollectionModal from '../components/CollectionModal';
@@ -14,7 +14,7 @@ import UsedBookGrid from '../components/UsedBookGrid';
 import ContactSellerModal from '../components/ContactSellerModal';
 import { useCollections, Collection } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
-import { usedBooksForPurchase } from '../data/mockData';
+import { booksForSale } from '../data/mockData';
 
 const BooksForSale = () => {
   const { collections, addCollection, addBookToCollection } = useCollections();
@@ -31,23 +31,29 @@ const BooksForSale = () => {
   const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isContactSellerModalOpen, setIsContactSellerModalOpen] = useState(false);
-  const [selectedBookForContact, setSelectedBookForContact] = useState<Book | null>(null);
+  const [selectedBookForContact, setSelectedBookForContact] = useState<BookForSale | null>(null);
 
   // Calculate books read count from actual data
   const booksReadCount = books.filter(book => book.userRating && book.userRating > 0).length;
 
+  // Get used books for purchase (excluding own books)
+  const usedBooksForPurchase = booksForSale.filter(sale => sale.sellerId !== 999);
+
   // Get unique genres for filtering from the centralized data
-  const genres = Array.from(new Set(usedBooksForPurchase.map(book => book.genre)));
+  const genres = Array.from(new Set(usedBooksForPurchase.map(sale => sale.book?.genre).filter(Boolean)));
 
   // Filter books based on search term, genre, and distance using centralized data
-  const filteredBooks = usedBooksForPurchase.filter(book => {
+  const filteredBooks = usedBooksForPurchase.filter(sale => {
+    const book = sale.book;
+    if (!book) return false;
+    
     const matchesSearch = book.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          book.author.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          book.genre.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesGenre = !selectedGenre || book.genre === selectedGenre;
     
-    const matchesDistance = !maxDistance || (book.distance && book.distance <= maxDistance);
+    const matchesDistance = !maxDistance || (sale.distance && sale.distance <= maxDistance);
     
     return matchesSearch && matchesGenre && matchesDistance;
   });
@@ -64,8 +70,8 @@ const BooksForSale = () => {
     setIsSidebarOpen(false);
   };
 
-  const handleBookClick = (book: Book) => {
-    setSelectedBook(book);
+  const handleBookClick = (bookForSale: BookForSale) => {
+    setSelectedBook(bookForSale.book);
     setIsBookDetailModalOpen(true);
   };
 
@@ -87,8 +93,8 @@ const BooksForSale = () => {
     setIsCollectionSelectionModalOpen(false);
   };
 
-  const handleContactSeller = (book: Book) => {
-    setSelectedBookForContact(book);
+  const handleContactSeller = (bookForSale: BookForSale) => {
+    setSelectedBookForContact(bookForSale);
     setIsContactSellerModalOpen(true);
   };
 
@@ -116,7 +122,7 @@ const BooksForSale = () => {
             onSelectCollection={handleCollectionSelect}
             onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
             books={books}
-            onBookClick={handleBookClick}
+            onBookClick={(book) => handleBookClick({ book, sellerId: 0, bookId: book.id, price: 0, condition: 'Good', isActive: true } as BookForSale)}
             booksReadCount={booksReadCount}
           />
         </div>
@@ -151,7 +157,7 @@ const BooksForSale = () => {
             </div>
 
             <UsedBookGrid
-              books={filteredBooks}
+              booksForSale={filteredBooks}
               onBookClick={handleBookClick}
               onContactSeller={handleContactSeller}
             />
@@ -185,7 +191,7 @@ const BooksForSale = () => {
       />
       
       <ContactSellerModal
-        book={selectedBookForContact}
+        bookForSale={selectedBookForContact}
         isOpen={isContactSellerModalOpen}
         onClose={() => setIsContactSellerModalOpen(false)}
       />

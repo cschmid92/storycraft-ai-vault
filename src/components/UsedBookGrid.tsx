@@ -1,17 +1,17 @@
 
 import React from 'react';
 import { DollarSign } from 'lucide-react';
-import { Book } from '../types/entities';
+import { BookForSale } from '../types/entities';
 import UsedBookCard from './UsedBookCard';
 
 interface UsedBookGridProps {
-  books: Book[];
-  onBookClick: (book: Book) => void;
-  onContactSeller: (book: Book) => void;
+  booksForSale: BookForSale[];
+  onBookClick: (bookForSale: BookForSale) => void;
+  onContactSeller: (bookForSale: BookForSale) => void;
 }
 
-const UsedBookGrid = ({ books, onBookClick, onContactSeller }: UsedBookGridProps) => {
-  if (books.length === 0) {
+const UsedBookGrid = ({ booksForSale, onBookClick, onContactSeller }: UsedBookGridProps) => {
+  if (booksForSale.length === 0) {
     return (
       <div className="text-center py-12">
         <DollarSign className="h-16 w-16 text-slate-400 mx-auto mb-4 opacity-50" />
@@ -23,10 +23,10 @@ const UsedBookGrid = ({ books, onBookClick, onContactSeller }: UsedBookGridProps
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-      {books.map(book => (
+      {booksForSale.map(bookForSale => (
         <UsedBookCard
-          key={book.id}
-          book={book}
+          key={bookForSale.id}
+          bookForSale={bookForSale}
           onBookClick={onBookClick}
           onContactSeller={onContactSeller}
         />

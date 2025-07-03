@@ -6,15 +6,6 @@ export interface BaseEntity {
   updatedAt?: Date;
 }
 
-// Seller entity
-export interface Seller {
-  name: string;
-  rating: number;
-  totalSales: number;
-  responseTime: string;
-  avatar: string;
-}
-
 // Book entity
 export interface Book extends BaseEntity {
   title: string;
@@ -38,10 +29,6 @@ export interface Book extends BaseEntity {
   listPrice?: number;
   synopsis?: string;
   subject?: string;
-  condition?: BookCondition;
-  distance?: number;
-  location?: string;
-  seller?: Seller;
 }
 
 // Collection entity
@@ -61,6 +48,8 @@ export interface User extends BaseEntity {
   firstName?: string;
   lastName?: string;
   avatar?: string;
+  rating?: number;
+  totalSales?: number;
   preferences?: UserPreferences;
 }
 
@@ -100,8 +89,12 @@ export interface BookForSale extends BaseEntity {
   bookId: number;
   price: number;
   condition: BookCondition;
+  location?: string;
+  seller?: User;
+  distance?: number;
   description?: string;
   isActive: boolean;
+  book?: Book;
 }
 
 // API response types

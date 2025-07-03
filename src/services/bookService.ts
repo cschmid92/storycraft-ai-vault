@@ -1,5 +1,5 @@
 import { Book, SearchFilters, Collection } from '../types/entities';
-import { mockBooks, mockUsedBooksForSale } from '../data/mockData';
+import { mockBooks, booksForSale } from '../data/mockData';
 
 export class BookService {
   static getAllBooks(): Book[] {
@@ -7,7 +7,7 @@ export class BookService {
   }
 
   static getUsedBooks(): Book[] {
-    return mockUsedBooksForSale;
+    return booksForSale.filter(sale => sale.book).map(sale => sale.book!);
   }
 
   static searchBooks(query: string, genre?: string): Book[] {
@@ -38,9 +38,9 @@ export class BookService {
       const matchesYearTo = !filters.yearTo || book.year <= filters.yearTo;
       const matchesLanguage = !filters.language || book.language === filters.language;
       const matchesRating = !filters.ratingMin || book.rating >= filters.ratingMin;
-      const matchesCondition = !filters.condition || book.condition === filters.condition;
+      const matchesCondition = !filters.condition;
       const matchesPrice = !filters.priceMax || !book.salePrice || book.salePrice <= filters.priceMax;
-      const matchesDistance = !filters.maxDistance || !book.distance || book.distance <= filters.maxDistance;
+      const matchesDistance = !filters.maxDistance;
 
       return matchesTitle && matchesAuthor && matchesIsbn && matchesGenre && 
              matchesPublisher && matchesYearFrom && matchesYearTo && 

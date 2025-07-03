@@ -11,16 +11,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { Book } from '../types/entities';
+import { BookForSale } from '../types/entities';
 import { useToast } from "@/hooks/use-toast";
 
 interface ContactSellerModalProps {
-  book: Book | null;
+  bookForSale: BookForSale | null;
   isOpen: boolean;
   onClose: () => void;
 }
 
-const ContactSellerModal = ({ book, isOpen, onClose }: ContactSellerModalProps) => {
+const ContactSellerModal = ({ bookForSale, isOpen, onClose }: ContactSellerModalProps) => {
   const [message, setMessage] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const { toast } = useToast();
@@ -44,10 +44,11 @@ const ContactSellerModal = ({ book, isOpen, onClose }: ContactSellerModalProps) 
       return;
     }
 
-    // Simulate sending message
+    const sellerName = bookForSale?.seller ? `${bookForSale.seller.firstName} ${bookForSale.seller.lastName}` : 'the seller';
+    
     toast({
       title: "Message sent!",
-      description: `Your message has been sent to ${book?.seller?.name}. They'll respond via your provided contact info.`,
+      description: `Your message has been sent to ${sellerName}. They'll respond via your provided contact info.`,
     });
 
     setMessage('');
@@ -55,7 +56,10 @@ const ContactSellerModal = ({ book, isOpen, onClose }: ContactSellerModalProps) 
     onClose();
   };
 
-  if (!book?.seller) return null;
+  if (!bookForSale?.book || !bookForSale?.seller) return null;
+
+  const book = bookForSale.book;
+  const seller = bookForSale.seller;
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -63,7 +67,7 @@ const ContactSellerModal = ({ book, isOpen, onClose }: ContactSellerModalProps) 
         <DialogHeader>
           <DialogTitle>Contact Seller</DialogTitle>
           <DialogDescription>
-            Send a message to {book.seller.name} about "{book.title}"
+            Send a message to {seller.firstName} {seller.lastName} about "{book.title}"
           </DialogDescription>
         </DialogHeader>
 
@@ -71,21 +75,20 @@ const ContactSellerModal = ({ book, isOpen, onClose }: ContactSellerModalProps) 
           {/* Seller Info */}
           <div className="flex items-center space-x-3 p-3 bg-slate-50 rounded-lg">
             <img 
-              src={book.seller.avatar} 
-              alt={book.seller.name}
+              src={seller.avatar} 
+              alt={`${seller.firstName} ${seller.lastName}`}
               className="w-12 h-12 rounded-full object-cover"
             />
             <div className="flex-1">
-              <h4 className="font-medium text-slate-800">{book.seller.name}</h4>
+              <h4 className="font-medium text-slate-800">{seller.firstName} {seller.lastName}</h4>
               <div className="flex items-center space-x-2 text-sm text-slate-600">
                 <div className="flex items-center">
                   <Star className="h-3 w-3 text-yellow-500 fill-yellow-500 mr-1" />
-                  <span>{book.seller.rating}</span>
+                  <span>{seller.rating}</span>
                 </div>
                 <span>•</span>
-                <span>{book.seller.totalSales} sales</span>
+                <span>{seller.totalSales} sales</span>
               </div>
-              <p className="text-xs text-slate-500">{book.seller.responseTime}</p>
             </div>
           </div>
 
@@ -100,9 +103,9 @@ const ContactSellerModal = ({ book, isOpen, onClose }: ContactSellerModalProps) 
               <h4 className="font-medium text-slate-800 line-clamp-1">{book.title}</h4>
               <p className="text-sm text-slate-600">{book.author}</p>
               <div className="flex items-center justify-between mt-1">
-                <span className="text-lg font-bold text-green-600">${book.salePrice}</span>
+                <span className="text-lg font-bold text-green-600">${bookForSale.price}</span>
                 <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
-                  {book.condition}
+                  {bookForSale.condition}
                 </span>
               </div>
             </div>
@@ -128,7 +131,7 @@ const ContactSellerModal = ({ book, isOpen, onClose }: ContactSellerModalProps) 
               </label>
               <Textarea
                 id="message"
-                placeholder={`Hi ${book.seller.name}! I'm interested in purchasing "${book.title}". Is it still available?`}
+                placeholder={`Hi ${seller.firstName}! I'm interested in purchasing "${book.title}". Is it still available?`}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
                 rows={4}

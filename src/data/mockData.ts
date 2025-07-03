@@ -1,5 +1,5 @@
 
-import { Book, Collection } from '../types/entities';
+import { Book, Collection, BookForSale, User } from '../types/entities';
 
 export const mockBooks: Book[] = [
   {
@@ -18,8 +18,7 @@ export const mockBooks: Book[] = [
     publisher: "Scribner",
     pages: 180,
     language: "English",
-    synopsis: "Set in the summer of 1922, the novel follows Nick Carraway as he observes the decadent world of his mysterious neighbor Jay Gatsby.",
-    condition: "Good"
+    synopsis: "Set in the summer of 1922, the novel follows Nick Carraway as he observes the decadent world of his mysterious neighbor Jay Gatsby."
   },
   {
     id: 2,
@@ -37,8 +36,7 @@ export const mockBooks: Book[] = [
     publisher: "Harper Perennial Modern Classics",
     pages: 376,
     language: "English",
-    synopsis: "Through the eyes of Scout Finch, we see the complexities of human nature and moral courage.",
-    condition: "Very Good"
+    synopsis: "Through the eyes of Scout Finch, we see the complexities of human nature and moral courage."
   },
   {
     id: 3,
@@ -57,8 +55,7 @@ export const mockBooks: Book[] = [
     publisher: "Plume",
     pages: 328,
     language: "English",
-    synopsis: "Winston Smith struggles against a totalitarian regime in a world of perpetual war and surveillance.",
-    condition: "Good"
+    synopsis: "Winston Smith struggles against a totalitarian regime in a world of perpetual war and surveillance."
   },
   {
     id: 4,
@@ -77,10 +74,7 @@ export const mockBooks: Book[] = [
     publisher: "Penguin Classics",
     pages: 432,
     language: "English",
-    synopsis: "Elizabeth Bennet navigates issues of marriage, morality, and misconceptions in 19th century England.",
-    condition: "Excellent",
-    distance: 9.2,
-    location: "Uptown"
+    synopsis: "Elizabeth Bennet navigates issues of marriage, morality, and misconceptions in 19th century England."
   },
   {
     id: 5,
@@ -98,8 +92,7 @@ export const mockBooks: Book[] = [
     publisher: "Little, Brown and Company",
     pages: 277,
     language: "English",
-    synopsis: "Holden Caulfield's journey through New York City after being expelled from prep school.",
-    condition: "Fair"
+    synopsis: "Holden Caulfield's journey through New York City after being expelled from prep school."
   },
   {
     id: 6,
@@ -117,8 +110,7 @@ export const mockBooks: Book[] = [
     publisher: "Ace",
     pages: 688,
     language: "English",
-    synopsis: "Paul Atreides navigates political intrigue and mystical powers on the desert planet Arrakis.",
-    condition: "New"
+    synopsis: "Paul Atreides navigates political intrigue and mystical powers on the desert planet Arrakis."
   },
   {
     id: 7,
@@ -136,8 +128,7 @@ export const mockBooks: Book[] = [
     publisher: "Houghton Mifflin Harcourt",
     pages: 1216,
     language: "English",
-    synopsis: "Frodo Baggins embarks on a perilous journey to destroy the One Ring and save Middle-earth.",
-    condition: "Like New"
+    synopsis: "Frodo Baggins embarks on a perilous journey to destroy the One Ring and save Middle-earth."
   },
   {
     id: 8,
@@ -155,168 +146,150 @@ export const mockBooks: Book[] = [
     publisher: "Scholastic",
     pages: 309,
     language: "English",
-    synopsis: "Harry Potter discovers he's a wizard on his 11th birthday and begins his magical education at Hogwarts.",
-    condition: "Very Good"
+    synopsis: "Harry Potter discovers he's a wizard on his 11th birthday and begins his magical education at Hogwarts."
   }
 ];
 
-// My books for sale - books owned by the current user that are available for sale
-export const myBooksForSale: Book[] = [
+// Mock users/sellers
+export const mockUsers: User[] = [
+  {
+    id: 1,
+    email: "sarah.chen@email.com",
+    username: "sarahc",
+    firstName: "Sarah",
+    lastName: "Chen",
+    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=100&h=100&fit=crop&crop=face",
+    rating: 4.8,
+    totalSales: 23
+  },
+  {
+    id: 2,
+    email: "mike.rodriguez@email.com",
+    username: "mikerod",
+    firstName: "Mike",
+    lastName: "Rodriguez",
+    avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+    rating: 4.5,
+    totalSales: 15
+  },
+  {
+    id: 3,
+    email: "emma.thompson@email.com",
+    username: "emmat",
+    firstName: "Emma",
+    lastName: "Thompson",
+    avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
+    rating: 4.9,
+    totalSales: 41
+  },
+  {
+    id: 4,
+    email: "david.kim@email.com",
+    username: "davidk",
+    firstName: "David",
+    lastName: "Kim",
+    avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
+    rating: 4.7,
+    totalSales: 32
+  }
+];
+
+// Books for sale - consolidated entity
+export const booksForSale: BookForSale[] = [
+  // My books for sale
   {
     id: 101,
-    title: "1984",
-    author: "George Orwell",
-    cover: "https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=300&h=450&fit=crop",
-    rating: 4.4,
-    genre: "Dystopian Fiction",
-    year: 1949,
-    description: "A dystopian social science fiction novel about totalitarian control and surveillance.",
-    isFavorite: false,
-    isOwnedForSale: true,
-    salePrice: 12.99,
+    sellerId: 999, // Current user ID
+    bookId: 3, // 1984 from mockBooks
+    price: 12.99,
     condition: "Good",
-    isbn10: "0452284236",
-    isbn13: "978-0452284234",
-    publisher: "Plume",
-    pages: 328,
-    language: "English"
+    location: "My Location",
+    distance: 0,
+    isActive: true,
+    book: mockBooks.find(b => b.id === 3)
   },
   {
     id: 102,
-    title: "The Hobbit",
-    author: "J.R.R. Tolkien",
-    cover: "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=300&h=450&fit=crop",
-    rating: 4.6,
-    genre: "Fantasy",
-    year: 1937,
-    description: "A children's fantasy novel about the adventures of a hobbit named Bilbo Baggins.",
-    isFavorite: false,
-    isOwnedForSale: true,
-    salePrice: 8.99,
+    sellerId: 999, // Current user ID
+    bookId: 7, // The Lord of the Rings
+    price: 8.99,
     condition: "Fair",
-    isbn10: "0547928227",
-    isbn13: "978-0547928227",
-    publisher: "Houghton Mifflin Harcourt",
-    pages: 310,
-    language: "English"
-  }
-];
-
-// Used books available for purchase from other users in the community
-export const usedBooksForPurchase: Book[] = [
+    location: "My Location", 
+    distance: 0,
+    isActive: true,
+    book: {
+      id: 999,
+      title: "The Hobbit",
+      author: "J.R.R. Tolkien",
+      cover: "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=300&h=450&fit=crop",
+      rating: 4.6,
+      genre: "Fantasy",
+      year: 1937,
+      description: "A children's fantasy novel about the adventures of a hobbit named Bilbo Baggins.",
+      isFavorite: false,
+      isOwnedForSale: true,
+      salePrice: 8.99,
+      isbn10: "0547928227",
+      isbn13: "978-0547928227",
+      publisher: "Houghton Mifflin Harcourt",
+      pages: 310,
+      language: "English"
+    }
+  },
+  // Community books for sale
   {
     id: 201,
-    title: "1984",
-    author: "George Orwell",
-    cover: "https://images.unsplash.com/photo-1495640388908-05fa85288e61?w=300&h=450&fit=crop",
-    rating: 4.4,
-    genre: "Dystopian Fiction",
-    year: 1949,
-    description: "A dystopian social science fiction novel about totalitarian control and surveillance.",
-    isFavorite: false,
-    isOwnedForSale: true,
-    salePrice: 12.99,
+    sellerId: 1,
+    bookId: 3, // 1984
+    price: 12.99,
     condition: "Good",
-    isbn10: "0452284236",
-    isbn13: "978-0452284234",
-    publisher: "Plume",
-    pages: 328,
-    language: "English",
-    distance: 3.7,
     location: "Downtown",
-    seller: {
-      name: "Sarah Chen",
-      rating: 4.8,
-      totalSales: 23,
-      responseTime: "Usually responds within 2 hours",
-      avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=100&h=100&fit=crop&crop=face"
-    }
+    distance: 3.7,
+    isActive: true,
+    seller: mockUsers[0],
+    book: mockBooks.find(b => b.id === 3)
   },
   {
     id: 202,
-    title: "Pride and Prejudice",
-    author: "Jane Austen",
-    cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop",
-    rating: 4.3,
-    genre: "Classic Literature",
-    year: 1813,
-    description: "A romantic novel of manners set in Georgian England.",
-    isFavorite: false,
-    isOwnedForSale: true,
-    salePrice: 15.99,
+    sellerId: 2,
+    bookId: 4, // Pride and Prejudice
+    price: 15.99,
     condition: "Excellent",
-    isbn10: "0141439513",
-    isbn13: "978-0141439518",
-    publisher: "Penguin Classics",
-    pages: 432,
-    language: "English",
-    distance: 9.2,
     location: "Uptown",
-    seller: {
-      name: "Mike Rodriguez",
-      rating: 4.5,
-      totalSales: 15,
-      responseTime: "Usually responds within 4 hours",
-      avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face"
-    }
+    distance: 9.2,
+    isActive: true,
+    seller: mockUsers[1],
+    book: mockBooks.find(b => b.id === 4)
   },
   {
     id: 203,
-    title: "The Great Gatsby",
-    author: "F. Scott Fitzgerald",
-    cover: "https://images.unsplash.com/photo-1544947950-fa07a98d237f?w=300&h=450&fit=crop",
-    rating: 4.2,
-    genre: "Classic Literature",
-    year: 1925,
-    description: "A classic American novel set in the Jazz Age, exploring themes of wealth, love, and the American Dream.",
-    isFavorite: false,
-    isOwnedForSale: true,
-    salePrice: 10.99,
+    sellerId: 3,
+    bookId: 1, // The Great Gatsby
+    price: 10.99,
     condition: "Fair",
-    isbn10: "0743273567",
-    isbn13: "978-0743273565",
-    publisher: "Scribner",
-    pages: 180,
-    language: "English",
-    distance: 1.9,
     location: "Midtown",
-    seller: {
-      name: "Emma Thompson",
-      rating: 4.9,
-      totalSales: 41,
-      responseTime: "Usually responds within 1 hour",
-      avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face"
-    }
+    distance: 1.9,
+    isActive: true,
+    seller: mockUsers[2],
+    book: mockBooks.find(b => b.id === 1)
   },
   {
     id: 204,
-    title: "Dune",
-    author: "Frank Herbert",
-    cover: "https://images.unsplash.com/photo-1518373714866-3f1478910cc0?w=300&h=450&fit=crop",
-    rating: 4.6,
-    genre: "Science Fiction",
-    year: 1965,
-    description: "An epic science fiction novel set on the desert planet Arrakis.",
-    isFavorite: false,
-    isOwnedForSale: true,
-    salePrice: 18.50,
+    sellerId: 4,
+    bookId: 6, // Dune
+    price: 18.50,
     condition: "Like New",
-    isbn10: "0441013597",
-    isbn13: "978-0441013593",
-    publisher: "Ace",
-    pages: 688,
-    language: "English",
-    distance: 5.1,
     location: "Westside",
-    seller: {
-      name: "David Kim",
-      rating: 4.7,
-      totalSales: 32,
-      responseTime: "Usually responds within 3 hours",
-      avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face"
-    }
+    distance: 5.1,
+    isActive: true,
+    seller: mockUsers[3],
+    book: mockBooks.find(b => b.id === 6)
   }
 ];
+
+// Legacy exports for backward compatibility
+export const myBooksForSale = booksForSale.filter(sale => sale.sellerId === 999);
+export const usedBooksForPurchase = booksForSale.filter(sale => sale.sellerId !== 999);
 
 // Legacy exports for backward compatibility
 export const mockUsedBooksForSale = usedBooksForPurchase;
