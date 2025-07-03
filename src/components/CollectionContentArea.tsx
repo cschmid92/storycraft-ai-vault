@@ -1,8 +1,9 @@
 
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, BookmarkPlus, Heart } from 'lucide-react';
+import { ArrowLeft, BookmarkPlus, Heart, Share2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
 import BookCard from './BookCard';
 import CollectionActions from './CollectionActions';
 import { Book, Collection } from '../types/entities';
@@ -19,6 +20,7 @@ interface CollectionContentAreaProps {
   onRemoveFromCollection?: (bookId: number) => void;
   onEditCollection: (collectionId: number) => void;
   onDeleteCollection: () => void;
+  onShareCollection?: () => void;
 }
 
 const CollectionContentArea = ({
@@ -32,8 +34,25 @@ const CollectionContentArea = ({
   onAddToBooksRead,
   onRemoveFromCollection,
   onEditCollection,
-  onDeleteCollection
+  onDeleteCollection,
+  onShareCollection
 }: CollectionContentAreaProps) => {
+  const handleShareCollection = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      toast({
+        title: "Collection link copied!",
+        description: "You can now share this collection with others.",
+      });
+    }).catch(() => {
+      toast({
+        title: "Failed to copy link",
+        description: "Please try again.",
+        variant: "destructive",
+      });
+    });
+  };
+
   return (
     <main className="flex-1 p-4 md:p-6">
       <div className="mb-6 md:mb-8">
@@ -55,14 +74,27 @@ const CollectionContentArea = ({
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-slate-800">{selectedCollection.name}</h1>
               <p className="text-xs text-slate-600">{collectionBooks.length} books</p>
+              {(selectedCollection as Collection).description && (
+                <p className="text-sm text-slate-500 mt-1">{(selectedCollection as Collection).description}</p>
+              )}
             </div>
           </div>
-          <CollectionActions
-            selectedCollection={selectedCollection}
-            canEdit={canEdit}
-            onEdit={onEditCollection}
-            onDelete={onDeleteCollection}
-          />
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={handleShareCollection}
+            >
+              <Share2 className="h-4 w-4 sm:mr-2" />
+              <span className="hidden sm:inline">Share</span>
+            </Button>
+            <CollectionActions
+              selectedCollection={selectedCollection}
+              canEdit={canEdit}
+              onEdit={onEditCollection}
+              onDelete={onDeleteCollection}
+            />
+          </div>
         </div>
       </div>
 

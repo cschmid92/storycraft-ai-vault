@@ -24,8 +24,7 @@ const About = () => {
   const [isBookDetailOpen, setIsBookDetailOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const booksRead = books.filter(book => book.userRating && book.userRating > 0);
-  const booksReadCount = booksRead.length;
+  const booksReadCount = books.filter(book => book.userRating && book.userRating > 0).length;
 
   const handleSelectCollection = (collection: Collection | null) => {
     setSelectedCollection(collection);
@@ -58,6 +57,10 @@ const About = () => {
     }
   };
 
+  const handleCreateCollection = (name: string, color: string, description?: string) => {
+    addCollection(name, color, description);
+  };
+
   const selectedBookTitle = selectedBookId ? books.find(book => book.id === selectedBookId)?.title || '' : '';
 
   return (
@@ -86,7 +89,7 @@ const About = () => {
             books={books}
             onBookClick={handleBookClick}
             booksReadCount={booksReadCount}
-            onDeleteCollection={deleteCollection}
+            
           />
         </div>
 
@@ -203,7 +206,7 @@ const About = () => {
       <CollectionModal
         isOpen={isCollectionModalOpen}
         onClose={() => setIsCollectionModalOpen(false)}
-        onCreateCollection={addCollection}
+        onCreateCollection={handleCreateCollection}
       />
 
       <CollectionSelectionModal

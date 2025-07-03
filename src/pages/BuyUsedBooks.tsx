@@ -75,8 +75,8 @@ const BooksForSale = () => {
     setIsBookDetailModalOpen(true);
   };
 
-  const handleCreateCollection = (name: string, color: string) => {
-    addCollection(name, color);
+  const handleCreateCollection = (name: string, color: string, description?: string) => {
+    addCollection(name, color, description);
   };
 
   const handleAddToCollection = (book: Book) => {
