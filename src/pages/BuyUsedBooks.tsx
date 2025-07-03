@@ -5,7 +5,7 @@ import { ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book, BookForSale } from '../types/entities';
 import UnifiedHeader from '../components/layout/UnifiedHeader';
-import UnifiedSidebar from '../components/UnifiedSidebar';
+import AppSidebar from '../components/layout/AppSidebar';
 import CollectionModal from '../components/CollectionModal';
 import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
@@ -117,7 +117,7 @@ const BooksForSale = () => {
         
         {/* Sidebar */}
         <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-50 md:z-auto`}>
-          <UnifiedSidebar 
+          <AppSidebar 
             collections={collections}
             selectedCollection={selectedCollection}
             onSelectCollection={handleCollectionSelect}

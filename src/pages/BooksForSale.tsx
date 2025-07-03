@@ -4,17 +4,15 @@ import { ArrowLeft, DollarSign, Tag, Star } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book, BookForSale } from '../types/entities';
 import UnifiedHeader from '../components/layout/UnifiedHeader';
-import UnifiedSidebar from '../components/UnifiedSidebar';
+import AppSidebar from '../components/layout/AppSidebar';
 import CollectionModal from '../components/CollectionModal';
 import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import { useCollections } from '../hooks/useCollections';
 import { useBooksForSale } from '../hooks/useBooksForSale';
-import { useBooks } from '../hooks/useBooks';
 
 const BooksForSale = () => {
-  const { collections, addCollection, addBookToCollection } = useCollections();
-  const { books } = useBooks();
+  const { collections, addCollection } = useCollections();
   const { getMyBooksForSale, removeBookFromSale } = useBooksForSale();
   const myBooks = getMyBooksForSale();
   const navigate = useNavigate();
@@ -87,12 +85,12 @@ const BooksForSale = () => {
         
         {/* Sidebar */}
         <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-50 md:z-auto`}>
-          <UnifiedSidebar 
+          <AppSidebar 
             collections={collections}
             selectedCollection={selectedCollection}
             onSelectCollection={handleCollectionSelect}
             onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
-            books={books}
+            books={myBooks.map(sale => sale.book!).filter(Boolean)}
             onBookClick={(book) => {
               const bookForSale = myBooks.find(sale => sale.book?.id === book.id);
               if (bookForSale) handleBookClick(bookForSale);

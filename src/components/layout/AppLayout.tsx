@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import AppHeader from './AppHeader';
-import UnifiedSidebar from '../UnifiedSidebar';
+import AppSidebar from './AppSidebar';
 import { useBooks } from '../../hooks/useBooks';
 import { useCollections } from '../../hooks/useCollections';
 import CollectionModal from '../CollectionModal';
@@ -92,7 +92,7 @@ const AppLayout = ({
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex w-full">
       {showSidebar && (
-        <UnifiedSidebar
+        <AppSidebar
           collections={collections}
           selectedCollection={selectedCollection}
           onSelectCollection={handleSelectCollection}
@@ -100,6 +100,7 @@ const AppLayout = ({
           books={books}
           onBookClick={handleBookClick}
           booksReadCount={booksReadCount}
+          onDeleteCollection={deleteCollection}
         />
       )}
       
