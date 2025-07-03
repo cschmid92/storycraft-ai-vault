@@ -287,13 +287,9 @@ export const booksForSale: BookForSale[] = [
   }
 ];
 
-// Legacy exports for backward compatibility
-export const myBooksForSale = booksForSale.filter(sale => sale.sellerId === 999);
-export const usedBooksForPurchase = booksForSale.filter(sale => sale.sellerId !== 999);
-
-// Legacy exports for backward compatibility
-export const mockUsedBooksForSale = usedBooksForPurchase;
-export const mockUsedBooks = usedBooksForPurchase;
+// Legacy exports for backward compatibility - DEPRECATED
+// Use booksForSale.filter(sale => sale.sellerId === 999) for my books
+// Use booksForSale.filter(sale => sale.sellerId !== 999) for used books
 
 export const mockCollections: Collection[] = [
   {

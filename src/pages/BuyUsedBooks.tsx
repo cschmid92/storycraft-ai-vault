@@ -36,14 +36,14 @@ const BooksForSale = () => {
   // Calculate books read count from actual data
   const booksReadCount = books.filter(book => book.userRating && book.userRating > 0).length;
 
-  // Get used books for purchase (excluding own books)
-  const usedBooksForPurchase = booksForSale.filter(sale => sale.sellerId !== 999);
+  // Get books for purchase (excluding own books)
+  const filteredBooksForSale = booksForSale.filter(sale => sale.sellerId !== 999);
 
   // Get unique genres for filtering from the centralized data
-  const genres = Array.from(new Set(usedBooksForPurchase.map(sale => sale.book?.genre).filter(Boolean)));
+  const genres = Array.from(new Set(filteredBooksForSale.map(sale => sale.book?.genre).filter(Boolean)));
 
   // Filter books based on search term, genre, and distance using centralized data
-  const filteredBooks = usedBooksForPurchase.filter(sale => {
+  const filteredBooks = filteredBooksForSale.filter(sale => {
     const book = sale.book;
     if (!book) return false;
     

@@ -2,7 +2,7 @@
 import React from 'react';
 import { DollarSign, Tag } from 'lucide-react';
 import { Book } from '../types/entities';
-import { myBooksForSale } from '../data/mockData';
+import { booksForSale } from '../data/mockData';
 
 interface BooksForSaleProps {
   books: Book[];
@@ -11,7 +11,8 @@ interface BooksForSaleProps {
 
 const BooksForSale = ({ books, onBookClick }: BooksForSaleProps) => {
   // Use books prop if provided, otherwise use centralized data
-  const booksToShow = books.length > 0 ? books.filter(book => book.isOwnedForSale && book.salePrice) : myBooksForSale;
+  const myBooks = booksForSale.filter(sale => sale.sellerId === 999);
+  const booksToShow = books.length > 0 ? books.filter(book => book.isOwnedForSale && book.salePrice) : myBooks;
 
   if (booksToShow.length === 0) {
     return (
