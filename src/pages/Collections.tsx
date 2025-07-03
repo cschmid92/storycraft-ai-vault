@@ -3,11 +3,10 @@ import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BookmarkPlus } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import CollectionsHeader from '../components/CollectionsHeader';
+import UnifiedHeader from '../components/layout/UnifiedHeader';
 import CollectionContentArea from '../components/CollectionContentArea';
 import SharedSidebar from '../components/SharedSidebar';
 import CollectionModal from '../components/CollectionModal';
-import AccountModal from '../components/AccountModal';
 import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import { Book, Collection } from '../types/entities';
@@ -20,7 +19,6 @@ const Collections = () => {
   const { collections, addCollection, deleteCollection, updateCollection, addBookToCollection, removeBookFromCollection } = useCollections();
   const { books, toggleFavorite, toggleOwnedForSale, rateBook } = useBooks();
   const [booksReadList, setBooksReadList] = useState<number[]>([1, 2]);
-  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingCollection, setEditingCollection] = useState<Collection | null>(null);
@@ -168,10 +166,9 @@ const Collections = () => {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
-      <CollectionsHeader 
-        isSidebarOpen={isSidebarOpen}
-        setIsSidebarOpen={setIsSidebarOpen}
-        setIsAccountModalOpen={setIsAccountModalOpen}
+      <UnifiedHeader 
+        showMobileMenu={true}
+        onMobileMenuClick={() => setIsSidebarOpen(true)}
       />
 
       <div className="flex">
@@ -247,11 +244,6 @@ const Collections = () => {
         onAddToCollection={handleAddToCollection}
         onToggleOwnedForSale={handleToggleOwnedForSale}
         onRateBook={handleRateBook}
-      />
-      
-      <AccountModal 
-        isOpen={isAccountModalOpen}
-        onClose={() => setIsAccountModalOpen(false)}
       />
     </div>
   );

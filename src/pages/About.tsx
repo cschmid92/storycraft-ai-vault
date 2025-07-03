@@ -258,11 +258,6 @@ const About = () => {
         onToggleOwnedForSale={toggleOwnedForSale}
         onRateBook={rateBook}
       />
-
-      <AccountModal 
-        isOpen={isAccountModalOpen}
-        onClose={() => setIsAccountModalOpen(false)}
-      />
     </div>
   );
 };
