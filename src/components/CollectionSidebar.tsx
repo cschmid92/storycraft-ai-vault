@@ -92,7 +92,7 @@ const CollectionSidebar = ({
           </button>
           {showBooksForSale && (
             <div className="ml-2 mb-4">
-              <BooksForSale books={books} onBookClick={onBookClick} />
+              <BooksForSale onBookClick={onBookClick} />
               <Link to="/books-for-sale">
                 <Button variant="outline" size="sm" className="w-full mt-2 text-xs">
                   View All

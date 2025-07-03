@@ -4,6 +4,7 @@ import { BookOpen, User, MessageSquare, Menu } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import AccountModal from '../AccountModal';
 import MessengerModal from '../MessengerModal';
+import ResetDataButton from '../ResetDataButton';
 
 interface UnifiedHeaderProps {
   title?: string;
@@ -49,6 +50,7 @@ const UnifiedHeader = ({
               </Link>
             </div>
             <div className="flex items-center gap-3">
+              <ResetDataButton />
               <Button 
                 variant="outline"
                 size="sm"

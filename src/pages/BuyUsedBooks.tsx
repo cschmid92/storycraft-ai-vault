@@ -14,11 +14,12 @@ import UsedBookGrid from '../components/UsedBookGrid';
 import ContactSellerModal from '../components/ContactSellerModal';
 import { useCollections, Collection } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
-import { booksForSale } from '../data/mockData';
+import { useBooksForSale } from '../hooks/useBooksForSale';
 
 const BooksForSale = () => {
   const { collections, addCollection, addBookToCollection } = useCollections();
   const { books, toggleFavorite, toggleOwnedForSale, rateBook } = useBooks();
+  const { getCommunityBooksForSale } = useBooksForSale();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('');
@@ -37,7 +38,7 @@ const BooksForSale = () => {
   const booksReadCount = 2; // This should match the booksReadList in Collections.tsx: [1, 2]
 
   // Get books for purchase (excluding own books)
-  const filteredBooksForSale = booksForSale.filter(sale => sale.sellerId !== 999);
+  const filteredBooksForSale = getCommunityBooksForSale();
 
   // Get unique genres for filtering from the centralized data
   const genres = Array.from(new Set(filteredBooksForSale.map(sale => sale.book?.genre).filter(Boolean)));

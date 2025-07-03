@@ -9,12 +9,13 @@ import CollectionModal from '../components/CollectionModal';
 import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import { useCollections } from '../hooks/useCollections';
-import { booksForSale } from '../data/mockData';
+import { useBooksForSale } from '../hooks/useBooksForSale';
 
 const BooksForSale = () => {
   const { collections, addCollection } = useCollections();
+  const { getMyBooksForSale, removeBookFromSale } = useBooksForSale();
+  const myBooks = getMyBooksForSale();
   const navigate = useNavigate();
-  const [myBooks] = useState(booksForSale.filter(sale => sale.sellerId === 999));
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isBookDetailModalOpen, setIsBookDetailModalOpen] = useState(false);
@@ -61,9 +62,9 @@ const BooksForSale = () => {
     handleBookClick(bookForSale);
   };
 
-  const handleRemoveFromSale = (bookId: number) => {
-    console.log(`Removing book ${bookId} from sale`);
-    // In a real app, this would update the book's isOwnedForSale status
+  const handleRemoveFromSale = (saleId: number) => {
+    console.log(`Removing book sale ${saleId} from sale`);
+    removeBookFromSale(saleId);
   };
 
   return (
@@ -90,7 +91,10 @@ const BooksForSale = () => {
             onSelectCollection={handleCollectionSelect}
             onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
             books={myBooks.map(sale => sale.book!).filter(Boolean)}
-            onBookClick={(book) => handleBookClick(myBooks.find(sale => sale.book?.id === book.id)!)}
+            onBookClick={(book) => {
+              const bookForSale = myBooks.find(sale => sale.book?.id === book.id);
+              if (bookForSale) handleBookClick(bookForSale);
+            }}
             booksReadCount={booksReadList.length}
           />
         </div>

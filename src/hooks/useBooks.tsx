@@ -61,11 +61,18 @@ export const useBooks = () => {
     ));
   };
 
+  // Reset to initial mock data
+  const resetToMockData = () => {
+    setBooks(BookService.getAllBooks());
+    localStorage.removeItem(BOOKS_STORAGE_KEY);
+  };
+
   return {
     books,
     updateBook,
     toggleFavorite,
     toggleOwnedForSale,
-    rateBook
+    rateBook,
+    resetToMockData
   };
 };
