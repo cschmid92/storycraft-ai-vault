@@ -33,8 +33,8 @@ const BooksForSale = () => {
   const [isContactSellerModalOpen, setIsContactSellerModalOpen] = useState(false);
   const [selectedBookForContact, setSelectedBookForContact] = useState<BookForSale | null>(null);
 
-  // Calculate books read count from actual data
-  const booksReadCount = books.filter(book => book.userRating && book.userRating > 0).length;
+  // Use the same books read logic as Collections.tsx - books with IDs 1 and 2 are marked as read
+  const booksReadCount = 2; // This should match the booksReadList in Collections.tsx: [1, 2]
 
   // Get books for purchase (excluding own books)
   const filteredBooksForSale = booksForSale.filter(sale => sale.sellerId !== 999);

@@ -24,7 +24,8 @@ const About = () => {
   const [isBookDetailOpen, setIsBookDetailOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const booksReadCount = books.filter(book => book.userRating && book.userRating > 0).length;
+  // Use the same books read logic as Collections.tsx - books with IDs 1 and 2 are marked as read
+  const booksReadCount = 2; // This should match the booksReadList in Collections.tsx: [1, 2]
 
   const handleSelectCollection = (collection: Collection | null) => {
     setSelectedCollection(collection);

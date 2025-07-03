@@ -61,7 +61,10 @@ const CollectionActions = ({
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
             <AlertDialogAction 
-              onClick={onDelete}
+              onClick={() => {
+                console.log('Delete button clicked in confirmation dialog');
+                onDelete();
+              }}
               className="bg-red-600 hover:bg-red-700"
             >
               Delete
