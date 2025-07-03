@@ -58,7 +58,8 @@ const Collections = () => {
     if (selectedCollection && typeof selectedCollection.id === 'number') {
       console.log('Deleting collection:', selectedCollection.id);
       deleteCollection(selectedCollection.id);
-      navigate('/');
+      // Navigate immediately without waiting
+      setTimeout(() => navigate('/'), 0);
     }
   };
 

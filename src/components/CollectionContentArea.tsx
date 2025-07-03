@@ -74,9 +74,6 @@ const CollectionContentArea = ({
             <div>
               <h1 className="text-2xl md:text-3xl font-bold text-slate-800">{selectedCollection.name}</h1>
               <p className="text-xs text-slate-600">{collectionBooks.length} books</p>
-              {(selectedCollection as Collection).description && (
-                <p className="text-sm text-slate-500 mt-1">{(selectedCollection as Collection).description}</p>
-              )}
             </div>
           </div>
           <div className="flex gap-2">
@@ -97,6 +94,12 @@ const CollectionContentArea = ({
           </div>
         </div>
       </div>
+
+      {(selectedCollection as Collection).description && (
+        <div className="mb-6">
+          <p className="text-slate-600">{(selectedCollection as Collection).description}</p>
+        </div>
+      )}
 
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
         {collectionBooks.map(book => (
