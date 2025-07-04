@@ -5,35 +5,31 @@ const defaultCollections: Collection[] = [
   { 
     id: 2, 
     name: "To Read 📚", 
-    count: 3, 
+    count: 0, 
     color: "bg-blue-500", 
-    bookIds: [1, 3, 4],
+    bookIds: [],
     description: "Books I want to read"
   },
   { 
     id: 3, 
     name: "Classics", 
-    count: 3, 
+    count: 0, 
     color: "bg-amber-500", 
-    bookIds: [1, 2, 4],
+    bookIds: [],
     description: "Classic literature collection"
   },
   { 
     id: 4, 
     name: "Sci-Fi Adventures", 
-    count: 2, 
+    count: 0, 
     color: "bg-purple-500", 
-    bookIds: [2, 3],
+    bookIds: [],
     description: "Science fiction favorites"
   }
 ];
 
 // Export collectionBookMappings for backward compatibility
-export const collectionBookMappings: Record<number, number[]> = {
-  2: [1, 3, 4],
-  3: [1, 2, 4], 
-  4: [2, 3]
-};
+export const collectionBookMappings: Record<number, number[]> = {};
 
 const STORAGE_KEY = 'bacondo-collections';
 

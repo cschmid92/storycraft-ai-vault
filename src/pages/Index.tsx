@@ -16,11 +16,11 @@ import { Button } from "@/components/ui/button";
 import { Book, BookCondition } from '../types/entities';
 import { Plus, Filter, Heart, Star, BookmarkPlus, Quote } from 'lucide-react';
 import { useCollections, Collection } from '../hooks/useCollections';
-import { mockBooks } from '../data/mockData';
+import { useBooks } from '../hooks/useBooks';
 
 const Index = () => {
   const { collections, addCollection, deleteCollection, addBookToCollection } = useCollections();
-  const [books, setBooks] = useState(mockBooks);
+  const { books, toggleFavorite: bookToggleFavorite, toggleOwnedForSale: bookToggleOwnedForSale, rateBook } = useBooks();
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isCollectionSelectionOpen, setIsCollectionSelectionOpen] = useState(false);
@@ -56,35 +56,24 @@ const Index = () => {
   };
 
   const toggleFavorite = (bookId: number) => {
-    setBooks(books.map(book => 
-      book.id === bookId ? { ...book, isFavorite: !book.isFavorite } : book
-    ));
+    bookToggleFavorite(bookId);
   };
 
   const toggleOwnedForSale = (bookId: number, price?: number) => {
-    const book = books.find(b => b.id === bookId);
+    const book = books.find(b => Number(b.id) === bookId);
     if (!book) return;
 
     if (!book.isOwnedForSale) {
       setSelectedBookForSale(bookId);
       setIsPriceModalOpen(true);
     } else {
-      setBooks(books.map(book => 
-        book.id === bookId ? { ...book, isOwnedForSale: false, salePrice: undefined } : book
-      ));
+      bookToggleOwnedForSale(bookId);
     }
   };
 
   const handleSetSalePrice = (price: number, condition: string) => {
     if (selectedBookForSale) {
-      setBooks(books.map(book => 
-        book.id === selectedBookForSale ? { 
-          ...book, 
-          isOwnedForSale: true, 
-          salePrice: price, 
-          condition: condition as BookCondition 
-        } : book
-      ));
+      bookToggleOwnedForSale(selectedBookForSale, price);
       setSelectedBookForSale(null);
     }
   };
@@ -114,16 +103,14 @@ const Index = () => {
   const handleCollectionSelection = (collection: Collection) => {
     if (collection && selectedBookForCollection) {
       addBookToCollection(collection.id, selectedBookForCollection);
-      console.log(`Added "${books.find(b => b.id === selectedBookForCollection)?.title}" to collection "${collection.name}"`);
+      console.log(`Added "${books.find(b => Number(b.id) === selectedBookForCollection)?.title}" to collection "${collection.name}"`);
     }
     setSelectedBookForCollection(null);
     setIsCollectionSelectionOpen(false);
   };
 
   const handleRateBook = (bookId: number, rating: number) => {
-    setBooks(books.map(book => 
-      book.id === bookId ? { ...book, userRating: rating } : book
-    ));
+    rateBook(bookId, rating);
   };
 
   const handleAddToBooksRead = (bookId: number) => {
