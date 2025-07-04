@@ -1,18 +1,19 @@
 
 import React from 'react';
 import { DollarSign, Tag } from 'lucide-react';
-import { Book, BookForSale } from '../types/entities';
-import { useBooksForSale } from '../hooks/useBooksForSale';
+import { Book } from '../types/entities';
+import { booksForSale } from '../data/mockData';
 
 interface BooksForSaleProps {
+  books: Book[];
   onBookClick: (book: Book) => void;
 }
 
-const BooksForSale = ({ onBookClick }: BooksForSaleProps) => {
-  const { getMyBooksForSale } = useBooksForSale();
-  const myBooksForSale = getMyBooksForSale();
+const BooksForSale = ({ books, onBookClick }: BooksForSaleProps) => {
+  // Filter books that are marked for sale from the books prop
+  const booksToShow = books.filter(book => book.isOwnedForSale && book.salePrice);
 
-  if (myBooksForSale.length === 0) {
+  if (booksToShow.length === 0) {
     return (
       <div className="p-4 text-center">
         <DollarSign className="h-8 w-8 text-slate-400 mx-auto mb-2" />
@@ -23,13 +24,9 @@ const BooksForSale = ({ onBookClick }: BooksForSaleProps) => {
 
   return (
     <div className="space-y-3">
-      {myBooksForSale.map((bookForSale) => {
-        const book = bookForSale.book;
-        if (!book) return null;
-        
-        return (
+      {booksToShow.map((book) => (
         <div
-          key={bookForSale.id}
+          key={book.id}
           className="flex items-center gap-3 p-3 bg-white/60 rounded-lg border border-slate-200 hover:bg-white/80 cursor-pointer transition-colors"
           onClick={() => onBookClick(book)}
         >
@@ -43,12 +40,11 @@ const BooksForSale = ({ onBookClick }: BooksForSaleProps) => {
             <p className="text-slate-600 text-xs truncate">{book.author}</p>
             <div className="flex items-center gap-1 mt-1">
               <Tag className="h-3 w-3 text-green-600" />
-              <span className="text-green-600 font-medium text-sm">${bookForSale.price}</span>
+              <span className="text-green-600 font-medium text-sm">${book.salePrice}</span>
             </div>
           </div>
         </div>
-        );
-      })}
+      ))}
     </div>
   );
 };
