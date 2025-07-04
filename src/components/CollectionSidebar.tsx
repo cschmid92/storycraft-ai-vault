@@ -4,7 +4,6 @@ import { Library, Heart, BookOpen, Plus, DollarSign, ChevronDown, ChevronRight, 
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import BooksForSale from './BooksForSale';
-import { useBooksForSale } from '../hooks/useBooksForSale';
 import { Book } from '../types/entities';
 import { Collection } from '../hooks/useCollections';
 
@@ -28,8 +27,7 @@ const CollectionSidebar = ({
   booksReadCount
 }: CollectionSidebarProps) => {
   const [showBooksForSale, setShowBooksForSale] = useState(false);
-  const { getMyBooksForSale } = useBooksForSale();
-  const booksForSaleCount = getMyBooksForSale().length;
+  const booksForSaleCount = books.filter(book => book.isOwnedForSale && book.salePrice).length;
 
   const handleEditCollection = (e: React.MouseEvent, collectionId: number | string) => {
     e.stopPropagation();
