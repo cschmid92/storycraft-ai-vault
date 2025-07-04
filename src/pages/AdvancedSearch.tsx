@@ -14,13 +14,14 @@ import { SearchService } from '../services/mockDataService';
 import { useNavigate } from 'react-router-dom';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
+import { useBooksRead } from '../hooks/useBooksRead';
 import { Book, Collection } from '../types/entities';
 
 const AdvancedSearch = () => {
   const navigate = useNavigate();
   const { collections, addCollection, deleteCollection, addBookToCollection } = useCollections();
   const { books, toggleFavorite, toggleOwnedForSale, rateBook } = useBooks();
-  const [booksReadList, setBooksReadList] = useState<number[]>([1, 2]);
+  const { getBooksReadCount } = useBooksRead();
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -184,7 +185,7 @@ const AdvancedSearch = () => {
             onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
             books={books}
             onBookClick={handleBookClick}
-            booksReadCount={booksReadList.length}
+            booksReadCount={getBooksReadCount()}
             onDeleteCollection={deleteCollection}
           />
         </div>

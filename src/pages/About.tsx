@@ -6,6 +6,7 @@ import UnifiedHeader from '../components/layout/UnifiedHeader';
 import AppSidebar from '../components/layout/AppSidebar';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
+import { useBooksRead } from '../hooks/useBooksRead';
 import CollectionModal from '../components/CollectionModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import BookDetailModal from '../components/BookDetailModal';
@@ -14,6 +15,7 @@ import { Book, Collection } from '../types/entities';
 const About = () => {
   const { books, toggleFavorite, toggleOwnedForSale, rateBook } = useBooks();
   const { collections, addCollection, deleteCollection, addBookToCollection } = useCollections();
+  const { getBooksReadCount } = useBooksRead();
   const navigate = useNavigate();
   
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
@@ -25,7 +27,7 @@ const About = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   // Use the same books read logic as Collections.tsx - books with IDs 1 and 2 are marked as read
-  const booksReadCount = 2; // This should match the booksReadList in Collections.tsx: [1, 2]
+  const booksReadCount = getBooksReadCount();
 
   const handleSelectCollection = (collection: Collection | null) => {
     setSelectedCollection(collection);

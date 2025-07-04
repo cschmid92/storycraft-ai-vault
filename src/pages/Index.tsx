@@ -17,10 +17,12 @@ import { Book, BookCondition } from '../types/entities';
 import { Plus, Filter, Heart, Star, BookmarkPlus, Quote } from 'lucide-react';
 import { useCollections, Collection } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
+import { useBooksRead } from '../hooks/useBooksRead';
 
 const Index = () => {
   const { collections, addCollection, deleteCollection, addBookToCollection } = useCollections();
   const { books, toggleFavorite: bookToggleFavorite, toggleOwnedForSale: bookToggleOwnedForSale, rateBook } = useBooks();
+  const { booksReadList, addToBooksRead, isInBooksRead, getBooksReadCount } = useBooksRead();
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isCollectionSelectionOpen, setIsCollectionSelectionOpen] = useState(false);
@@ -31,13 +33,12 @@ const Index = () => {
   const [filterGenre, setFilterGenre] = useState("");
   const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
   const [selectedBookForSale, setSelectedBookForSale] = useState<number | null>(null);
-  const [booksReadList, setBooksReadList] = useState<number[]>([1, 2, 3, 4, 5]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const collectionSectionRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   // Books read collection count
-  const booksReadCount = booksReadList.length;
+  const booksReadCount = getBooksReadCount();
 
   // Total collections including default ones (Favorites and Books read)
   const totalCollections = collections.length + 2;
@@ -115,15 +116,7 @@ const Index = () => {
 
   const handleAddToBooksRead = (bookId: number) => {
     console.log(`Adding/removing book ${bookId} to/from Books read collection`);
-    setBooksReadList(prev => {
-      if (prev.includes(bookId)) {
-        console.log(`Removing book ${bookId} from Books read`);
-        return prev.filter(id => id !== bookId);
-      } else {
-        console.log(`Adding book ${bookId} to Books read`);
-        return [...prev, bookId];
-      }
-    });
+    addToBooksRead(bookId);
   };
 
   const selectedBookTitle = selectedBookForCollection 
@@ -265,7 +258,7 @@ const Index = () => {
             onToggleFavorite={toggleFavorite}
             onAddToCollection={handleAddToCollection}
             onAddToBooksRead={handleAddToBooksRead}
-            isInBooksRead={(bookId) => booksReadList.includes(bookId)}
+            isInBooksRead={isInBooksRead}
           />
 
           {/* Recommendations */}
@@ -275,7 +268,7 @@ const Index = () => {
             onToggleFavorite={toggleFavorite}
             onAddToCollection={handleAddToCollection}
             onAddToBooksRead={handleAddToBooksRead}
-            isInBooksRead={(bookId) => booksReadList.includes(bookId)}
+            isInBooksRead={isInBooksRead}
           />
         </main>
       </div>

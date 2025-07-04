@@ -12,13 +12,14 @@ import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import { Book, Collection } from '../types/entities';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
+import { useBooksRead } from '../hooks/useBooksRead';
 
 const Collections = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { collections, addCollection, deleteCollection, updateCollection, addBookToCollection, removeBookFromCollection } = useCollections();
   const { books, toggleFavorite, toggleOwnedForSale, rateBook } = useBooks();
-  const [booksReadList, setBooksReadList] = useState<number[]>([1, 2]);
+  const { booksReadList, addToBooksRead, isInBooksRead, getBooksReadCount } = useBooksRead();
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingCollection, setEditingCollection] = useState<Collection | null>(null);
@@ -36,7 +37,7 @@ const Collections = () => {
     selectedCollection = { id: 'favorites', name: "Favorites ❤️", count: books.filter(book => book.isFavorite).length, color: "bg-red-500" };
     collectionBooks = books.filter(book => book.isFavorite);
   } else if (id === 'books-read') {
-    selectedCollection = { id: 'books-read', name: "Books read 📖", count: booksReadList.length, color: "bg-green-500" };
+    selectedCollection = { id: 'books-read', name: "Books read 📖", count: getBooksReadCount(), color: "bg-green-500" };
     collectionBooks = books.filter(book => booksReadList.includes(Number(book.id)));
   } else {
     selectedCollection = collections.find(c => c.id === parseInt(id || '')) || null;
@@ -108,12 +109,7 @@ const Collections = () => {
   };
 
   const handleAddToBooksRead = (bookId: number) => {
-    setBooksReadList(prev => {
-      if (prev.includes(bookId)) {
-        return prev.filter(id => id !== bookId);
-      }
-      return [...prev, bookId];
-    });
+    addToBooksRead(bookId);
   };
 
   const handleToggleOwnedForSale = (bookId: number, price?: number) => {
@@ -190,7 +186,7 @@ const Collections = () => {
             onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
             books={books}
             onBookClick={handleBookClick}
-            booksReadCount={booksReadList.length}
+            booksReadCount={getBooksReadCount()}
           />
         </div>
 

@@ -9,10 +9,14 @@ import CollectionModal from '../components/CollectionModal';
 import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import { useCollections } from '../hooks/useCollections';
+import { useBooks } from '../hooks/useBooks';
+import { useBooksRead } from '../hooks/useBooksRead';
 import { booksForSale } from '../data/mockData';
 
 const BooksForSale = () => {
   const { collections, addCollection } = useCollections();
+  const { books } = useBooks();
+  const { getBooksReadCount } = useBooksRead();
   const navigate = useNavigate();
   const [myBooks] = useState(booksForSale.filter(sale => sale.sellerId === 999));
   const [selectedCollection, setSelectedCollection] = useState(null);
@@ -21,7 +25,6 @@ const BooksForSale = () => {
   const [isCollectionSelectionModalOpen, setIsCollectionSelectionModalOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
-  const [booksReadList] = useState<number[]>([3]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleCollectionSelect = (collection: any) => {
@@ -91,7 +94,7 @@ const BooksForSale = () => {
             onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
             books={myBooks.map(sale => sale.book!).filter(Boolean)}
             onBookClick={(book) => handleBookClick(myBooks.find(sale => sale.book?.id === book.id)!)}
-            booksReadCount={booksReadList.length}
+            booksReadCount={getBooksReadCount()}
           />
         </div>
 

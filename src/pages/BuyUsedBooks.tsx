@@ -14,11 +14,13 @@ import UsedBookGrid from '../components/UsedBookGrid';
 import ContactSellerModal from '../components/ContactSellerModal';
 import { useCollections, Collection } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
+import { useBooksRead } from '../hooks/useBooksRead';
 import { booksForSale } from '../data/mockData';
 
 const BooksForSale = () => {
   const { collections, addCollection, addBookToCollection } = useCollections();
   const { books, toggleFavorite, toggleOwnedForSale, rateBook } = useBooks();
+  const { getBooksReadCount } = useBooksRead();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedGenre, setSelectedGenre] = useState('');
@@ -34,7 +36,7 @@ const BooksForSale = () => {
   const [selectedBookForContact, setSelectedBookForContact] = useState<BookForSale | null>(null);
 
   // Use the same books read logic as Collections.tsx - books with IDs 1 and 2 are marked as read
-  const booksReadCount = 2; // This should match the booksReadList in Collections.tsx: [1, 2]
+  const booksReadCount = getBooksReadCount();
 
   // Get books for purchase (excluding own books)
   const filteredBooksForSale = booksForSale.filter(sale => sale.sellerId !== 999);

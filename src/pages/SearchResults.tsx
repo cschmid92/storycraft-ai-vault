@@ -14,10 +14,12 @@ import PriceInputModal from '../components/PriceInputModal';
 import { SearchService } from '../services/mockDataService';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
+import { useBooksRead } from '../hooks/useBooksRead';
 
 const SearchResults = () => {
   const { collections, addCollection, addBookToCollection } = useCollections();
   const { books, toggleFavorite, toggleOwnedForSale, rateBook } = useBooks();
+  const { booksReadList, addToBooksRead, isInBooksRead, getBooksReadCount } = useBooksRead();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
@@ -32,7 +34,6 @@ const SearchResults = () => {
   const [selectedBook, setSelectedBook] = useState(null);
   const [selectedBookForCollection, setSelectedBookForCollection] = useState(null);
   const [selectedBookForSale, setSelectedBookForSale] = useState(null);
-  const [booksReadList, setBooksReadList] = useState([1, 2, 3, 4, 5]);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const searchResults = SearchService.searchBooks(query, genre);
@@ -91,13 +92,7 @@ const SearchResults = () => {
   };
 
   const handleAddToBooksRead = (bookId) => {
-    setBooksReadList(prev => {
-      if (prev.includes(bookId)) {
-        return prev.filter(id => id !== bookId);
-      } else {
-        return [...prev, bookId];
-      }
-    });
+    addToBooksRead(bookId);
   };
 
   const handleSearch = () => {
@@ -136,7 +131,7 @@ const SearchResults = () => {
             onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
             books={books}
             onBookClick={handleBookClick}
-            booksReadCount={booksReadList.length}
+            booksReadCount={getBooksReadCount()}
           />
         </div>
 
@@ -180,7 +175,7 @@ const SearchResults = () => {
                     onBookClick={handleBookClick}
                     onToggleOwnedForSale={handleToggleOwnedForSale}
                     onAddToBooksRead={handleAddToBooksRead}
-                    isInBooksRead={booksReadList.includes(book.id)}
+                    isInBooksRead={isInBooksRead(book.id)}
                   />
                 ))}
               </div>
