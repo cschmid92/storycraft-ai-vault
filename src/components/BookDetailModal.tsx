@@ -71,7 +71,7 @@ const BookDetailModal = ({
                   isFavorite={book.isFavorite}
                   isOwnedForSale={book.isOwnedForSale}
                   onToggleFavorite={onToggleFavorite}
-                  onAddToCollection={onAddToCollection}
+                  onAddToCollection={() => onAddToCollection(book.id)}
                   onToggleOwnedForSale={onToggleOwnedForSale}
                   bookTitle={book.title}
                 />
