@@ -1,12 +1,13 @@
 
 import React, { useState } from 'react';
-import { Search, Filter, Menu, BookOpen, User, ArrowLeft } from 'lucide-react';
+import { Search, Filter, Menu, BookOpen, User } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Link } from 'react-router-dom';
 import SharedSidebar from '../components/SharedSidebar';
 import CollectionModal from '../components/CollectionModal';
+import AccountModal from '../components/AccountModal';
 import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import { SearchService } from '../services/mockDataService';
@@ -21,6 +22,7 @@ const AdvancedSearch = () => {
   const { collections, addCollection, deleteCollection, addBookToCollection } = useCollections();
   const { books, toggleFavorite, toggleOwnedForSale, rateBook } = useBooks();
   const { getBooksReadCount } = useBooksRead();
+  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
@@ -141,16 +143,12 @@ const AdvancedSearch = () => {
                 <Menu className="h-5 w-5" />
               </Button>
               <Link to="/" className="flex items-center space-x-3">
-                <Button variant="ghost" size="sm" className="text-slate-600 hover:bg-slate-100 mr-2">
-                  <ArrowLeft className="h-4 w-4 mr-2" />
-                  Back
-                </Button>
                 <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
                   <BookOpen className="h-6 w-6 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-xl font-bold text-slate-800">Advanced Search</h1>
-                  <p className="text-xs text-slate-600 hidden sm:block">Find books with detailed filters</p>
+                  <h1 className="text-xl font-bold text-slate-800">Bacondo</h1>
+                  <p className="text-xs text-slate-600 hidden sm:block">Advanced Search</p>
                 </div>
               </Link>
             </div>
@@ -159,6 +157,7 @@ const AdvancedSearch = () => {
                 variant="outline"
                 size="sm"
                 className="bg-white/60 border-slate-300 text-slate-700 hover:bg-slate-100"
+                onClick={() => setIsAccountModalOpen(true)}
               >
                 <User className="h-4 w-4 sm:mr-2" />
                 <span className="hidden sm:inline">Account</span>
