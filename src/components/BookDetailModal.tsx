@@ -38,6 +38,14 @@ const BookDetailModal = ({
     onRateBook(book.id, rating);
   };
 
+  const handleToggleFavorite = (bookId: number) => {
+    onToggleFavorite(bookId);
+  };
+
+  const handleToggleOwnedForSale = (bookId: number, price?: number) => {
+    onToggleOwnedForSale(bookId, price);
+  };
+
   return (
     <div 
       className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
@@ -70,9 +78,9 @@ const BookDetailModal = ({
                   bookId={book.id}
                   isFavorite={book.isFavorite}
                   isOwnedForSale={book.isOwnedForSale}
-                  onToggleFavorite={onToggleFavorite}
+                  onToggleFavorite={handleToggleFavorite}
                   onAddToCollection={onAddToCollection}
-                  onToggleOwnedForSale={onToggleOwnedForSale}
+                  onToggleOwnedForSale={handleToggleOwnedForSale}
                   bookTitle={book.title}
                 />
 

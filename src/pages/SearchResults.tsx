@@ -1,7 +1,7 @@
 
 import React, { useState } from 'react';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
-import { Search as SearchIcon } from 'lucide-react';
+import { Search as SearchIcon, ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import BookCard from '../components/BookCard';
 import SearchBar from '../components/SearchBar';
@@ -139,9 +139,21 @@ const SearchResults = () => {
         <main className="flex-1 p-4 md:p-6">
           <div className="max-w-7xl mx-auto">
             <div className="mb-6">
-              <h2 className="text-2xl font-bold text-slate-800 mb-4">
-                Search Results {query && `for "${query}"`}
-              </h2>
+              {/* Back button and title */}
+              <div className="flex items-center gap-4 mb-4">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => navigate(-1)}
+                  className="flex items-center gap-2"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                  Back
+                </Button>
+                <h2 className="text-2xl font-bold text-slate-800">
+                  Search Results {query && `for "${query}"`}
+                </h2>
+              </div>
               
               <div className="flex gap-2 mb-4">
                 <div className="flex-1">
