@@ -196,6 +196,7 @@ const BooksForSale = () => {
                         const status = (bookForSale as any).status || 'available';
                         const canEdit = status !== 'sold' && status !== 'picked';
                         const canChangeStatus = status !== 'picked';
+                        const canDelete = status !== 'sold' && status !== 'picked';
                         
                         return (
                           <TableRow key={bookForSale.id}>
@@ -236,14 +237,15 @@ const BooksForSale = () => {
                                 >
                                   <Edit className="h-4 w-4" />
                                 </Button>
-                                <Button
-                                  variant="outline"
-                                  size="sm"
-                                  onClick={() => handleRemoveFromSale(bookForSale.id)}
-                                  className="text-red-600 hover:bg-red-50"
-                                >
-                                  <Trash2 className="h-4 w-4" />
-                                </Button>
+                                 <Button
+                                   variant="outline"
+                                   size="sm"
+                                   onClick={() => handleRemoveFromSale(bookForSale.id)}
+                                   disabled={!canDelete}
+                                   className="text-red-600 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                 >
+                                   <Trash2 className="h-4 w-4" />
+                                 </Button>
                                 <Button
                                   variant="outline"
                                   size="sm"
@@ -276,9 +278,10 @@ const BooksForSale = () => {
                   {myBooks.map(bookForSale => {
                     const book = bookForSale.book;
                     if (!book) return null;
-                    const status = (bookForSale as any).status || 'available';
-                    const canEdit = status !== 'sold' && status !== 'picked';
-                    const canChangeStatus = status !== 'picked';
+                     const status = (bookForSale as any).status || 'available';
+                     const canEdit = status !== 'sold' && status !== 'picked';
+                     const canChangeStatus = status !== 'picked';
+                     const canDelete = status !== 'sold' && status !== 'picked';
                     
                     return (
                       <div key={bookForSale.id} className="bg-white rounded-lg p-4 border border-slate-200">
@@ -316,15 +319,16 @@ const BooksForSale = () => {
                             <Edit className="h-4 w-4 mr-1" />
                             Edit
                           </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleRemoveFromSale(bookForSale.id)}
-                            className="text-red-600 hover:bg-red-50 flex-1 min-w-0"
-                          >
-                            <Trash2 className="h-4 w-4 mr-1" />
-                            Remove
-                          </Button>
+                           <Button
+                             variant="outline"
+                             size="sm"
+                             onClick={() => handleRemoveFromSale(bookForSale.id)}
+                             disabled={!canDelete}
+                             className="text-red-600 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed flex-1 min-w-0"
+                           >
+                             <Trash2 className="h-4 w-4 mr-1" />
+                             Remove
+                           </Button>
                           <Button
                             variant="outline"
                             size="sm"
