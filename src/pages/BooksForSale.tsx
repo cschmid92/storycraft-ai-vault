@@ -174,7 +174,7 @@ const BooksForSale = () => {
                         const book = bookForSale.book;
                         if (!book) return null;
                         const status = (bookForSale as any).status || 'available';
-                        const canEdit = status !== 'sold';
+                        const canEdit = status !== 'sold' && status !== 'picked';
                         const canChangeStatus = status !== 'picked';
                         
                         return (
@@ -257,7 +257,7 @@ const BooksForSale = () => {
                     const book = bookForSale.book;
                     if (!book) return null;
                     const status = (bookForSale as any).status || 'available';
-                    const canEdit = status !== 'sold';
+                    const canEdit = status !== 'sold' && status !== 'picked';
                     const canChangeStatus = status !== 'picked';
                     
                     return (
