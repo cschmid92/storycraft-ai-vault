@@ -1,13 +1,17 @@
+
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, DollarSign, Tag, Star } from 'lucide-react';
+import { ArrowLeft, Edit, Trash2, CheckCircle, Package } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
 import { Book, BookForSale } from '../types/entities';
 import UnifiedHeader from '../components/layout/UnifiedHeader';
 import AppSidebar from '../components/layout/AppSidebar';
 import CollectionModal from '../components/CollectionModal';
 import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
+import PriceInputModal from '../components/PriceInputModal';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
@@ -18,13 +22,15 @@ const BooksForSale = () => {
   const { books } = useBooks();
   const { getBooksReadCount } = useBooksRead();
   const navigate = useNavigate();
-  const [myBooks] = useState(booksForSale.filter(sale => sale.sellerId === 999));
+  const [myBooks, setMyBooks] = useState(booksForSale.filter(sale => sale.sellerId === 999));
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isBookDetailModalOpen, setIsBookDetailModalOpen] = useState(false);
   const [isCollectionSelectionModalOpen, setIsCollectionSelectionModalOpen] = useState(false);
+  const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
+  const [selectedBookForEdit, setSelectedBookForEdit] = useState<BookForSale | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleCollectionSelect = (collection: any) => {
@@ -60,13 +66,46 @@ const BooksForSale = () => {
     setSelectedBookForCollection(null);
   };
 
-  const handleCardClick = (bookForSale: BookForSale) => {
-    handleBookClick(bookForSale);
+  const handleRemoveFromSale = (bookId: number) => {
+    setMyBooks(prev => prev.filter(book => book.id !== bookId));
+    console.log(`Removing book ${bookId} from sale`);
   };
 
-  const handleRemoveFromSale = (bookId: number) => {
-    console.log(`Removing book ${bookId} from sale`);
-    // In a real app, this would update the book's isOwnedForSale status
+  const handleEditBook = (bookForSale: BookForSale) => {
+    setSelectedBookForEdit(bookForSale);
+    setIsPriceModalOpen(true);
+  };
+
+  const handleUpdateBook = (price: number, condition: string) => {
+    if (selectedBookForEdit) {
+      setMyBooks(prev => prev.map(book => 
+        book.id === selectedBookForEdit.id 
+          ? { ...book, price, condition: condition as any }
+          : book
+      ));
+      setSelectedBookForEdit(null);
+    }
+    setIsPriceModalOpen(false);
+  };
+
+  const handleChangeStatus = (bookId: number, newStatus: 'available' | 'sold' | 'picked') => {
+    setMyBooks(prev => prev.map(book => 
+      book.id === bookId 
+        ? { ...book, status: newStatus }
+        : book
+    ));
+    console.log(`Changed book ${bookId} status to ${newStatus}`);
+  };
+
+  const getStatusBadge = (status: string = 'available') => {
+    switch (status) {
+      case 'sold':
+        return <Badge variant="secondary" className="bg-green-100 text-green-800">Sold</Badge>;
+      case 'picked':
+        return <Badge variant="secondary" className="bg-blue-100 text-blue-800">Picked</Badge>;
+      default:
+        return <Badge variant="outline">Available</Badge>;
+    }
   };
 
   return (
@@ -116,66 +155,95 @@ const BooksForSale = () => {
               <p className="text-slate-600">{myBooks.length} books available for purchase</p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-              {myBooks.map(bookForSale => {
-                const book = bookForSale.book;
-                if (!book) return null;
-                
-                return (
-                  <div 
-                    key={bookForSale.id} 
-                    className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
-                    onClick={() => handleCardClick(bookForSale)}
-                  >
-                    <div className="relative aspect-[3/4] overflow-hidden">
-                      <img 
-                        src={book.cover} 
-                        alt={book.title}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute top-2 left-2 bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full flex items-center gap-1">
-                        <Tag className="h-3 w-3" />
-                        ${bookForSale.price}
-                      </div>
-                      <div className="absolute bottom-2 left-2 flex items-center space-x-1 bg-white/80 backdrop-blur-sm rounded-full px-2 py-1">
-                        <Star className="h-3 w-3 text-yellow-500 fill-yellow-500" />
-                        <span className="text-xs font-medium text-slate-700">{book.rating}</span>
-                      </div>
-                    </div>
-                    <div className="p-4">
-                      <h3 className="font-semibold text-slate-800 text-sm leading-tight line-clamp-2 mb-1">
-                        {book.title}
-                      </h3>
-                      <p className="text-slate-600 text-xs mb-2">{book.author}</p>
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-full">
-                          {book.genre}
-                        </span>
-                        <span className="text-slate-500">{book.year}</span>
-                      </div>
-                      <p className="text-slate-600 text-xs mt-2 line-clamp-2">
-                        {book.description}
-                      </p>
-                      <Button 
-                        variant="outline"
-                        className="w-full mt-3 border-red-500 text-red-600 hover:bg-red-50" 
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleRemoveFromSale(bookForSale.id);
-                        }}
-                      >
-                        Remove from Sale
-                      </Button>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            {myBooks.length === 0 && (
+            {myBooks.length > 0 ? (
+              <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Book</TableHead>
+                      <TableHead>Condition</TableHead>
+                      <TableHead>Price</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {myBooks.map(bookForSale => {
+                      const book = bookForSale.book;
+                      if (!book) return null;
+                      
+                      return (
+                        <TableRow key={bookForSale.id}>
+                          <TableCell>
+                            <div className="flex items-center gap-3">
+                              <img 
+                                src={book.cover} 
+                                alt={book.title}
+                                className="w-12 h-16 object-cover rounded cursor-pointer"
+                                onClick={() => handleBookClick(bookForSale)}
+                              />
+                              <div>
+                                <h3 className="font-medium text-slate-800 cursor-pointer hover:text-blue-600" 
+                                    onClick={() => handleBookClick(bookForSale)}>
+                                  {book.title}
+                                </h3>
+                                <p className="text-slate-600 text-sm">{book.author}</p>
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline">{bookForSale.condition}</Badge>
+                          </TableCell>
+                          <TableCell>
+                            <span className="font-semibold text-green-600">${bookForSale.price}</span>
+                          </TableCell>
+                          <TableCell>
+                            {getStatusBadge((bookForSale as any).status)}
+                          </TableCell>
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleEditBook(bookForSale)}
+                                className="text-blue-600 hover:bg-blue-50"
+                              >
+                                <Edit className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleRemoveFromSale(bookForSale.id)}
+                                className="text-red-600 hover:bg-red-50"
+                              >
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleChangeStatus(bookForSale.id, 'sold')}
+                                className="text-green-600 hover:bg-green-50"
+                              >
+                                <CheckCircle className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={() => handleChangeStatus(bookForSale.id, 'picked')}
+                                className="text-purple-600 hover:bg-purple-50"
+                              >
+                                <Package className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </div>
+            ) : (
               <div className="text-center py-12">
-                <DollarSign className="h-16 w-16 text-slate-400 mx-auto mb-4 opacity-50" />
                 <h3 className="text-xl font-semibold text-slate-700 mb-2">No books for sale</h3>
                 <p className="text-slate-500">Check back later for new listings</p>
               </div>
@@ -207,6 +275,16 @@ const BooksForSale = () => {
         onAddToCollection={() => selectedBook && handleAddToCollection(selectedBook)}
         onToggleOwnedForSale={() => {}}
         onRateBook={() => {}}
+      />
+
+      <PriceInputModal
+        isOpen={isPriceModalOpen}
+        onClose={() => {
+          setIsPriceModalOpen(false);
+          setSelectedBookForEdit(null);
+        }}
+        onConfirm={handleUpdateBook}
+        bookTitle={selectedBookForEdit?.book?.title || ""}
       />
     </div>
   );

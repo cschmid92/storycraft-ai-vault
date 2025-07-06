@@ -1,3 +1,4 @@
+
 import React from 'react';
 import BookDetailHeader from './BookDetailHeader';
 import BookCover from './BookCover';
@@ -5,6 +6,7 @@ import BookInfo from './BookInfo';
 import BookActions from './BookActions';
 import BookDescription from './BookDescription';
 import BookDetailsGrid from './BookDetailsGrid';
+import UsedBookAvailability from './UsedBookAvailability';
 import { Book } from '../types/entities';
 
 interface BookDetailModalProps {
@@ -83,6 +85,8 @@ const BookDetailModal = ({
                   onToggleOwnedForSale={handleToggleOwnedForSale}
                   bookTitle={book.title}
                 />
+
+                <UsedBookAvailability bookTitle={book.title} />
 
                 <BookDescription
                   description={book.description}
