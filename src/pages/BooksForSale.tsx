@@ -157,90 +157,179 @@ const BooksForSale = () => {
 
             {myBooks.length > 0 ? (
               <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden">
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Book</TableHead>
-                      <TableHead>Condition</TableHead>
-                      <TableHead>Price</TableHead>
-                      <TableHead>Status</TableHead>
-                      <TableHead>Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {myBooks.map(bookForSale => {
-                      const book = bookForSale.book;
-                      if (!book) return null;
-                      
-                      return (
-                        <TableRow key={bookForSale.id}>
-                          <TableCell>
-                            <div className="flex items-center gap-3">
-                              <img 
-                                src={book.cover} 
-                                alt={book.title}
-                                className="w-12 h-16 object-cover rounded cursor-pointer"
-                                onClick={() => handleBookClick(bookForSale)}
-                              />
-                              <div>
-                                <h3 className="font-medium text-slate-800 cursor-pointer hover:text-blue-600" 
-                                    onClick={() => handleBookClick(bookForSale)}>
-                                  {book.title}
-                                </h3>
-                                <p className="text-slate-600 text-sm">{book.author}</p>
+                {/* Desktop Table View */}
+                <div className="hidden md:block">
+                  <Table>
+                    <TableHeader>
+                      <TableRow>
+                        <TableHead>Book</TableHead>
+                        <TableHead>Condition</TableHead>
+                        <TableHead>Price</TableHead>
+                        <TableHead>Status</TableHead>
+                        <TableHead>Actions</TableHead>
+                      </TableRow>
+                    </TableHeader>
+                    <TableBody>
+                      {myBooks.map(bookForSale => {
+                        const book = bookForSale.book;
+                        if (!book) return null;
+                        const status = (bookForSale as any).status || 'available';
+                        const canEdit = status !== 'sold';
+                        const canChangeStatus = status !== 'picked';
+                        
+                        return (
+                          <TableRow key={bookForSale.id}>
+                            <TableCell>
+                              <div className="flex items-center gap-3">
+                                <img 
+                                  src={book.cover} 
+                                  alt={book.title}
+                                  className="w-12 h-16 object-cover rounded cursor-pointer"
+                                  onClick={() => handleBookClick(bookForSale)}
+                                />
+                                <div>
+                                  <h3 className="font-medium text-slate-800 cursor-pointer hover:text-blue-600" 
+                                      onClick={() => handleBookClick(bookForSale)}>
+                                    {book.title}
+                                  </h3>
+                                  <p className="text-slate-600 text-sm">{book.author}</p>
+                                </div>
                               </div>
+                            </TableCell>
+                            <TableCell>
+                              <Badge variant="outline">{bookForSale.condition}</Badge>
+                            </TableCell>
+                            <TableCell>
+                              <span className="font-semibold text-green-600">${bookForSale.price}</span>
+                            </TableCell>
+                            <TableCell>
+                              {getStatusBadge(status)}
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleEditBook(bookForSale)}
+                                  disabled={!canEdit}
+                                  className="text-blue-600 hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                  <Edit className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleRemoveFromSale(bookForSale.id)}
+                                  className="text-red-600 hover:bg-red-50"
+                                >
+                                  <Trash2 className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleChangeStatus(bookForSale.id, 'sold')}
+                                  disabled={!canChangeStatus || status === 'sold'}
+                                  className="text-green-600 hover:bg-green-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                  <CheckCircle className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handleChangeStatus(bookForSale.id, 'picked')}
+                                  disabled={!canChangeStatus || status === 'picked'}
+                                  className="text-purple-600 hover:bg-purple-50 disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                  <Package className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        );
+                      })}
+                    </TableBody>
+                  </Table>
+                </div>
+
+                {/* Mobile Card View */}
+                <div className="md:hidden space-y-4 p-4">
+                  {myBooks.map(bookForSale => {
+                    const book = bookForSale.book;
+                    if (!book) return null;
+                    const status = (bookForSale as any).status || 'available';
+                    const canEdit = status !== 'sold';
+                    const canChangeStatus = status !== 'picked';
+                    
+                    return (
+                      <div key={bookForSale.id} className="bg-white rounded-lg p-4 border border-slate-200">
+                        <div className="flex gap-4 mb-4">
+                          <img 
+                            src={book.cover} 
+                            alt={book.title}
+                            className="w-16 h-20 object-cover rounded cursor-pointer flex-shrink-0"
+                            onClick={() => handleBookClick(bookForSale)}
+                          />
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-medium text-slate-800 cursor-pointer hover:text-blue-600 truncate" 
+                                onClick={() => handleBookClick(bookForSale)}>
+                              {book.title}
+                            </h3>
+                            <p className="text-slate-600 text-sm truncate">{book.author}</p>
+                            <div className="flex items-center gap-2 mt-2">
+                              <Badge variant="outline">{bookForSale.condition}</Badge>
+                              <span className="font-semibold text-green-600">${bookForSale.price}</span>
                             </div>
-                          </TableCell>
-                          <TableCell>
-                            <Badge variant="outline">{bookForSale.condition}</Badge>
-                          </TableCell>
-                          <TableCell>
-                            <span className="font-semibold text-green-600">${bookForSale.price}</span>
-                          </TableCell>
-                          <TableCell>
-                            {getStatusBadge((bookForSale as any).status)}
-                          </TableCell>
-                          <TableCell>
-                            <div className="flex items-center gap-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleEditBook(bookForSale)}
-                                className="text-blue-600 hover:bg-blue-50"
-                              >
-                                <Edit className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleRemoveFromSale(bookForSale.id)}
-                                className="text-red-600 hover:bg-red-50"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleChangeStatus(bookForSale.id, 'sold')}
-                                className="text-green-600 hover:bg-green-50"
-                              >
-                                <CheckCircle className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handleChangeStatus(bookForSale.id, 'picked')}
-                                className="text-purple-600 hover:bg-purple-50"
-                              >
-                                <Package className="h-4 w-4" />
-                              </Button>
+                            <div className="mt-2">
+                              {getStatusBadge(status)}
                             </div>
-                          </TableCell>
-                        </TableRow>
-                      );
-                    })}
-                  </TableBody>
-                </Table>
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-wrap gap-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleEditBook(bookForSale)}
+                            disabled={!canEdit}
+                            className="text-blue-600 hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed flex-1 min-w-0"
+                          >
+                            <Edit className="h-4 w-4 mr-1" />
+                            Edit
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleRemoveFromSale(bookForSale.id)}
+                            className="text-red-600 hover:bg-red-50 flex-1 min-w-0"
+                          >
+                            <Trash2 className="h-4 w-4 mr-1" />
+                            Remove
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleChangeStatus(bookForSale.id, 'sold')}
+                            disabled={!canChangeStatus || status === 'sold'}
+                            className="text-green-600 hover:bg-green-50 disabled:opacity-50 disabled:cursor-not-allowed flex-1 min-w-0"
+                          >
+                            <CheckCircle className="h-4 w-4 mr-1" />
+                            Sold
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleChangeStatus(bookForSale.id, 'picked')}
+                            disabled={!canChangeStatus || status === 'picked'}
+                            className="text-purple-600 hover:bg-purple-50 disabled:opacity-50 disabled:cursor-not-allowed flex-1 min-w-0"
+                          >
+                            <Package className="h-4 w-4 mr-1" />
+                            Picked
+                          </Button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
             ) : (
               <div className="text-center py-12">
