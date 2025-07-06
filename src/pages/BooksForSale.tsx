@@ -19,7 +19,7 @@ import { booksForSale } from '../data/mockData';
 
 const BooksForSale = () => {
   const { collections, addCollection } = useCollections();
-  const { books } = useBooks();
+  const { books, toggleFavorite, toggleOwnedForSale } = useBooks();
   const { getBooksReadCount } = useBooksRead();
   const navigate = useNavigate();
   const [myBooks, setMyBooks] = useState(booksForSale.filter(sale => sale.sellerId === 999));
@@ -64,6 +64,26 @@ const BooksForSale = () => {
       console.log(`Added "${selectedBookForCollection.title}" to collection "${collection.name}"`);
     }
     setSelectedBookForCollection(null);
+  };
+
+  const handleToggleFavorite = (bookId: number) => {
+    toggleFavorite(bookId);
+    // Update the selected book to reflect the change
+    if (selectedBook && selectedBook.id === bookId) {
+      setSelectedBook(prev => prev ? { ...prev, isFavorite: !prev.isFavorite } : null);
+    }
+  };
+
+  const handleToggleOwnedForSale = (bookId: number, price?: number) => {
+    toggleOwnedForSale(bookId, price);
+    // Update the selected book to reflect the change
+    if (selectedBook && selectedBook.id === bookId) {
+      setSelectedBook(prev => prev ? { 
+        ...prev, 
+        isOwnedForSale: !prev.isOwnedForSale,
+        salePrice: price
+      } : null);
+    }
   };
 
   const handleRemoveFromSale = (bookId: number) => {
@@ -131,7 +151,7 @@ const BooksForSale = () => {
             selectedCollection={selectedCollection}
             onSelectCollection={handleCollectionSelect}
             onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
-            books={myBooks.map(sale => sale.book!).filter(Boolean)}
+            books={books}
             onBookClick={(book) => handleBookClick(myBooks.find(sale => sale.book?.id === book.id)!)}
             booksReadCount={getBooksReadCount()}
           />
@@ -360,9 +380,9 @@ const BooksForSale = () => {
         book={selectedBook}
         isOpen={isBookDetailModalOpen}
         onClose={() => setIsBookDetailModalOpen(false)}
-        onToggleFavorite={() => {}}
+        onToggleFavorite={handleToggleFavorite}
         onAddToCollection={() => selectedBook && handleAddToCollection(selectedBook)}
-        onToggleOwnedForSale={() => {}}
+        onToggleOwnedForSale={handleToggleOwnedForSale}
         onRateBook={() => {}}
       />
 
