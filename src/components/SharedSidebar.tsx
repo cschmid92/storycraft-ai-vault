@@ -1,10 +1,10 @@
 
-import React, { useState } from 'react';
-import { Library, Heart, BookOpen, Plus, DollarSign, ChevronDown, ChevronRight, ShoppingCart, Info, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import React from 'react';
+import { DollarSign, ShoppingCart, Info, Plus, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
-import BooksForSale from './BooksForSale';
 import { Book, Collection } from '../types/entities';
+import { booksForSale } from '../data/mockData';
 
 interface SharedSidebarProps {
   collections: Collection[];
@@ -27,11 +27,9 @@ const SharedSidebar = ({
   booksReadCount,
   onDeleteCollection
 }: SharedSidebarProps) => {
-  const [showBooksForSale, setShowBooksForSale] = useState(false);
-  const booksForSaleCount = books.filter(book => 
-    book.isOwnedForSale && 
-    book.salePrice && 
-    (!(book as any).status || (book as any).status === 'available')
+  const booksForSaleCount = booksForSale.filter(sale => 
+    sale.sellerId === 999 && 
+    (!(sale as any).status || (sale as any).status === 'available')
   ).length;
 
   // Calculate actual counts for collections
