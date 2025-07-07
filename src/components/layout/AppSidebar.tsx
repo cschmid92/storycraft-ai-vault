@@ -28,7 +28,11 @@ const AppSidebar = ({
   onDeleteCollection
 }: AppSidebarProps) => {
   const [showBooksForSale, setShowBooksForSale] = useState(false);
-  const booksForSaleCount = books.filter(book => book.isOwnedForSale && book.salePrice).length;
+  const booksForSaleCount = books.filter(book => 
+    book.isOwnedForSale && 
+    book.salePrice && 
+    (!(book as any).status || (book as any).status === 'available')
+  ).length;
 
   // Calculate actual counts for collections
   const getCollectionCount = (collectionId: number | string) => {
