@@ -287,6 +287,7 @@ export const booksForSale: BookForSale[] = [
   }
 ];
 
+// Mock collection
 export const mockCollections: Collection[] = [
   {
     id: 1,
