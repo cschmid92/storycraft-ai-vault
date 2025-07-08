@@ -270,7 +270,7 @@ export const booksForSale: BookForSale[] = [
   }
 ];
 
-// Mock default Collections
+// Mock default collections
 export const mockCollections: Collection[] = [
   {
     id: 1,
