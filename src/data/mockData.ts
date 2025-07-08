@@ -205,7 +205,7 @@ export const booksForSale: BookForSale[] = [
     condition: "Good",
     location: "My Location",
     distance: 0,
-    isActive: true,
+    status: 'Available' as const,
     book: mockBooks.find(b => b.id === 3)
   },
   {
@@ -216,7 +216,7 @@ export const booksForSale: BookForSale[] = [
     condition: "Fair",
     location: "My Location", 
     distance: 0,
-    isActive: true,
+    status: 'Available' as const,
     book: {
       id: 999,
       title: "The Hobbit",
@@ -245,7 +245,7 @@ export const booksForSale: BookForSale[] = [
     condition: "Good",
     location: "Downtown",
     distance: 3.7,
-    isActive: true,
+    status: 'Available' as const,
     seller: mockUsers[0],
     book: mockBooks.find(b => b.id === 3)
   },
@@ -257,7 +257,7 @@ export const booksForSale: BookForSale[] = [
     condition: "Excellent",
     location: "Uptown",
     distance: 9.2,
-    isActive: true,
+    status: 'Available' as const,
     seller: mockUsers[1],
     book: mockBooks.find(b => b.id === 4)
   },
@@ -269,7 +269,7 @@ export const booksForSale: BookForSale[] = [
     condition: "Fair",
     location: "Midtown",
     distance: 1.9,
-    isActive: true,
+    status: 'Available' as const,
     seller: mockUsers[2],
     book: mockBooks.find(b => b.id === 1)
   },
@@ -281,7 +281,7 @@ export const booksForSale: BookForSale[] = [
     condition: "Like New",
     location: "Westside",
     distance: 5.1,
-    isActive: true,
+    status: 'Available' as const,
     seller: mockUsers[3],
     book: mockBooks.find(b => b.id === 6)
   }

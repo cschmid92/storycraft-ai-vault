@@ -29,7 +29,7 @@ const SharedSidebar = ({
 }: SharedSidebarProps) => {
   const booksForSaleCount = booksForSale.filter(sale => 
     sale.sellerId === 999 && 
-    (!(sale as any).status || (sale as any).status === 'available')
+    sale.status === 'Available'
   ).length;
 
   // Calculate actual counts for collections

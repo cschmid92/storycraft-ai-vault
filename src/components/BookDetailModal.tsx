@@ -79,10 +79,8 @@ const BookDetailModal = ({
                 <BookActions
                   bookId={book.id}
                   isFavorite={book.isFavorite}
-                  isOwnedForSale={book.isOwnedForSale}
                   onToggleFavorite={handleToggleFavorite}
                   onAddToCollection={onAddToCollection}
-                  onToggleOwnedForSale={handleToggleOwnedForSale}
                   bookTitle={book.title}
                 />
 

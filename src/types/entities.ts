@@ -83,6 +83,9 @@ export interface SearchFilters {
   maxDistance?: number;
 }
 
+// Book for sale status type
+export type BookForSaleStatus = 'Available' | 'Sold' | 'Picked';
+
 // Book for sale entity
 export interface BookForSale extends BaseEntity {
   sellerId: number;
@@ -93,7 +96,7 @@ export interface BookForSale extends BaseEntity {
   seller?: User;
   distance?: number;
   description?: string;
-  isActive: boolean;
+  status: BookForSaleStatus;
   book?: Book;
 }
 

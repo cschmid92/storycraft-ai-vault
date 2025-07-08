@@ -124,7 +124,7 @@ const BooksForSale = () => {
             onSelectCollection={handleCollectionSelect}
             onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
             books={books}
-            onBookClick={(book) => handleBookClick({ book, sellerId: 0, bookId: book.id, price: 0, condition: 'Good', isActive: true } as BookForSale)}
+            onBookClick={(book) => handleBookClick({ id: 0, book, sellerId: 0, bookId: book.id, price: 0, condition: 'Good', status: 'Available' })}
             booksReadCount={booksReadCount}
           />
         </div>

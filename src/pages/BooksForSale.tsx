@@ -5,7 +5,7 @@ import { ArrowLeft, Edit, Trash2, CheckCircle, Package } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { Book, BookForSale } from '../types/entities';
+import { Book, BookForSale, BookForSaleStatus } from '../types/entities';
 import UnifiedHeader from '../components/layout/UnifiedHeader';
 import AppSidebar from '../components/layout/AppSidebar';
 import CollectionModal from '../components/CollectionModal';
@@ -15,14 +15,15 @@ import PriceInputModal from '../components/PriceInputModal';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
-import { booksForSale } from '../data/mockData';
+import { useBooksForSale } from '../hooks/useBooksForSale';
 
 const BooksForSale = () => {
   const { collections, addCollection } = useCollections();
-  const { books, toggleFavorite, toggleOwnedForSale } = useBooks();
+  const { books, toggleFavorite } = useBooks();
   const { getBooksReadCount } = useBooksRead();
+  const { getMyBooksForSale, updateBookForSaleStatus, updateBookForSale } = useBooksForSale();
   const navigate = useNavigate();
-  const [myBooks, setMyBooks] = useState(booksForSale.filter(sale => sale.sellerId === 999));
+  const myBooks = getMyBooksForSale();
   const [selectedCollection, setSelectedCollection] = useState(null);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isBookDetailModalOpen, setIsBookDetailModalOpen] = useState(false);
@@ -74,20 +75,10 @@ const BooksForSale = () => {
     }
   };
 
-  const handleToggleOwnedForSale = (bookId: number, price?: number) => {
-    toggleOwnedForSale(bookId, price);
-    // Update the selected book to reflect the change
-    if (selectedBook && selectedBook.id === bookId) {
-      setSelectedBook(prev => prev ? { 
-        ...prev, 
-        isOwnedForSale: !prev.isOwnedForSale,
-        salePrice: price
-      } : null);
-    }
-  };
+  // This function is no longer needed since BookActions handles it directly
 
   const handleRemoveFromSale = (bookId: number) => {
-    setMyBooks(prev => prev.filter(book => book.id !== bookId));
+    // This is handled by the updateBookForSaleStatus function
     console.log(`Removing book ${bookId} from sale`);
   };
 
@@ -98,30 +89,25 @@ const BooksForSale = () => {
 
   const handleUpdateBook = (price: number, condition: string) => {
     if (selectedBookForEdit) {
-      setMyBooks(prev => prev.map(book => 
-        book.id === selectedBookForEdit.id 
-          ? { ...book, price, condition: condition as any }
-          : book
-      ));
+      updateBookForSale(selectedBookForEdit.id, { 
+        price, 
+        condition: condition as any 
+      });
       setSelectedBookForEdit(null);
     }
     setIsPriceModalOpen(false);
   };
 
-  const handleChangeStatus = (bookId: number, newStatus: 'available' | 'sold' | 'picked') => {
-    setMyBooks(prev => prev.map(book => 
-      book.id === bookId 
-        ? { ...book, status: newStatus }
-        : book
-    ));
+  const handleChangeStatus = (bookId: number, newStatus: BookForSaleStatus) => {
+    updateBookForSaleStatus(bookId, newStatus);
     console.log(`Changed book ${bookId} status to ${newStatus}`);
   };
 
-  const getStatusBadge = (status: string = 'available') => {
+  const getStatusBadge = (status: string = 'Available') => {
     switch (status) {
-      case 'sold':
+      case 'Sold':
         return <Badge variant="secondary" className="bg-green-100 text-green-800">Sold</Badge>;
-      case 'picked':
+      case 'Picked':
         return <Badge variant="secondary" className="bg-blue-100 text-blue-800">Picked</Badge>;
       default:
         return <Badge variant="outline">Available</Badge>;
@@ -193,10 +179,10 @@ const BooksForSale = () => {
                       {myBooks.map(bookForSale => {
                         const book = bookForSale.book;
                         if (!book) return null;
-                        const status = (bookForSale as any).status || 'available';
-                        const canEdit = status !== 'sold' && status !== 'picked';
-                        const canChangeStatus = status !== 'picked';
-                        const canDelete = status !== 'sold' && status !== 'picked';
+                         const status: BookForSaleStatus = bookForSale.status;
+                         const canEdit = status !== 'Sold' && status !== 'Picked';
+                         const canChangeStatus = status !== 'Picked';
+                         const canDelete = status !== 'Sold' && status !== 'Picked';
                         
                         return (
                           <TableRow key={bookForSale.id}>
@@ -249,8 +235,8 @@ const BooksForSale = () => {
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  onClick={() => handleChangeStatus(bookForSale.id, 'sold')}
-                                  disabled={!canChangeStatus || status === 'sold'}
+                                   onClick={() => handleChangeStatus(bookForSale.id, 'Sold')}
+                                   disabled={!canChangeStatus || status === 'Sold'}
                                   className="text-green-600 hover:bg-green-50 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                   <CheckCircle className="h-4 w-4" />
@@ -258,8 +244,8 @@ const BooksForSale = () => {
                                 <Button
                                   variant="outline"
                                   size="sm"
-                                  onClick={() => handleChangeStatus(bookForSale.id, 'picked')}
-                                  disabled={!canChangeStatus || status === 'picked'}
+                                   onClick={() => handleChangeStatus(bookForSale.id, 'Picked')}
+                                    disabled={!canChangeStatus || (status as BookForSaleStatus) === 'Picked'}
                                   className="text-purple-600 hover:bg-purple-50 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                   <Package className="h-4 w-4" />
@@ -278,10 +264,10 @@ const BooksForSale = () => {
                   {myBooks.map(bookForSale => {
                     const book = bookForSale.book;
                     if (!book) return null;
-                     const status = (bookForSale as any).status || 'available';
-                     const canEdit = status !== 'sold' && status !== 'picked';
-                     const canChangeStatus = status !== 'picked';
-                     const canDelete = status !== 'sold' && status !== 'picked';
+                     const status: BookForSaleStatus = bookForSale.status;
+                     const canEdit = status !== 'Sold' && status !== 'Picked';
+                     const canChangeStatus = status !== 'Picked';
+                     const canDelete = status !== 'Sold' && status !== 'Picked';
                     
                     return (
                       <div key={bookForSale.id} className="bg-white rounded-lg p-4 border border-slate-200">
@@ -332,8 +318,8 @@ const BooksForSale = () => {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleChangeStatus(bookForSale.id, 'sold')}
-                            disabled={!canChangeStatus || status === 'sold'}
+                             onClick={() => handleChangeStatus(bookForSale.id, 'Sold')}
+                             disabled={!canChangeStatus || status === 'Sold'}
                             className="text-green-600 hover:bg-green-50 disabled:opacity-50 disabled:cursor-not-allowed flex-1 min-w-0"
                           >
                             <CheckCircle className="h-4 w-4 mr-1" />
@@ -342,8 +328,8 @@ const BooksForSale = () => {
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleChangeStatus(bookForSale.id, 'picked')}
-                            disabled={!canChangeStatus || status === 'picked'}
+                             onClick={() => handleChangeStatus(bookForSale.id, 'Picked')}
+                             disabled={!canChangeStatus || (status as BookForSaleStatus) === 'Picked'}
                             className="text-purple-600 hover:bg-purple-50 disabled:opacity-50 disabled:cursor-not-allowed flex-1 min-w-0"
                           >
                             <Package className="h-4 w-4 mr-1" />
@@ -386,7 +372,7 @@ const BooksForSale = () => {
         onClose={() => setIsBookDetailModalOpen(false)}
         onToggleFavorite={handleToggleFavorite}
         onAddToCollection={() => selectedBook && handleAddToCollection(selectedBook)}
-        onToggleOwnedForSale={handleToggleOwnedForSale}
+        onToggleOwnedForSale={() => {}}
         onRateBook={() => {}}
       />
 

@@ -15,7 +15,7 @@ const UsedBookAvailability = ({ bookTitle }: UsedBookAvailabilityProps) => {
   const availableUsedBooks = booksForSale.filter(sale => 
     sale.book?.title === bookTitle && 
     sale.sellerId !== 999 && 
-    sale.isActive
+    sale.status === 'Available'
   );
 
   if (availableUsedBooks.length === 0) {

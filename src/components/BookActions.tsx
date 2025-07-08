@@ -3,37 +3,37 @@ import React, { useState } from 'react';
 import { Heart, BookmarkPlus, DollarSign, ExternalLink } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import PriceInputModal from './PriceInputModal';
+import { useBooksForSale } from '../hooks/useBooksForSale';
 
 interface BookActionsProps {
   bookId: number;
   isFavorite: boolean;
-  isOwnedForSale: boolean;
   onToggleFavorite: (bookId: number) => void;
   onAddToCollection: (bookId: number) => void;
-  onToggleOwnedForSale: (bookId: number, price?: number) => void;
   bookTitle?: string;
 }
 
 const BookActions = ({ 
   bookId, 
   isFavorite, 
-  isOwnedForSale, 
   onToggleFavorite, 
   onAddToCollection, 
-  onToggleOwnedForSale,
   bookTitle = "this book"
 }: BookActionsProps) => {
   const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
+  const { isBookForSale, addBookForSale, removeBookForSale } = useBooksForSale();
 
   const handleBuyOnline = () => {
     // Open Amazon search for the book - in a real app, you'd use the book's ISBN or title
     window.open('https://www.amazon.com/s?k=books', '_blank');
   };
 
+  const isForSale = isBookForSale(bookId);
+
   const handleToggleForSale = () => {
-    if (isOwnedForSale) {
+    if (isForSale) {
       // Remove from sale
-      onToggleOwnedForSale(bookId);
+      removeBookForSale(bookId);
     } else {
       // Show price input modal
       setIsPriceModalOpen(true);
@@ -41,7 +41,7 @@ const BookActions = ({
   };
 
   const handlePriceConfirm = (price: number, condition: string) => {
-    onToggleOwnedForSale(bookId, price);
+    addBookForSale(bookId, price, condition);
     setIsPriceModalOpen(false);
   };
 
@@ -67,11 +67,11 @@ const BookActions = ({
 
         <Button
           onClick={handleToggleForSale}
-          variant={isOwnedForSale ? "default" : "outline"}
-          className={isOwnedForSale ? "bg-green-500 hover:bg-green-600" : ""}
+          variant={isForSale ? "default" : "outline"}
+          className={isForSale ? "bg-green-500 hover:bg-green-600" : ""}
         >
           <DollarSign className="h-4 w-4 mr-2" />
-          {isOwnedForSale ? 'Remove from Sale' : 'Mark for Sale'}
+          {isForSale ? 'Remove from Sale' : 'Mark for Sale'}
         </Button>
 
         <Button
