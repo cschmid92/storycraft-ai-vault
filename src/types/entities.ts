@@ -53,9 +53,6 @@ export interface User extends BaseEntity {
   preferences?: UserPreferences;
 }
 
-// Supporting types
-export type BookCondition = 'New' | 'Like New' | 'Very Good' | 'Good' | 'Fair' | 'Poor' | 'Excellent';
-
 export interface UserPreferences {
   favoriteGenres: string[];
   readingGoal?: number;
@@ -83,9 +80,6 @@ export interface SearchFilters {
   maxDistance?: number;
 }
 
-// Book for sale status type
-export type BookForSaleStatus = 'Available' | 'Sold' | 'Picked';
-
 // Book for sale entity
 export interface BookForSale extends BaseEntity {
   sellerId: number;
@@ -99,6 +93,12 @@ export interface BookForSale extends BaseEntity {
   status: BookForSaleStatus;
   book?: Book;
 }
+
+// Supporting types
+export type BookCondition = 'New' | 'Like New' | 'Very Good' | 'Good' | 'Fair' | 'Poor' | 'Excellent';
+
+// Book for sale status type
+export type BookForSaleStatus = 'Available' | 'Sold' | 'Picked';
 
 // API response types
 export interface ApiResponse<T> {
