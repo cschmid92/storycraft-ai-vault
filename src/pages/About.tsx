@@ -194,7 +194,7 @@ const About = () => {
               Ready to Start Your Reading Journey?
             </h2>
             <p className="text-slate-600 mb-6">
-              Join thousands of readers who have already made Bacondo their digital home.
+              Join readers who have already made Bacondo their digital home.
             </p>
             <Link to="/">
               <Button className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-lg px-8 py-3">
