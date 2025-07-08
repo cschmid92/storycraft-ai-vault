@@ -217,24 +217,7 @@ export const booksForSale: BookForSale[] = [
     location: "My Location", 
     distance: 0,
     status: 'Available' as const,
-    book: {
-      id: 999,
-      title: "The Hobbit",
-      author: "J.R.R. Tolkien",
-      cover: "https://images.unsplash.com/photo-1621351183012-e2f9972dd9bf?w=300&h=450&fit=crop",
-      rating: 4.6,
-      genre: "Fantasy",
-      year: 1937,
-      description: "A children's fantasy novel about the adventures of a hobbit named Bilbo Baggins.",
-      isFavorite: false,
-      isOwnedForSale: true,
-      salePrice: 8.99,
-      isbn10: "0547928227",
-      isbn13: "978-0547928227",
-      publisher: "Houghton Mifflin Harcourt",
-      pages: 310,
-      language: "English"
-    }
+    book: mockBooks.find(b => b.id === 5)
   },
   // Community books for sale
   {
@@ -287,10 +270,7 @@ export const booksForSale: BookForSale[] = [
   }
 ];
 
-// Legacy exports for backward compatibility - DEPRECATED
-// Use booksForSale.filter(sale => sale.sellerId === 999) for my books
-// Use booksForSale.filter(sale => sale.sellerId !== 999) for used books
-
+// Mock default Collections
 export const mockCollections: Collection[] = [
   {
     id: 1,
