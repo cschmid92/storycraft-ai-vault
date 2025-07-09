@@ -3,6 +3,9 @@ import React, { useState } from 'react';
 import SharedSidebar from './SharedSidebar';
 import { useBooks } from '../hooks/useBooks';
 import { useCollections } from '../hooks/useCollections';
+import { useFavorites } from '../hooks/useFavorites';
+import { useBooksForSale } from '../hooks/useBooksForSale';
+import { useBooksRead } from '../hooks/useBooksRead';
 import CollectionModal from './CollectionModal';
 import CollectionSelectionModal from './CollectionSelectionModal';
 import BookDetailModal from './BookDetailModal';
@@ -13,12 +16,10 @@ interface SharedLayoutProps {
 }
 
 const SharedLayout = ({ children }: SharedLayoutProps) => {
-  const { 
-    books, 
-    toggleFavorite, 
-    toggleOwnedForSale,
-    rateBook
-  } = useBooks();
+  const { books, rateBook } = useBooks();
+  const { toggleFavorite, getFavoriteBooks } = useFavorites();
+  const { isBookForSale, addBookForSale, removeBookForSale } = useBooksForSale();
+  const { getBooksReadCount } = useBooksRead();
   
   const { 
     collections, 
@@ -27,10 +28,7 @@ const SharedLayout = ({ children }: SharedLayoutProps) => {
     addBookToCollection 
   } = useCollections();
 
-  // Compute derived values from books
-  const favorites = books.filter(book => book.isFavorite);
-  const booksRead = books.filter(book => book.userRating && book.userRating > 0);
-  const booksReadCount = booksRead.length;
+  const booksReadCount = getBooksReadCount();
 
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
@@ -118,7 +116,13 @@ const SharedLayout = ({ children }: SharedLayoutProps) => {
         onClose={handleCloseBookDetail}
         onToggleFavorite={toggleFavorite}
         onAddToCollection={handleAddToCollection}
-        onToggleOwnedForSale={toggleOwnedForSale}
+        onToggleOwnedForSale={(bookId: number, price?: number) => {
+          if (isBookForSale(bookId)) {
+            removeBookForSale(bookId);
+          } else if (price) {
+            addBookForSale(bookId, price);
+          }
+        }}
         onRateBook={rateBook}
       />
     </div>

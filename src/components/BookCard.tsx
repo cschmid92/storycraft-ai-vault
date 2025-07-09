@@ -3,6 +3,8 @@ import React from 'react';
 import { Star, Heart, BookmarkPlus, BookOpen, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/entities';
+import { useFavorites } from '../hooks/useFavorites';
+import { useBooksForSale } from '../hooks/useBooksForSale';
 
 interface BookCardProps {
   book: Book;
@@ -27,6 +29,8 @@ const BookCard = ({
   onRemoveFromCollection,
   showRemoveFromCollection = false
 }: BookCardProps) => {
+  const { isFavorite } = useFavorites();
+  const { isBookForSale } = useBooksForSale();
   return (
     <div 
       className="group relative bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 overflow-hidden hover:bg-white/90 transition-all duration-300 hover:scale-105 hover:shadow-lg cursor-pointer"
@@ -66,7 +70,7 @@ const BookCard = ({
             }}
           >
             <Heart 
-              className={`h-4 w-4 ${book.isFavorite ? 'text-red-500 fill-red-500' : 'text-slate-600'}`} 
+              className={`h-4 w-4 ${isFavorite(book.id) ? 'text-red-500 fill-red-500' : 'text-slate-600'}`} 
             />
           </Button>
           <Button

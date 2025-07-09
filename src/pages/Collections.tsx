@@ -13,13 +13,17 @@ import { Book, Collection } from '../types/entities';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
+import { useFavorites } from '../hooks/useFavorites';
+import { useBooksForSale } from '../hooks/useBooksForSale';
 
 const Collections = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { collections, addCollection, deleteCollection, updateCollection, addBookToCollection, removeBookFromCollection } = useCollections();
-  const { books, toggleFavorite, toggleOwnedForSale, rateBook } = useBooks();
+  const { books, rateBook } = useBooks();
   const { booksReadList, addToBooksRead, isInBooksRead, getBooksReadCount } = useBooksRead();
+  const { toggleFavorite, isFavorite, getFavoriteBooks } = useFavorites();
+  const { isBookForSale, addBookForSale, removeBookForSale } = useBooksForSale();
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingCollection, setEditingCollection] = useState<Collection | null>(null);
@@ -34,8 +38,9 @@ const Collections = () => {
   let collectionBooks: Book[] = [];
 
   if (id === 'favorites') {
-    selectedCollection = { id: 'favorites', name: "Favorites ❤️", count: books.filter(book => book.isFavorite).length, color: "bg-red-500" };
-    collectionBooks = books.filter(book => book.isFavorite);
+    const favoriteBookIds = getFavoriteBooks();
+    selectedCollection = { id: 'favorites', name: "Favorites ❤️", count: favoriteBookIds.length, color: "bg-red-500" };
+    collectionBooks = books.filter(book => favoriteBookIds.includes(book.id));
   } else if (id === 'books-read') {
     selectedCollection = { id: 'books-read', name: "Books read 📖", count: getBooksReadCount(), color: "bg-green-500" };
     collectionBooks = books.filter(book => booksReadList.includes(Number(book.id)));
@@ -113,19 +118,10 @@ const Collections = () => {
   };
 
   const handleToggleOwnedForSale = (bookId: number, price?: number) => {
-    const book = books.find(b => Number(b.id) === bookId);
-    if (book && book.isOwnedForSale && !price) {
-      // If removing from sale, don't require price
-      toggleOwnedForSale(bookId);
-    } else if (book && !book.isOwnedForSale && price) {
-      // If adding to sale, use provided price
-      toggleOwnedForSale(bookId, price);
-    } else if (book && !book.isOwnedForSale) {
-      // If adding to sale without price, use default or prompt
-      toggleOwnedForSale(bookId, 10); // Default price
-    } else {
-      // Toggle current state
-      toggleOwnedForSale(bookId, price);
+    if (isBookForSale(bookId)) {
+      removeBookForSale(bookId);
+    } else if (price) {
+      addBookForSale(bookId, price);
     }
   };
 

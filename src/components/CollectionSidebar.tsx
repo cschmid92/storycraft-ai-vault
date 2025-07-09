@@ -6,6 +6,8 @@ import { Button } from "@/components/ui/button";
 import BooksForSale from './BooksForSale';
 import { Book } from '../types/entities';
 import { Collection } from '../hooks/useCollections';
+import { useFavorites } from '../hooks/useFavorites';
+import { useBooksForSale } from '../hooks/useBooksForSale';
 
 interface CollectionSidebarProps {
   collections: Collection[];
@@ -27,7 +29,9 @@ const CollectionSidebar = ({
   booksReadCount
 }: CollectionSidebarProps) => {
   const [showBooksForSale, setShowBooksForSale] = useState(false);
-  const booksForSaleCount = books.filter(book => book.isOwnedForSale && book.salePrice).length;
+  const { getFavoriteBooks } = useFavorites();
+  const { getMyBooksForSale } = useBooksForSale();
+  const booksForSaleCount = getMyBooksForSale().filter(sale => sale.status === 'Available').length;
 
   const handleEditCollection = (e: React.MouseEvent, collectionId: number | string) => {
     e.stopPropagation();
@@ -41,7 +45,7 @@ const CollectionSidebar = ({
 
   // Standard collections that appear before user collections
   const standardCollections = [
-    { id: 'favorites', name: "Favorites ❤️", count: books.filter(book => book.isFavorite).length, color: "bg-red-500" },
+    { id: 'favorites', name: "Favorites ❤️", count: getFavoriteBooks().length, color: "bg-red-500" },
     { id: 'books-read', name: "Books read 📖", count: booksReadCount, color: "bg-green-500" },
   ];
 

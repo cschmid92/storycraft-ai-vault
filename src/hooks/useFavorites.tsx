@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Favorites } from '../types/entities';
+import { mockFavorites } from '../data/mockData';
 
 const FAVORITES_STORAGE_KEY = 'bacondo-favorites';
-const CURRENT_USER_ID = 999;
 
 const loadFavorites = (): Favorites => {
   try {
@@ -13,11 +13,7 @@ const loadFavorites = (): Favorites => {
   } catch (error) {
     console.error('Error loading favorites from localStorage:', error);
   }
-  return {
-    id: 1,
-    userId: CURRENT_USER_ID,
-    bookIds: [2, 5, 7] // Default favorites matching previous data
-  };
+  return mockFavorites;
 };
 
 const saveFavorites = (favorites: Favorites) => {

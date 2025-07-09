@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Book, Collection } from '../types/entities';
 import { booksForSale } from '../data/mockData';
+import { useFavorites } from '../hooks/useFavorites';
 
 interface SharedSidebarProps {
   collections: Collection[];
@@ -32,10 +33,12 @@ const SharedSidebar = ({
     sale.status === 'Available'
   ).length;
 
+  const { getFavoriteBooks } = useFavorites();
+  
   // Calculate actual counts for collections
   const getCollectionCount = (collectionId: number | string) => {
     if (collectionId === 'favorites') {
-      return books.filter(book => book.isFavorite).length;
+      return getFavoriteBooks().length;
     } else if (collectionId === 'books-read') {
       return booksReadCount;
     } else {

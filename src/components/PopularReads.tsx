@@ -2,6 +2,7 @@ import React from 'react';
 import { TrendingUp, Star, Heart, BookmarkPlus, BookOpen } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/entities';
+import { useFavorites } from '../hooks/useFavorites';
 
 interface PopularReadsProps {
   books: Book[];
@@ -13,6 +14,7 @@ interface PopularReadsProps {
 }
 
 const PopularReads = ({ books, onBookClick, onToggleFavorite, onAddToCollection, onAddToBooksRead, isInBooksRead }: PopularReadsProps) => {
+  const { isFavorite } = useFavorites();
   const popularBooks = books.slice(0, 5); // Show top 5 popular books
 
   return (
@@ -50,7 +52,7 @@ const PopularReads = ({ books, onBookClick, onToggleFavorite, onAddToCollection,
                   }}
                 >
                   <Heart 
-                    className={`h-3 w-3 ${book.isFavorite ? 'text-red-500 fill-red-500' : 'text-slate-600'}`} 
+                    className={`h-3 w-3 ${isFavorite(book.id) ? 'text-red-500 fill-red-500' : 'text-slate-600'}`} 
                   />
                 </Button>
                 <Button

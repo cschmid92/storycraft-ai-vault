@@ -15,10 +15,6 @@ export interface Book extends BaseEntity {
   genre: string;
   year: number;
   description: string;
-  // Temporarily keeping these for backward compatibility during refactoring
-  isFavorite?: boolean;
-  isOwnedForSale?: boolean;
-  salePrice?: number;
   userRating?: number;
   isbn10?: string;
   isbn13?: string;

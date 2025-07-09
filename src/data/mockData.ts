@@ -1,5 +1,5 @@
 
-import { Book, Collection, BookForSale, User } from '../types/entities';
+import { Book, Collection, BookForSale, User, Favorites, BooksRead } from '../types/entities';
 
 export const mockBooks: Book[] = [
   {
@@ -11,8 +11,6 @@ export const mockBooks: Book[] = [
     genre: "Classic Literature",
     year: 1925,
     description: "A classic American novel set in the Jazz Age, exploring themes of wealth, love, and the American Dream.",
-    isFavorite: false,
-    isOwnedForSale: false,
     isbn10: "0743273567",
     isbn13: "978-0743273565",
     publisher: "Scribner",
@@ -29,8 +27,6 @@ export const mockBooks: Book[] = [
     genre: "Classic Literature",
     year: 1960,
     description: "A gripping tale of racial injustice and childhood innocence in the American South.",
-    isFavorite: true,
-    isOwnedForSale: false,
     isbn10: "0061120081",
     isbn13: "978-0061120084",
     publisher: "Harper Perennial Modern Classics",
@@ -47,9 +43,6 @@ export const mockBooks: Book[] = [
     genre: "Dystopian Fiction",
     year: 1949,
     description: "A dystopian social science fiction novel about totalitarian control and surveillance.",
-    isFavorite: false,
-    isOwnedForSale: true,
-    salePrice: 12.99,
     isbn10: "0452284236",
     isbn13: "978-0452284234",
     publisher: "Plume",
@@ -66,9 +59,6 @@ export const mockBooks: Book[] = [
     genre: "Classic Literature",
     year: 1813,
     description: "A romantic novel of manners set in Georgian England.",
-    isFavorite: false,
-    isOwnedForSale: true,
-    salePrice: 15.99,
     isbn10: "0141439513",
     isbn13: "978-0141439518",
     publisher: "Penguin Classics",
@@ -85,8 +75,6 @@ export const mockBooks: Book[] = [
     genre: "Coming-of-age Fiction",
     year: 1951,
     description: "A controversial novel about teenage rebellion and alienation.",
-    isFavorite: true,
-    isOwnedForSale: false,
     isbn10: "0316769487",
     isbn13: "978-0316769488",
     publisher: "Little, Brown and Company",
@@ -103,8 +91,6 @@ export const mockBooks: Book[] = [
     genre: "Science Fiction",
     year: 1965,
     description: "An epic science fiction novel set on the desert planet Arrakis.",
-    isFavorite: false,
-    isOwnedForSale: false,
     isbn10: "0441013597",
     isbn13: "978-0441013593",
     publisher: "Ace",
@@ -121,8 +107,6 @@ export const mockBooks: Book[] = [
     genre: "Fantasy",
     year: 1954,
     description: "An epic high fantasy novel following the quest to destroy the One Ring.",
-    isFavorite: true,
-    isOwnedForSale: false,
     isbn10: "0544003415",
     isbn13: "978-0544003415",
     publisher: "Houghton Mifflin Harcourt",
@@ -139,8 +123,6 @@ export const mockBooks: Book[] = [
     genre: "Fantasy",
     year: 1997,
     description: "The first book in the beloved Harry Potter series about a young wizard's adventures.",
-    isFavorite: false,
-    isOwnedForSale: false,
     isbn10: "0439708184",
     isbn13: "978-0439708180",
     publisher: "Scholastic",
@@ -269,6 +251,20 @@ export const booksForSale: BookForSale[] = [
     book: mockBooks.find(b => b.id === 6)
   }
 ];
+
+// Mock favorites
+export const mockFavorites: Favorites = {
+  id: 1,
+  userId: 999,
+  bookIds: [2, 5, 7] // To Kill a Mockingbird, The Catcher in the Rye, The Lord of the Rings
+};
+
+// Mock books read
+export const mockBooksRead: BooksRead = {
+  id: 1,
+  userId: 999,
+  bookIds: [1, 2] // The Great Gatsby, To Kill a Mockingbird
+};
 
 // Mock collection
 export const mockCollections: Collection[] = [

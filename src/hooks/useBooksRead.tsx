@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { BooksRead } from '../types/entities';
+import { mockBooksRead } from '../data/mockData';
 
 const BOOKS_READ_STORAGE_KEY = 'bacondo-books-read';
 
-const loadBooksRead = (): number[] => {
+const loadBooksRead = (): BooksRead => {
   try {
     const stored = localStorage.getItem(BOOKS_READ_STORAGE_KEY);
     if (stored) {
@@ -11,10 +13,10 @@ const loadBooksRead = (): number[] => {
   } catch (error) {
     console.error('Error loading books read from localStorage:', error);
   }
-  return []; // Start with empty array instead of hardcoded values
+  return mockBooksRead;
 };
 
-const saveBooksRead = (booksRead: number[]) => {
+const saveBooksRead = (booksRead: BooksRead) => {
   try {
     localStorage.setItem(BOOKS_READ_STORAGE_KEY, JSON.stringify(booksRead));
   } catch (error) {
@@ -23,37 +25,49 @@ const saveBooksRead = (booksRead: number[]) => {
 };
 
 export const useBooksRead = () => {
-  const [booksReadList, setBooksReadList] = useState<number[]>(() => loadBooksRead());
+  const [booksRead, setBooksRead] = useState<BooksRead>(() => loadBooksRead());
 
-  // Save to localStorage whenever booksReadList changes
+  // Save to localStorage whenever booksRead changes
   useEffect(() => {
-    saveBooksRead(booksReadList);
-  }, [booksReadList]);
+    saveBooksRead(booksRead);
+  }, [booksRead]);
 
   const addToBooksRead = (bookId: number) => {
-    setBooksReadList(prev => {
-      if (prev.includes(bookId)) {
+    setBooksRead(prev => {
+      if (prev.bookIds.includes(bookId)) {
         console.log(`Removing book ${bookId} from Books read`);
-        return prev.filter(id => id !== bookId);
+        return {
+          ...prev,
+          bookIds: prev.bookIds.filter(id => id !== bookId)
+        };
       } else {
         console.log(`Adding book ${bookId} to Books read`);
-        return [...prev, bookId];
+        return {
+          ...prev,
+          bookIds: [...prev.bookIds, bookId]
+        };
       }
     });
   };
 
   const isInBooksRead = (bookId: number): boolean => {
-    return booksReadList.includes(bookId);
+    return booksRead.bookIds.includes(bookId);
   };
 
   const getBooksReadCount = (): number => {
-    return booksReadList.length;
+    return booksRead.bookIds.length;
+  };
+
+  const getBooksReadList = (): number[] => {
+    return booksRead.bookIds;
   };
 
   return {
-    booksReadList,
+    booksRead,
+    booksReadList: booksRead.bookIds,
     addToBooksRead,
     isInBooksRead,
-    getBooksReadCount
+    getBooksReadCount,
+    getBooksReadList
   };
 };

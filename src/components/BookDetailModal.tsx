@@ -8,6 +8,9 @@ import BookDescription from './BookDescription';
 import BookDetailsGrid from './BookDetailsGrid';
 import UsedBookAvailability from './UsedBookAvailability';
 import { Book } from '../types/entities';
+import { useBooksForSale } from '../hooks/useBooksForSale';
+import { useFavorites } from '../hooks/useFavorites';
+import { useUserRatings } from '../hooks/useUserRatings';
 
 interface BookDetailModalProps {
   book: Book | null;
@@ -28,7 +31,14 @@ const BookDetailModal = ({
   onToggleOwnedForSale,
   onRateBook
 }: BookDetailModalProps) => {
+  const { isBookForSale, getMyBooksForSale } = useBooksForSale();
+  const { isFavorite } = useFavorites();
+  const { getUserRating } = useUserRatings();
+  
   if (!isOpen || !book) return null;
+  
+  const myBookForSale = getMyBooksForSale().find(sale => sale.bookId === book.id);
+  const userRating = getUserRating(book.id);
 
   const handleBackdropClick = (e: React.MouseEvent) => {
     if (e.target === e.currentTarget) {
@@ -62,8 +72,8 @@ const BookDetailModal = ({
               <BookCover 
                 cover={book.cover}
                 title={book.title}
-                isOwnedForSale={book.isOwnedForSale}
-                salePrice={book.salePrice}
+                isOwnedForSale={isBookForSale(book.id)}
+                salePrice={myBookForSale?.price}
               />
 
               <div className="flex-1 space-y-6">
@@ -72,13 +82,13 @@ const BookDetailModal = ({
                   author={book.author}
                   rating={book.rating}
                   genre={book.genre}
-                  userRating={book.userRating}
+                  userRating={userRating}
                   onRatingChange={handleRatingChange}
                 />
 
                 <BookActions
                   bookId={book.id}
-                  isFavorite={book.isFavorite}
+                  isFavorite={isFavorite(book.id)}
                   onToggleFavorite={handleToggleFavorite}
                   onAddToCollection={onAddToCollection}
                   bookTitle={book.title}
