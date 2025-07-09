@@ -8,7 +8,8 @@ const defaultCollections: Collection[] = [
     count: 0, 
     color: "bg-blue-500", 
     bookIds: [],
-    description: "Books I want to read"
+    description: "Books I want to read",
+    userId: 999
   },
   { 
     id: 3, 
@@ -16,7 +17,8 @@ const defaultCollections: Collection[] = [
     count: 0, 
     color: "bg-amber-500", 
     bookIds: [],
-    description: "Classic literature collection"
+    description: "Classic literature collection",
+    userId: 999
   },
   { 
     id: 4, 
@@ -24,7 +26,8 @@ const defaultCollections: Collection[] = [
     count: 0, 
     color: "bg-purple-500", 
     bookIds: [],
-    description: "Science fiction favorites"
+    description: "Science fiction favorites",
+    userId: 999
   }
 ];
 
@@ -75,6 +78,7 @@ export const useCollections = () => {
       color,
       bookIds: [],
       description,
+      userId: 999,
       createdAt: new Date(),
       updatedAt: new Date()
     };

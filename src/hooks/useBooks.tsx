@@ -39,33 +39,10 @@ export const useBooks = () => {
     ));
   };
 
-  const toggleFavorite = (bookId: number) => {
-    setBooks(prev => prev.map(book => 
-      book.id === bookId ? { ...book, isFavorite: !book.isFavorite } : book
-    ));
-  };
-
-  const toggleOwnedForSale = (bookId: number, price?: number) => {
-    setBooks(prev => prev.map(book =>
-      book.id === bookId 
-        ? { ...book, isOwnedForSale: !book.isOwnedForSale, salePrice: price }
-        : book
-    ));
-  };
-
-  const rateBook = (bookId: number, rating: number) => {
-    setBooks(prev => prev.map(book =>
-      book.id === bookId 
-        ? { ...book, userRating: rating }
-        : book
-    ));
-  };
+  // These are now handled by separate hooks
 
   return {
     books,
-    updateBook,
-    toggleFavorite,
-    toggleOwnedForSale,
-    rateBook
+    updateBook
   };
 };

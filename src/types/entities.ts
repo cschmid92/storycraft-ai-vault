@@ -15,10 +15,6 @@ export interface Book extends BaseEntity {
   genre: string;
   year: number;
   description: string;
-  isFavorite: boolean;
-  isOwnedForSale: boolean;
-  salePrice?: number;
-  userRating?: number;
   isbn10?: string;
   isbn13?: string;
   publisher?: string;
@@ -39,6 +35,26 @@ export interface Collection extends BaseEntity {
   bookIds: number[];
   description?: string;
   isPublic?: boolean;
+  userId: number;
+}
+
+// Favorites entity
+export interface Favorites extends BaseEntity {
+  userId: number;
+  bookIds: number[];
+}
+
+// Books read entity
+export interface BooksRead extends BaseEntity {
+  userId: number;
+  bookIds: number[];
+}
+
+// User ratings entity
+export interface UserRating extends BaseEntity {
+  userId: number;
+  bookId: number;
+  rating: number;
 }
 
 // User entity

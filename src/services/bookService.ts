@@ -39,13 +39,12 @@ export class BookService {
       const matchesLanguage = !filters.language || book.language === filters.language;
       const matchesRating = !filters.ratingMin || book.rating >= filters.ratingMin;
       const matchesCondition = !filters.condition;
-      const matchesPrice = !filters.priceMax || !book.salePrice || book.salePrice <= filters.priceMax;
       const matchesDistance = !filters.maxDistance;
 
       return matchesTitle && matchesAuthor && matchesIsbn && matchesGenre && 
              matchesPublisher && matchesYearFrom && matchesYearTo && 
              matchesLanguage && matchesRating && matchesCondition && 
-             matchesPrice && matchesDistance;
+             matchesDistance;
     });
   }
 
@@ -53,21 +52,23 @@ export class BookService {
     return mockBooks.filter(book => bookIds.includes(book.id));
   }
 
-  static getFavoriteBooks(): Book[] {
-    return mockBooks.filter(book => book.isFavorite);
+  // These functions are now handled by specialized hooks
+  static getFavoriteBooks(favoriteBookIds: number[]): Book[] {
+    return mockBooks.filter(book => favoriteBookIds.includes(book.id));
   }
 
   static getBooksForSale(): Book[] {
-    return mockBooks.filter(book => book.isOwnedForSale && book.salePrice);
+    // This is now handled by useBooksForSale hook
+    return [];
   }
 }
 
 export class CollectionService {
-  static getCollectionBooks(collection: Collection): Book[] {
+  static getCollectionBooks(collection: Collection, favoriteBookIds: number[] = [], ratedBookIds: number[] = []): Book[] {
     if (String(collection.id) === 'favorites') {
-      return BookService.getFavoriteBooks();
+      return BookService.getFavoriteBooks(favoriteBookIds);
     } else if (String(collection.id) === 'books-read') {
-      return mockBooks.filter(book => book.userRating && book.userRating > 0);
+      return BookService.getBooksByIds(ratedBookIds);
     } else {
       return BookService.getBooksByIds(collection.bookIds);
     }

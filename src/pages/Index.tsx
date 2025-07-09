@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from 'react';
 import { BookOpen, User, Search as SearchIcon, Menu } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -18,11 +17,18 @@ import { Plus, Filter, Heart, Star, BookmarkPlus, Quote } from 'lucide-react';
 import { useCollections, Collection } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
+import { useFavorites } from '../hooks/useFavorites';
+import { useUserRatings } from '../hooks/useUserRatings';
+import { useBooksForSale } from '../hooks/useBooksForSale';
 
 const Index = () => {
   const { collections, addCollection, deleteCollection, addBookToCollection } = useCollections();
-  const { books, toggleFavorite: bookToggleFavorite, toggleOwnedForSale: bookToggleOwnedForSale, rateBook } = useBooks();
+  const { books } = useBooks();
   const { booksReadList, addToBooksRead, isInBooksRead, getBooksReadCount } = useBooksRead();
+  const { toggleFavorite, isFavorite, getFavoriteBooks } = useFavorites();
+  const { rateBook, getUserRating } = useUserRatings();
+  const { addBookForSale, removeBookForSale, isBookForSale } = useBooksForSale();
+
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isCollectionSelectionOpen, setIsCollectionSelectionOpen] = useState(false);
@@ -56,25 +62,18 @@ const Index = () => {
     addCollection(name, color);
   };
 
-  const toggleFavorite = (bookId: number) => {
-    bookToggleFavorite(bookId);
-  };
-
-  const toggleOwnedForSale = (bookId: number, price?: number) => {
-    const book = books.find(b => Number(b.id) === bookId);
-    if (!book) return;
-
-    if (!book.isOwnedForSale) {
+  const handleToggleOwnedForSale = (bookId: number, price?: number) => {
+    if (!isBookForSale(bookId)) {
       setSelectedBookForSale(bookId);
       setIsPriceModalOpen(true);
     } else {
-      bookToggleOwnedForSale(bookId);
+      removeBookForSale(bookId);
     }
   };
 
   const handleSetSalePrice = (price: number, condition: string) => {
     if (selectedBookForSale) {
-      bookToggleOwnedForSale(selectedBookForSale, price);
+      addBookForSale(selectedBookForSale, price, condition);
       setSelectedBookForSale(null);
     }
   };
@@ -209,7 +208,7 @@ const Index = () => {
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-slate-600 text-sm">Favorites</p>
-                    <p className="text-2xl font-bold text-slate-800">{books.filter(b => b.isFavorite).length}</p>
+                    <p className="text-2xl font-bold text-slate-800">{getFavoriteBooks().length}</p>
                   </div>
                   <Heart className="h-8 w-8 text-red-500" />
                 </div>
@@ -286,7 +285,7 @@ const Index = () => {
         onClose={() => setIsBookDetailOpen(false)}
         onToggleFavorite={toggleFavorite}
         onAddToCollection={handleAddToCollection}
-        onToggleOwnedForSale={toggleOwnedForSale}
+        onToggleOwnedForSale={handleToggleOwnedForSale}
         onRateBook={handleRateBook}
       />
       
