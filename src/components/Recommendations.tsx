@@ -53,7 +53,7 @@ const Recommendations = ({ books, onBookClick, onToggleFavorite, onAddToCollecti
                   }}
                 >
                   <Heart 
-                    className={`h-3 w-3 ${book.isFavorite ? 'text-red-500 fill-red-500' : 'text-slate-600'}`} 
+                    className="h-3 w-3 text-slate-600"
                   />
                 </Button>
                 <Button

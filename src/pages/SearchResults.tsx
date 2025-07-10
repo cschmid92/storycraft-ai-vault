@@ -15,10 +15,16 @@ import { SearchService } from '../services/mockDataService';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
+import { useFavorites } from '../hooks/useFavorites';
+import { useBooksForSale } from '../hooks/useBooksForSale';
+import { useUserRatings } from '../hooks/useUserRatings';
 
 const SearchResults = () => {
   const { collections, addCollection, addBookToCollection } = useCollections();
-  const { books, toggleFavorite, toggleOwnedForSale, rateBook } = useBooks();
+  const { books } = useBooks();
+  const { toggleFavorite } = useFavorites();
+  const { addBookForSale, removeBookForSale, isBookForSale } = useBooksForSale();
+  const { rateBook } = useUserRatings();
   const { booksReadList, addToBooksRead, isInBooksRead, getBooksReadCount } = useBooksRead();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -73,20 +79,17 @@ const SearchResults = () => {
   };
 
   const handleToggleOwnedForSale = (bookId, price) => {
-    const book = books.find(b => b.id === bookId);
-    if (!book) return;
-
-    if (!book.isOwnedForSale) {
+    if (!isBookForSale(bookId)) {
       setSelectedBookForSale(bookId);
       setIsPriceModalOpen(true);
     } else {
-      toggleOwnedForSale(bookId);
+      removeBookForSale(bookId);
     }
   };
 
   const handleSetSalePrice = (price, condition) => {
     if (selectedBookForSale) {
-      toggleOwnedForSale(selectedBookForSale, price);
+      addBookForSale(selectedBookForSale, price, condition);
       setSelectedBookForSale(null);
     }
   };

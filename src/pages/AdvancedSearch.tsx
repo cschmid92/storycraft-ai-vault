@@ -15,12 +15,18 @@ import { useNavigate } from 'react-router-dom';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
+import { useFavorites } from '../hooks/useFavorites';
+import { useBooksForSale } from '../hooks/useBooksForSale';
+import { useUserRatings } from '../hooks/useUserRatings';
 import { Book, Collection } from '../types/entities';
 
 const AdvancedSearch = () => {
   const navigate = useNavigate();
   const { collections, addCollection, deleteCollection, addBookToCollection } = useCollections();
-  const { books, toggleFavorite, toggleOwnedForSale, rateBook } = useBooks();
+  const { books } = useBooks();
+  const { toggleFavorite } = useFavorites();
+  const { addBookForSale, removeBookForSale } = useBooksForSale();
+  const { rateBook } = useUserRatings();
   const { getBooksReadCount } = useBooksRead();
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -376,7 +382,10 @@ const AdvancedSearch = () => {
         onClose={() => setIsBookDetailModalOpen(false)}
         onToggleFavorite={toggleFavorite}
         onAddToCollection={handleAddToCollection}
-        onToggleOwnedForSale={toggleOwnedForSale}
+        onToggleOwnedForSale={(bookId, price) => {
+          if (price) addBookForSale(bookId, price, 'Good');
+          else removeBookForSale(bookId);
+        }}
         onRateBook={rateBook}
       />
     </div>

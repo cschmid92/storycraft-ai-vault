@@ -15,11 +15,17 @@ import ContactSellerModal from '../components/ContactSellerModal';
 import { useCollections, Collection } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
+import { useFavorites } from '../hooks/useFavorites';
+import { useBooksForSale } from '../hooks/useBooksForSale';
+import { useUserRatings } from '../hooks/useUserRatings';
 import { booksForSale } from '../data/mockData';
 
 const BooksForSale = () => {
   const { collections, addCollection, addBookToCollection } = useCollections();
-  const { books, toggleFavorite, toggleOwnedForSale, rateBook } = useBooks();
+  const { books } = useBooks();
+  const { toggleFavorite } = useFavorites();
+  const { addBookForSale, removeBookForSale } = useBooksForSale();
+  const { rateBook } = useUserRatings();
   const { getBooksReadCount } = useBooksRead();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
@@ -188,7 +194,10 @@ const BooksForSale = () => {
         onClose={() => setIsBookDetailModalOpen(false)}
         onToggleFavorite={toggleFavorite}
         onAddToCollection={() => selectedBook && handleAddToCollection(selectedBook)}
-        onToggleOwnedForSale={toggleOwnedForSale}
+        onToggleOwnedForSale={(bookId, price) => {
+          if (price) addBookForSale(bookId, price, 'Good');
+          else removeBookForSale(bookId);
+        }}
         onRateBook={rateBook}
       />
       

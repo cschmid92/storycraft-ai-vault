@@ -7,13 +7,19 @@ import AppSidebar from '../components/layout/AppSidebar';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
+import { useFavorites } from '../hooks/useFavorites';
+import { useBooksForSale } from '../hooks/useBooksForSale';
+import { useUserRatings } from '../hooks/useUserRatings';
 import CollectionModal from '../components/CollectionModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import BookDetailModal from '../components/BookDetailModal';
 import { Book, Collection } from '../types/entities';
 
 const About = () => {
-  const { books, toggleFavorite, toggleOwnedForSale, rateBook } = useBooks();
+  const { books } = useBooks();
+  const { toggleFavorite } = useFavorites();
+  const { addBookForSale, removeBookForSale } = useBooksForSale();
+  const { rateBook } = useUserRatings();
   const { collections, addCollection, deleteCollection, addBookToCollection } = useCollections();
   const { getBooksReadCount } = useBooksRead();
   const navigate = useNavigate();
@@ -226,7 +232,10 @@ const About = () => {
         onClose={() => setIsBookDetailOpen(false)}
         onToggleFavorite={toggleFavorite}
         onAddToCollection={handleAddToCollection}
-        onToggleOwnedForSale={toggleOwnedForSale}
+        onToggleOwnedForSale={(bookId, price) => {
+          if (price) addBookForSale(bookId, price, 'Good');
+          else removeBookForSale(bookId);
+        }}
         onRateBook={rateBook}
       />
     </div>

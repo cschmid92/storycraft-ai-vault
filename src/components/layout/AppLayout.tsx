@@ -4,6 +4,9 @@ import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
 import { useBooks } from '../../hooks/useBooks';
 import { useCollections } from '../../hooks/useCollections';
+import { useFavorites } from '../../hooks/useFavorites';
+import { useBooksForSale } from '../../hooks/useBooksForSale';
+import { useUserRatings } from '../../hooks/useUserRatings';
 import CollectionModal from '../CollectionModal';
 import CollectionSelectionModal from '../CollectionSelectionModal';
 import BookDetailModal from '../BookDetailModal';
@@ -22,12 +25,10 @@ const AppLayout = ({
   headerSubtitle,
   showSidebar = true 
 }: AppLayoutProps) => {
-  const { 
-    books, 
-    toggleFavorite, 
-    toggleOwnedForSale,
-    rateBook
-  } = useBooks();
+  const { books } = useBooks();
+  const { toggleFavorite } = useFavorites();
+  const { addBookForSale, removeBookForSale } = useBooksForSale();
+  const { rateBook } = useUserRatings();
   
   const { 
     collections, 
@@ -131,7 +132,10 @@ const AppLayout = ({
         onClose={handleCloseBookDetail}
         onToggleFavorite={toggleFavorite}
         onAddToCollection={handleAddToCollection}
-        onToggleOwnedForSale={toggleOwnedForSale}
+        onToggleOwnedForSale={(bookId, price) => {
+          if (price) addBookForSale(bookId, price, 'Good');
+          else removeBookForSale(bookId);
+        }}
         onRateBook={rateBook}
       />
     </div>

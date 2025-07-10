@@ -16,10 +16,12 @@ import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
 import { useBooksForSale } from '../hooks/useBooksForSale';
+import { useFavorites } from '../hooks/useFavorites';
 
 const BooksForSale = () => {
   const { collections, addCollection } = useCollections();
-  const { books, toggleFavorite } = useBooks();
+  const { books } = useBooks();
+  const { toggleFavorite } = useFavorites();
   const { getBooksReadCount } = useBooksRead();
   const { getMyBooksForSale, updateBookForSaleStatus, updateBookForSale } = useBooksForSale();
   const navigate = useNavigate();
@@ -69,10 +71,7 @@ const BooksForSale = () => {
 
   const handleToggleFavorite = (bookId: number) => {
     toggleFavorite(bookId);
-    // Update the selected book to reflect the change
-    if (selectedBook && selectedBook.id === bookId) {
-      setSelectedBook(prev => prev ? { ...prev, isFavorite: !prev.isFavorite } : null);
-    }
+    // Favorite is now handled by useFavorites hook
   };
 
   // This function is no longer needed since BookActions handles it directly
