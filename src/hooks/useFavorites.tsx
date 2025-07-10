@@ -8,7 +8,11 @@ const loadFavorites = (): Favorites => {
   try {
     const stored = localStorage.getItem(FAVORITES_STORAGE_KEY);
     if (stored) {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      // Ensure the structure is correct
+      if (parsed && Array.isArray(parsed.bookIds)) {
+        return parsed;
+      }
     }
   } catch (error) {
     console.error('Error loading favorites from localStorage:', error);
