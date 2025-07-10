@@ -8,7 +8,11 @@ const loadBooksRead = (): BooksRead => {
   try {
     const stored = localStorage.getItem(BOOKS_READ_STORAGE_KEY);
     if (stored) {
-      return JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      // Ensure the structure is correct
+      if (parsed && Array.isArray(parsed.bookIds)) {
+        return parsed;
+      }
     }
   } catch (error) {
     console.error('Error loading books read from localStorage:', error);
@@ -34,37 +38,40 @@ export const useBooksRead = () => {
 
   const addToBooksRead = (bookId: number) => {
     setBooksRead(prev => {
-      if (prev.bookIds.includes(bookId)) {
+      // Ensure prev has the correct structure
+      const currentBookIds = prev?.bookIds || [];
+      
+      if (currentBookIds.includes(bookId)) {
         console.log(`Removing book ${bookId} from Books read`);
         return {
           ...prev,
-          bookIds: prev.bookIds.filter(id => id !== bookId)
+          bookIds: currentBookIds.filter(id => id !== bookId)
         };
       } else {
         console.log(`Adding book ${bookId} to Books read`);
         return {
           ...prev,
-          bookIds: [...prev.bookIds, bookId]
+          bookIds: [...currentBookIds, bookId]
         };
       }
     });
   };
 
   const isInBooksRead = (bookId: number): boolean => {
-    return booksRead.bookIds.includes(bookId);
+    return booksRead?.bookIds?.includes(bookId) || false;
   };
 
   const getBooksReadCount = (): number => {
-    return booksRead.bookIds.length;
+    return booksRead?.bookIds?.length || 0;
   };
 
   const getBooksReadList = (): number[] => {
-    return booksRead.bookIds;
+    return booksRead?.bookIds || [];
   };
 
   return {
     booksRead,
-    booksReadList: booksRead.bookIds,
+    booksReadList: booksRead?.bookIds || [],
     addToBooksRead,
     isInBooksRead,
     getBooksReadCount,

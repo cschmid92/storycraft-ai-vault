@@ -36,20 +36,25 @@ export const useFavorites = () => {
   }, [favorites]);
 
   const toggleFavorite = (bookId: number) => {
-    setFavorites(prev => ({
-      ...prev,
-      bookIds: prev.bookIds.includes(bookId)
-        ? prev.bookIds.filter(id => id !== bookId)
-        : [...prev.bookIds, bookId]
-    }));
+    setFavorites(prev => {
+      // Ensure prev has the correct structure
+      const currentBookIds = prev?.bookIds || [];
+      
+      return {
+        ...prev,
+        bookIds: currentBookIds.includes(bookId)
+          ? currentBookIds.filter(id => id !== bookId)
+          : [...currentBookIds, bookId]
+      };
+    });
   };
 
   const isFavorite = (bookId: number): boolean => {
-    return favorites.bookIds.includes(bookId);
+    return favorites?.bookIds?.includes(bookId) || false;
   };
 
   const getFavoriteBooks = (): number[] => {
-    return favorites.bookIds;
+    return favorites?.bookIds || [];
   };
 
   return {
