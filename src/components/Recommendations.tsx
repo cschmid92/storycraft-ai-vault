@@ -2,6 +2,7 @@ import React from 'react';
 import { Lightbulb, Star, Heart, BookmarkPlus, BookOpen } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/entities';
+import { useFavorites } from '../hooks/useFavorites';
 
 interface RecommendationsProps {
   books: Book[];
@@ -13,6 +14,7 @@ interface RecommendationsProps {
 }
 
 const Recommendations = ({ books, onBookClick, onToggleFavorite, onAddToCollection, onAddToBooksRead, isInBooksRead }: RecommendationsProps) => {
+  const { isFavorite } = useFavorites();
   const recommendedBooks = books.slice(2, 7); // Show different books than popular reads
 
   return (
@@ -53,7 +55,7 @@ const Recommendations = ({ books, onBookClick, onToggleFavorite, onAddToCollecti
                   }}
                 >
                   <Heart 
-                    className="h-3 w-3 text-slate-600"
+                    className={`h-3 w-3 ${isFavorite(book.id) ? 'text-red-500 fill-red-500' : 'text-slate-600'}`}
                   />
                 </Button>
                 <Button
