@@ -4,8 +4,8 @@ import { DollarSign, ShoppingCart, Info, Plus, Facebook, Instagram, Linkedin, Tw
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Book, Collection } from '../../types/entities';
-import { booksForSale } from '../../data/mockData';
 import { useFavorites } from '../../hooks/useFavorites';
+import { useBooksForSale } from '../../hooks/useBooksForSale';
 
 interface AppSidebarProps {
   collections: Collection[];
@@ -28,12 +28,12 @@ const AppSidebar = ({
   booksReadCount,
   onDeleteCollection
 }: AppSidebarProps) => {
-  const booksForSaleCount = booksForSale.filter(sale => 
-    sale.sellerId === 999 && 
+  const { getMyBooksForSale } = useBooksForSale();
+  const { getFavoriteBooks } = useFavorites();
+  
+  const booksForSaleCount = getMyBooksForSale().filter(sale => 
     sale.status === 'Available'
   ).length;
-
-  const { getFavoriteBooks } = useFavorites();
   
   // Calculate actual counts for collections
   const getCollectionCount = (collectionId: number | string) => {
