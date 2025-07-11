@@ -23,7 +23,7 @@ const BooksForSale = () => {
   const { books } = useBooks();
   const { toggleFavorite } = useFavorites();
   const { getBooksReadCount } = useBooksRead();
-  const { getMyBooksForSale, updateBookForSaleStatus, updateBookForSale } = useBooksForSale();
+  const { getMyBooksForSale, updateBookForSaleStatus, updateBookForSale, removeBookForSale } = useBooksForSale();
   const navigate = useNavigate();
   const myBooks = getMyBooksForSale();
   const [selectedCollection, setSelectedCollection] = useState(null);
@@ -76,9 +76,11 @@ const BooksForSale = () => {
 
   // This function is no longer needed since BookActions handles it directly
 
-  const handleRemoveFromSale = (bookId: number) => {
-    // This is handled by the updateBookForSaleStatus function
-    console.log(`Removing book ${bookId} from sale`);
+  const handleRemoveFromSale = (saleId: number) => {
+    const bookForSale = myBooks.find(sale => sale.id === saleId);
+    if (bookForSale) {
+      removeBookForSale(bookForSale.bookId);
+    }
   };
 
   const handleEditBook = (bookForSale: BookForSale) => {
@@ -371,7 +373,12 @@ const BooksForSale = () => {
         onClose={() => setIsBookDetailModalOpen(false)}
         onToggleFavorite={handleToggleFavorite}
         onAddToCollection={() => selectedBook && handleAddToCollection(selectedBook)}
-        onToggleOwnedForSale={() => {}}
+        onToggleOwnedForSale={(bookId: number) => {
+          const bookForSale = myBooks.find(sale => sale.bookId === bookId);
+          if (bookForSale) {
+            removeBookForSale(bookId);
+          }
+        }}
         onRateBook={() => {}}
       />
 
