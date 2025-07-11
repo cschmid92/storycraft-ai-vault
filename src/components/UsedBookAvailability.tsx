@@ -56,10 +56,10 @@ const UsedBookAvailability = ({ bookTitle }: UsedBookAvailabilityProps) => {
                 {sale.condition}
               </Badge>
               {sale.distance && (
-                <div className="flex items-center gap-1 text-xs text-slate-500">
-                  <MapPin className="h-3 w-3" />
-                  {sale.distance} miles
-                </div>
+                  <div className="flex items-center gap-1 text-xs text-slate-500">
+                    <MapPin className="h-3 w-3" />
+                    {sale.distance} km
+                  </div>
               )}
             </div>
             <span className="font-semibold text-green-600">${sale.price}</span>
