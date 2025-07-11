@@ -11,6 +11,7 @@ import { Book } from '../types/entities';
 import { useBooksForSale } from '../hooks/useBooksForSale';
 import { useFavorites } from '../hooks/useFavorites';
 import { useUserRatings } from '../hooks/useUserRatings';
+import { useBooks } from '../hooks/useBooks';
 
 interface BookDetailModalProps {
   book: Book | null;
@@ -33,7 +34,8 @@ const BookDetailModal = ({
 }: BookDetailModalProps) => {
   const { isBookForSale, getMyBooksForSale } = useBooksForSale();
   const { isFavorite } = useFavorites();
-  const { getUserRating } = useUserRatings();
+  const { getUserRating, rateBook: rateUserBook } = useUserRatings();
+  const { rateBook } = useBooks();
   
   if (!isOpen || !book) return null;
   
@@ -47,7 +49,9 @@ const BookDetailModal = ({
   };
 
   const handleRatingChange = (rating: number) => {
-    onRateBook(book.id, rating);
+    rateUserBook(book.id, rating); // Store user's personal rating
+    rateBook(book.id, rating); // Trigger average rating recalculation
+    onRateBook(book.id, rating); // Call parent handler if needed
   };
 
   const handleToggleFavorite = (bookId: number) => {
