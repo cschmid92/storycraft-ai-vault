@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { DollarSign, ShoppingCart, Info, Plus, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
+import { Coins, ShoppingCart, Info, Plus, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Book, Collection } from '../../types/entities';
@@ -82,7 +82,7 @@ const AppSidebar = ({
         <div>
           <Link to="/books-for-sale">
             <Button variant="ghost" className="w-full justify-start text-slate-600 hover:bg-slate-100 px-3 py-2 h-auto text-sm">
-              <DollarSign className="h-4 w-4 mr-3" />
+              <Coins className="h-4 w-4 mr-3" />
               <span>My Books for Sale</span>
               {booksForSaleCount > 0 && (
                 <span className="text-xs bg-green-100 text-green-700 px-2 py-1 rounded-full ml-auto">
