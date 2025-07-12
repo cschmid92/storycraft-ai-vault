@@ -159,7 +159,10 @@ const BooksForSale = () => {
             </div>
 
             <div className="mb-8">
-              <p className="text-slate-600">{myBooks.length} books available for purchase</p>
+              <div className="flex gap-6 text-slate-600">
+                <p>{myBooks.filter(book => book.status === 'Available').length} books available for purchase</p>
+                <p>{myBooks.filter(book => book.status === 'Sold').length} books sold</p>
+              </div>
             </div>
 
             {myBooks.length > 0 ? (
