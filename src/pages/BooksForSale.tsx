@@ -225,7 +225,8 @@ const BooksForSale = () => {
                                   disabled={!canEdit}
                                   className="text-blue-600 hover:bg-blue-50 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                  <Edit className="h-4 w-4" />
+                                  <Edit className="h-4 w-4 mr-1" />
+                                  Edit
                                 </Button>
                                  <Button
                                    variant="outline"
@@ -234,7 +235,8 @@ const BooksForSale = () => {
                                    disabled={!canDelete}
                                    className="text-red-600 hover:bg-red-50 disabled:opacity-50 disabled:cursor-not-allowed"
                                  >
-                                   <Trash2 className="h-4 w-4" />
+                                   <Trash2 className="h-4 w-4 mr-1" />
+                                   Remove
                                  </Button>
                                 <Button
                                   variant="outline"
@@ -243,7 +245,8 @@ const BooksForSale = () => {
                                    disabled={!canChangeStatus || status === 'Sold'}
                                   className="text-green-600 hover:bg-green-50 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                  <CheckCircle className="h-4 w-4" />
+                                  <CheckCircle className="h-4 w-4 mr-1" />
+                                  Sold
                                 </Button>
                                 <Button
                                   variant="outline"
@@ -252,7 +255,8 @@ const BooksForSale = () => {
                                     disabled={!canChangeStatus || (status as BookForSaleStatus) === 'Picked'}
                                   className="text-purple-600 hover:bg-purple-50 disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                  <Package className="h-4 w-4" />
+                                  <Package className="h-4 w-4 mr-1" />
+                                  Picked
                                 </Button>
                               </div>
                             </TableCell>
