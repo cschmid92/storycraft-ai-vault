@@ -106,7 +106,6 @@ export interface BookForSale extends BaseEntity {
   location?: string;
   seller?: User;
   distance?: number;
-  description?: string;
   status: BookForSaleStatus;
   book?: Book;
 }
