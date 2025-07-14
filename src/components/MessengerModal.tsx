@@ -10,9 +10,10 @@ import { ConversationService } from '../services/conversationService';
 interface MessengerModalProps {
   isOpen: boolean;
   onClose: () => void;
+  selectedConversationId?: number;
 }
 
-const MessengerModal = ({ isOpen, onClose }: MessengerModalProps) => {
+const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerModalProps) => {
   const [selectedConversation, setSelectedConversation] = useState<number | null>(null);
   const [newMessage, setNewMessage] = useState('');
   const [conversations, setConversations] = useState<Conversation[]>([]);
@@ -23,6 +24,12 @@ const MessengerModal = ({ isOpen, onClose }: MessengerModalProps) => {
       loadConversations();
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (selectedConversationId) {
+      setSelectedConversation(selectedConversationId);
+    }
+  }, [selectedConversationId]);
 
   useEffect(() => {
     if (selectedConversation) {

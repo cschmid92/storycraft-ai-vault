@@ -12,6 +12,7 @@ import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import BuyUsedBooksFilters from '../components/BuyUsedBooksFilters';
 import UsedBookGrid from '../components/UsedBookGrid';
 import ContactSellerModal from '../components/ContactSellerModal';
+import MessengerModal from '../components/MessengerModal';
 import { useCollections, Collection } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
@@ -40,6 +41,8 @@ const BooksForSale = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [isContactSellerModalOpen, setIsContactSellerModalOpen] = useState(false);
   const [selectedBookForContact, setSelectedBookForContact] = useState<BookForSale | null>(null);
+  const [isMessengerModalOpen, setIsMessengerModalOpen] = useState(false);
+  const [selectedConversationId, setSelectedConversationId] = useState<number | undefined>(undefined);
 
   // Use the same books read logic as Collections.tsx - books with IDs 1 and 2 are marked as read
   const booksReadCount = getBooksReadCount();
@@ -104,6 +107,11 @@ const BooksForSale = () => {
   const handleContactSeller = (bookForSale: BookForSale) => {
     setSelectedBookForContact(bookForSale);
     setIsContactSellerModalOpen(true);
+  };
+
+  const handleMessageSent = (conversationId: number) => {
+    setSelectedConversationId(conversationId);
+    setIsMessengerModalOpen(true);
   };
 
   return (
@@ -205,6 +213,13 @@ const BooksForSale = () => {
         bookForSale={selectedBookForContact}
         isOpen={isContactSellerModalOpen}
         onClose={() => setIsContactSellerModalOpen(false)}
+        onMessageSent={handleMessageSent}
+      />
+      
+      <MessengerModal
+        isOpen={isMessengerModalOpen}
+        onClose={() => setIsMessengerModalOpen(false)}
+        selectedConversationId={selectedConversationId}
       />
     </div>
   );

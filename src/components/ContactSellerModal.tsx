@@ -19,9 +19,10 @@ interface ContactSellerModalProps {
   bookForSale: BookForSale | null;
   isOpen: boolean;
   onClose: () => void;
+  onMessageSent?: (conversationId: number) => void;
 }
 
-const ContactSellerModal = ({ bookForSale, isOpen, onClose }: ContactSellerModalProps) => {
+const ContactSellerModal = ({ bookForSale, isOpen, onClose, onMessageSent }: ContactSellerModalProps) => {
   const [message, setMessage] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const { toast } = useToast();
@@ -40,18 +41,23 @@ const ContactSellerModal = ({ bookForSale, isOpen, onClose }: ContactSellerModal
 
     try {
       // Create conversation and send message
-      ConversationService.createConversation(bookForSale, message.trim());
+      const conversation = ConversationService.createConversation(bookForSale, message.trim());
       
       const sellerName = bookForSale.seller ? `${bookForSale.seller.firstName} ${bookForSale.seller.lastName}` : 'the seller';
       
       toast({
         title: "Message sent!",
-        description: `Your message has been sent to ${sellerName}. Check your messages for their response.`,
+        description: `Your message has been sent to ${sellerName}.`,
       });
 
       setMessage('');
       setPhoneNumber('');
       onClose();
+      
+      // Open messenger modal with the new conversation
+      if (onMessageSent) {
+        onMessageSent(conversation.id);
+      }
     } catch (error) {
       toast({
         title: "Error",
