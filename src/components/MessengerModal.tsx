@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { X, Send, User } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Conversation, Message } from '../types/entities';
-import { conversationService } from '../services/conversationService';
+import { Message, Conversation } from '../types/entities';
 
 interface MessengerModalProps {
   isOpen: boolean;
@@ -15,33 +14,106 @@ interface MessengerModalProps {
 const MessengerModal = ({ isOpen, onClose }: MessengerModalProps) => {
   const [selectedConversation, setSelectedConversation] = useState<number | null>(null);
   const [newMessage, setNewMessage] = useState('');
-  const [conversations, setConversations] = useState<Conversation[]>([]);
-  const currentUserId = 999; // Current user ID
 
-  useEffect(() => {
-    if (isOpen) {
-      // Load conversations when modal opens
-      const userConversations = conversationService.getConversations(currentUserId);
-      setConversations(userConversations);
+  // Mock conversations data
+  const [conversations, setConversations] = useState<Conversation[]>([
+    {
+      id: 1,
+      participantName: "Alice Johnson",
+      participantAvatar: "https://images.unsplash.com/photo-1494790108755-2616b2e99b65?w=40&h=40&fit=crop&crop=face",
+      lastMessage: "Is the book still available?",
+      lastMessageTime: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
+      unreadCount: 2,
+      messages: [
+        {
+          id: 1,
+          senderId: 1,
+          senderName: "Alice Johnson",
+          content: "Hi! I'm interested in your copy of '1984'. Is it still available?",
+          timestamp: new Date(Date.now() - 1000 * 60 * 60), // 1 hour ago
+          isFromMe: false
+        },
+        {
+          id: 2,
+          senderId: 999,
+          senderName: "You",
+          content: "Yes, it's still available! The condition is good and I'm asking $12.99.",
+          timestamp: new Date(Date.now() - 1000 * 60 * 45), // 45 minutes ago
+          isFromMe: true
+        },
+        {
+          id: 3,
+          senderId: 1,
+          senderName: "Alice Johnson",
+          content: "Is the book still available?",
+          timestamp: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
+          isFromMe: false
+        }
+      ]
+    },
+    {
+      id: 2,
+      participantName: "Bob Smith",
+      participantAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+      lastMessage: "Great, I'll take it!",
+      lastMessageTime: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
+      unreadCount: 0,
+      messages: [
+        {
+          id: 4,
+          senderId: 2,
+          senderName: "Bob Smith",
+          content: "Hello! I saw your listing for 'The Hobbit'. Can you meet tomorrow?",
+          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 3), // 3 hours ago
+          isFromMe: false
+        },
+        {
+          id: 5,
+          senderId: 999,
+          senderName: "You",
+          content: "Sure! How about 2 PM at the coffee shop on Main Street?",
+          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2.5), // 2.5 hours ago
+          isFromMe: true
+        },
+        {
+          id: 6,
+          senderId: 2,
+          senderName: "Bob Smith",
+          content: "Great, I'll take it!",
+          timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
+          isFromMe: false
+        }
+      ]
     }
-  }, [isOpen]);
+  ]);
 
   const currentConversation = conversations.find(c => c.id === selectedConversation);
 
   const handleSendMessage = () => {
     if (!newMessage.trim() || !selectedConversation) return;
 
-    try {
-      conversationService.addMessage(selectedConversation, currentUserId, newMessage.trim());
-      
-      // Refresh conversations to show the new message
-      const userConversations = conversationService.getConversations(currentUserId);
-      setConversations(userConversations);
-      
-      setNewMessage('');
-    } catch (error) {
-      console.error('Failed to send message:', error);
-    }
+    const message: Message = {
+      id: Date.now(),
+      senderId: 999,
+      senderName: "You",
+      content: newMessage.trim(),
+      timestamp: new Date(),
+      isFromMe: true
+    };
+
+    setConversations(prev => prev.map(conv => {
+      if (conv.id === selectedConversation) {
+        return {
+          ...conv,
+          messages: [...conv.messages, message],
+          lastMessage: message.content,
+          lastMessageTime: message.timestamp
+        };
+      }
+      return conv;
+    }));
+
+    setNewMessage('');
   };
 
   const formatTime = (date: Date) => {
@@ -62,14 +134,14 @@ const MessengerModal = ({ isOpen, onClose }: MessengerModalProps) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl h-[600px] p-0 sm:max-w-[90vw] sm:h-[80vh]">
+      <DialogContent className="max-w-4xl h-[600px] p-0">
         <DialogHeader className="px-6 py-4 border-b">
           <DialogTitle>Messages</DialogTitle>
         </DialogHeader>
         
-        <div className="flex h-[calc(600px-80px)] sm:h-[calc(80vh-80px)]">
+        <div className="flex h-[calc(600px-80px)]">
           {/* Conversations List */}
-          <div className="w-1/3 sm:w-full sm:max-w-xs border-r bg-slate-50 sm:min-w-0">
+          <div className="w-1/3 border-r bg-slate-50">
             <ScrollArea className="h-full">
               <div className="p-4">
                 <h3 className="font-semibold text-slate-800 mb-3">Conversations</h3>
@@ -86,16 +158,16 @@ const MessengerModal = ({ isOpen, onClose }: MessengerModalProps) => {
                     >
                       <div className="flex items-center gap-3">
                         <img
-                          src={conversation.participant?.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face'}
-                          alt={conversation.participant?.firstName + ' ' + conversation.participant?.lastName || 'User'}
+                          src={conversation.participantAvatar}
+                          alt={conversation.participantName}
                           className="w-10 h-10 rounded-full"
                         />
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center justify-between">
                             <p className="font-medium text-slate-800 truncate">
-                              {conversation.participant?.firstName} {conversation.participant?.lastName}
+                              {conversation.participantName}
                             </p>
-                            {(conversation.unreadCount ?? 0) > 0 && (
+                            {conversation.unreadCount > 0 && (
                               <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
                                 {conversation.unreadCount}
                               </span>
@@ -105,7 +177,7 @@ const MessengerModal = ({ isOpen, onClose }: MessengerModalProps) => {
                             {conversation.lastMessage}
                           </p>
                           <p className="text-xs text-slate-500">
-                            {conversation.lastMessageTime ? formatTime(conversation.lastMessageTime) : ''}
+                            {formatTime(conversation.lastMessageTime)}
                           </p>
                         </div>
                       </div>
@@ -117,55 +189,47 @@ const MessengerModal = ({ isOpen, onClose }: MessengerModalProps) => {
           </div>
 
           {/* Message Area */}
-          <div className="flex-1 flex flex-col sm:min-w-0">
+          <div className="flex-1 flex flex-col">
             {selectedConversation ? (
               <>
                 {/* Conversation Header */}
                 <div className="p-4 border-b bg-white">
                   <div className="flex items-center gap-3">
                     <img
-                      src={currentConversation?.participant?.avatar || 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face'}
-                      alt={currentConversation?.participant?.firstName + ' ' + currentConversation?.participant?.lastName || 'User'}
+                      src={currentConversation?.participantAvatar}
+                      alt={currentConversation?.participantName}
                       className="w-8 h-8 rounded-full"
                     />
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-medium text-slate-800 truncate">
-                        {currentConversation?.participant?.firstName} {currentConversation?.participant?.lastName}
-                      </h4>
-                      <p className="text-sm text-slate-500 truncate">
-                        About: {currentConversation?.book?.title}
-                      </p>
-                    </div>
+                    <h4 className="font-medium text-slate-800">
+                      {currentConversation?.participantName}
+                    </h4>
                   </div>
                 </div>
 
                 {/* Messages */}
                 <ScrollArea className="flex-1 p-4">
                   <div className="space-y-4">
-                    {currentConversation?.messages.map(message => {
-                      const isFromMe = message.senderId === currentUserId;
-                      return (
+                    {currentConversation?.messages.map(message => (
+                      <div
+                        key={message.id}
+                        className={`flex ${message.isFromMe ? 'justify-end' : 'justify-start'}`}
+                      >
                         <div
-                          key={message.id}
-                          className={`flex ${isFromMe ? 'justify-end' : 'justify-start'}`}
+                          className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
+                            message.isFromMe
+                              ? 'bg-blue-500 text-white'
+                              : 'bg-slate-200 text-slate-800'
+                          }`}
                         >
-                          <div
-                            className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                              isFromMe
-                                ? 'bg-blue-500 text-white'
-                                : 'bg-slate-200 text-slate-800'
-                            }`}
-                          >
-                            <p className="text-sm">{message.content}</p>
-                            <p className={`text-xs mt-1 ${
-                              isFromMe ? 'text-blue-100' : 'text-slate-500'
-                            }`}>
-                              {formatTime(message.createdAt || new Date())}
-                            </p>
-                          </div>
+                          <p className="text-sm">{message.content}</p>
+                          <p className={`text-xs mt-1 ${
+                            message.isFromMe ? 'text-blue-100' : 'text-slate-500'
+                          }`}>
+                            {formatTime(message.timestamp)}
+                          </p>
                         </div>
-                      );
-                    })}
+                      </div>
+                    ))}
                   </div>
                 </ScrollArea>
 

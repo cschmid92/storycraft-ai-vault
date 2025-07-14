@@ -116,27 +116,6 @@ export type BookCondition = 'New' | 'Like New' | 'Very Good' | 'Good' | 'Fair' |
 // Book for sale status type
 export type BookForSaleStatus = 'Available' | 'Sold' | 'Picked';
 
-// Message and conversation entities
-export interface Message extends BaseEntity {
-  conversationId: string;
-  senderId: number;
-  content: string;
-  seen: boolean;
-}
-
-export interface Conversation extends BaseEntity {
-  user1Id: number;
-  user2Id: number;
-  bookId: number;
-  lastMessageId?: number;
-  book?: Book;
-  participant?: User;
-  lastMessage?: string;
-  lastMessageTime?: Date;
-  unreadCount?: number;
-  messages: Message[];
-}
-
 // API response types
 export interface ApiResponse<T> {
   data: T;
@@ -151,4 +130,23 @@ export interface PaginatedResponse<T> extends ApiResponse<T[]> {
     total: number;
     totalPages: number;
   };
+}
+
+export interface Message {
+  id: number;
+  senderId: number;
+  senderName: string;
+  content: string;
+  timestamp: Date;
+  isFromMe: boolean;
+}
+
+export interface Conversation {
+  id: number;
+  participantName: string;
+  participantAvatar: string;
+  lastMessage: string;
+  lastMessageTime: Date;
+  unreadCount: number;
+  messages: Message[];
 }
