@@ -4,7 +4,25 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Message, Conversation } from '../types/entities';
+
+interface Message {
+  id: number;
+  senderId: number;
+  senderName: string;
+  content: string;
+  timestamp: Date;
+  isFromMe: boolean;
+}
+
+interface Conversation {
+  id: number;
+  participantName: string;
+  participantAvatar: string;
+  lastMessage: string;
+  lastMessageTime: Date;
+  unreadCount: number;
+  messages: Message[];
+}
 
 interface MessengerModalProps {
   isOpen: boolean;

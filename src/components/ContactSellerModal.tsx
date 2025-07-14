@@ -13,16 +13,14 @@ import {
 } from "@/components/ui/dialog";
 import { BookForSale } from '../types/entities';
 import { useToast } from "@/hooks/use-toast";
-import { conversationService } from '../services/conversationService';
 
 interface ContactSellerModalProps {
   bookForSale: BookForSale | null;
   isOpen: boolean;
   onClose: () => void;
-  onConversationCreated?: () => void;
 }
 
-const ContactSellerModal = ({ bookForSale, isOpen, onClose, onConversationCreated }: ContactSellerModalProps) => {
+const ContactSellerModal = ({ bookForSale, isOpen, onClose }: ContactSellerModalProps) => {
   const [message, setMessage] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const { toast } = useToast();
@@ -37,31 +35,25 @@ const ContactSellerModal = ({ bookForSale, isOpen, onClose, onConversationCreate
       return;
     }
 
-    if (!bookForSale) return;
-
-    try {
-      // Create or add to conversation
-      const currentUserId = 999; // Current user ID
-      conversationService.createConversation(currentUserId, bookForSale, message.trim());
-      
-      const sellerName = bookForSale?.seller ? `${bookForSale.seller.firstName} ${bookForSale.seller.lastName}` : 'the seller';
-      
+    if (!phoneNumber.trim()) {
       toast({
-        title: "Message sent!",
-        description: `Your message has been sent to ${sellerName}. Check your messages for replies.`,
-      });
-
-      setMessage('');
-      setPhoneNumber('');
-      onClose();
-      onConversationCreated?.();
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to send message. Please try again.",
+        title: "Phone number required",
+        description: "Please enter your phone number so the seller can contact you.",
         variant: "destructive",
       });
+      return;
     }
+
+    const sellerName = bookForSale?.seller ? `${bookForSale.seller.firstName} ${bookForSale.seller.lastName}` : 'the seller';
+    
+    toast({
+      title: "Message sent!",
+      description: `Your message has been sent to ${sellerName}. They'll respond via your provided contact info.`,
+    });
+
+    setMessage('');
+    setPhoneNumber('');
+    onClose();
   };
 
   if (!bookForSale?.book || !bookForSale?.seller) return null;
@@ -71,7 +63,7 @@ const ContactSellerModal = ({ bookForSale, isOpen, onClose, onConversationCreate
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
           <DialogTitle>Contact Seller</DialogTitle>
           <DialogDescription>
@@ -123,12 +115,12 @@ const ContactSellerModal = ({ bookForSale, isOpen, onClose, onConversationCreate
           <div className="space-y-3">
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-slate-700 mb-1">
-                Your Phone Number (optional)
+                Your Phone Number
               </label>
               <Input
                 id="phone"
                 type="tel"
-                placeholder="e.g., (555) 123-4567 (optional)"
+                placeholder="e.g., (555) 123-4567"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
               />

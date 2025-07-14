@@ -131,22 +131,3 @@ export interface PaginatedResponse<T> extends ApiResponse<T[]> {
     totalPages: number;
   };
 }
-
-export interface Message {
-  id: number;
-  senderId: number;
-  senderName: string;
-  content: string;
-  timestamp: Date;
-  isFromMe: boolean;
-}
-
-export interface Conversation {
-  id: number;
-  participantName: string;
-  participantAvatar: string;
-  lastMessage: string;
-  lastMessageTime: Date;
-  unreadCount: number;
-  messages: Message[];
-}

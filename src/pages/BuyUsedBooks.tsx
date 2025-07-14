@@ -106,11 +106,6 @@ const BooksForSale = () => {
     setIsContactSellerModalOpen(true);
   };
 
-  const handleConversationCreated = () => {
-    // Handle conversation creation success - could refresh data or show toast
-    console.log('Conversation created successfully');
-  };
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
       <UnifiedHeader 
@@ -210,7 +205,6 @@ const BooksForSale = () => {
         bookForSale={selectedBookForContact}
         isOpen={isContactSellerModalOpen}
         onClose={() => setIsContactSellerModalOpen(false)}
-        onConversationCreated={handleConversationCreated}
       />
     </div>
   );
