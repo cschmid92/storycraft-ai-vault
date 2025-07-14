@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dialog";
 import { BookForSale } from '../types/entities';
 import { useToast } from "@/hooks/use-toast";
+import { ConversationService } from '../services/conversationService';
 
 interface ContactSellerModalProps {
   bookForSale: BookForSale | null;
@@ -35,25 +36,29 @@ const ContactSellerModal = ({ bookForSale, isOpen, onClose }: ContactSellerModal
       return;
     }
 
-    if (!phoneNumber.trim()) {
+    if (!bookForSale) return;
+
+    try {
+      // Create conversation and send message
+      ConversationService.createConversation(bookForSale, message.trim());
+      
+      const sellerName = bookForSale.seller ? `${bookForSale.seller.firstName} ${bookForSale.seller.lastName}` : 'the seller';
+      
       toast({
-        title: "Phone number required",
-        description: "Please enter your phone number so the seller can contact you.",
+        title: "Message sent!",
+        description: `Your message has been sent to ${sellerName}. Check your messages for their response.`,
+      });
+
+      setMessage('');
+      setPhoneNumber('');
+      onClose();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
         variant: "destructive",
       });
-      return;
     }
-
-    const sellerName = bookForSale?.seller ? `${bookForSale.seller.firstName} ${bookForSale.seller.lastName}` : 'the seller';
-    
-    toast({
-      title: "Message sent!",
-      description: `Your message has been sent to ${sellerName}. They'll respond via your provided contact info.`,
-    });
-
-    setMessage('');
-    setPhoneNumber('');
-    onClose();
   };
 
   if (!bookForSale?.book || !bookForSale?.seller) return null;
@@ -63,7 +68,7 @@ const ContactSellerModal = ({ bookForSale, isOpen, onClose }: ContactSellerModal
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[500px] mx-4 max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Contact Seller</DialogTitle>
           <DialogDescription>
@@ -115,7 +120,7 @@ const ContactSellerModal = ({ bookForSale, isOpen, onClose }: ContactSellerModal
           <div className="space-y-3">
             <div>
               <label htmlFor="phone" className="block text-sm font-medium text-slate-700 mb-1">
-                Your Phone Number
+                Your Phone Number <span className="text-slate-500">(optional)</span>
               </label>
               <Input
                 id="phone"

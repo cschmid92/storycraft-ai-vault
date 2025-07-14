@@ -1,5 +1,5 @@
 
-import { Book, Collection, BookForSale, User, Favorites, BooksRead } from '../types/entities';
+import { Book, Collection, BookForSale, User, Favorites, BooksRead, Conversation, Message } from '../types/entities';
 
 export const mockBooks: Book[] = [
   {
@@ -294,5 +294,99 @@ export const mockCollections: Collection[] = [
     bookIds: [7, 8],
     description: "Magical realms and epic quests",
     userId: 999
+  }
+];
+
+// Mock conversations
+export const mockConversations: Conversation[] = [
+  {
+    id: 1,
+    user1Id: 999, // Current user
+    user2Id: 1, // Alice Johnson
+    bookId: 3, // 1984
+    lastMessageId: 3,
+    updatedAt: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
+    participantName: "Alice Johnson",
+    participantAvatar: "https://images.unsplash.com/photo-1494790108755-2616b2e99b65?w=40&h=40&fit=crop&crop=face",
+    lastMessage: "Is the book still available?",
+    lastMessageTime: new Date(Date.now() - 1000 * 60 * 30),
+    unreadCount: 2
+  },
+  {
+    id: 2,
+    user1Id: 999, // Current user
+    user2Id: 2, // Bob Smith
+    bookId: 7, // The Lord of the Rings
+    lastMessageId: 6,
+    updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
+    participantName: "Bob Smith",
+    participantAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
+    lastMessage: "Great, I'll take it!",
+    lastMessageTime: new Date(Date.now() - 1000 * 60 * 60 * 2),
+    unreadCount: 0
+  }
+];
+
+// Mock messages
+export const mockMessages: Message[] = [
+  {
+    id: 1,
+    conversationId: 1,
+    senderId: 1,
+    content: "Hi! I'm interested in your copy of '1984'. Is it still available?",
+    createdAt: new Date(Date.now() - 1000 * 60 * 60), // 1 hour ago
+    seen: true,
+    senderName: "Alice Johnson",
+    isFromMe: false
+  },
+  {
+    id: 2,
+    conversationId: 1,
+    senderId: 999,
+    content: "Yes, it's still available! The condition is good and I'm asking $12.99.",
+    createdAt: new Date(Date.now() - 1000 * 60 * 45), // 45 minutes ago
+    seen: true,
+    senderName: "You",
+    isFromMe: true
+  },
+  {
+    id: 3,
+    conversationId: 1,
+    senderId: 1,
+    content: "Is the book still available?",
+    createdAt: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
+    seen: false,
+    senderName: "Alice Johnson",
+    isFromMe: false
+  },
+  {
+    id: 4,
+    conversationId: 2,
+    senderId: 2,
+    content: "Hello! I saw your listing for 'The Hobbit'. Can you meet tomorrow?",
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 3), // 3 hours ago
+    seen: true,
+    senderName: "Bob Smith",
+    isFromMe: false
+  },
+  {
+    id: 5,
+    conversationId: 2,
+    senderId: 999,
+    content: "Sure! How about 2 PM at the coffee shop on Main Street?",
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2.5), // 2.5 hours ago
+    seen: true,
+    senderName: "You",
+    isFromMe: true
+  },
+  {
+    id: 6,
+    conversationId: 2,
+    senderId: 2,
+    content: "Great, I'll take it!",
+    createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
+    seen: true,
+    senderName: "Bob Smith",
+    isFromMe: false
   }
 ];

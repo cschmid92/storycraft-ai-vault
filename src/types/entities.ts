@@ -116,6 +116,33 @@ export type BookCondition = 'New' | 'Like New' | 'Very Good' | 'Good' | 'Fair' |
 // Book for sale status type
 export type BookForSaleStatus = 'Available' | 'Sold' | 'Picked';
 
+// Conversation entity
+export interface Conversation extends BaseEntity {
+  user1Id: number;
+  user2Id: number;
+  bookId: number;
+  lastMessageId?: number;
+  updatedAt: Date;
+  // Extended properties for UI
+  participantName?: string;
+  participantAvatar?: string;
+  lastMessage?: string;
+  lastMessageTime?: Date;
+  unreadCount?: number;
+}
+
+// Message entity
+export interface Message extends BaseEntity {
+  conversationId: number;
+  senderId: number;
+  content: string;
+  createdAt: Date;
+  seen: boolean;
+  // Extended properties for UI
+  senderName?: string;
+  isFromMe?: boolean;
+}
+
 // API response types
 export interface ApiResponse<T> {
   data: T;
