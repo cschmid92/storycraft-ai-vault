@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
-import { X, User, Mail, Settings, Users, Globe, MapPin } from 'lucide-react';
+import { X, User, Mail, Settings, Globe, MapPin } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface AccountModalProps {
   isOpen: boolean;
@@ -11,8 +12,8 @@ interface AccountModalProps {
 
 const AccountModal = ({ isOpen, onClose }: AccountModalProps) => {
   const [activeTab, setActiveTab] = useState('profile');
-  const [searchTerm, setSearchTerm] = useState('');
   const [selectedLanguage, setSelectedLanguage] = useState('English');
+  const [selectedCountry, setSelectedCountry] = useState('Switzerland');
 
   if (!isOpen) return null;
 
@@ -43,15 +44,6 @@ const AccountModal = ({ isOpen, onClose }: AccountModalProps) => {
               >
                 <User className="h-4 w-4" />
                 Profile
-              </button>
-              <button
-                onClick={() => setActiveTab('connect')}
-                className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg text-left text-sm ${
-                  activeTab === 'connect' ? 'bg-blue-100 text-blue-700' : 'text-slate-600 hover:bg-slate-100'
-                }`}
-              >
-                <Users className="h-4 w-4" />
-                Connect
               </button>
               <button
                 onClick={() => setActiveTab('settings')}
@@ -94,46 +86,38 @@ const AccountModal = ({ isOpen, onClose }: AccountModalProps) => {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">Street Address</label>
-                        <Input placeholder="123 Main Street" />
+                        <Input placeholder="Bahnhofstrasse 123" />
                       </div>
                       <div>
                         <label className="block text-sm font-medium text-slate-700 mb-2">City</label>
-                        <Input placeholder="New York" />
+                        <Input placeholder="Zurich" />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">State/Province</label>
-                        <Input placeholder="NY" />
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Canton</label>
+                        <Input placeholder="ZH" />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-slate-700 mb-2">ZIP/Postal Code</label>
-                        <Input placeholder="10001" />
+                        <label className="block text-sm font-medium text-slate-700 mb-2">Postal Code</label>
+                        <Input placeholder="8001" />
                       </div>
                       <div className="md:col-span-2">
                         <label className="block text-sm font-medium text-slate-700 mb-2">Country</label>
-                        <Input placeholder="United States" />
+                        <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                          <SelectTrigger>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent className="bg-white border border-slate-300">
+                            <SelectItem value="Switzerland">Switzerland</SelectItem>
+                            <SelectItem value="Germany">Germany</SelectItem>
+                            <SelectItem value="Austria">Austria</SelectItem>
+                            <SelectItem value="France">France</SelectItem>
+                            <SelectItem value="Italy">Italy</SelectItem>
+                          </SelectContent>
+                        </Select>
                       </div>
                     </div>
                   </div>
                   <Button>Save Changes</Button>
-                </div>
-              </div>
-            )}
-            
-            {activeTab === 'connect' && (
-              <div className="space-y-6">
-                <h3 className="text-lg font-semibold text-slate-800">Connect with Others</h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Search Users</label>
-                    <Input 
-                      placeholder="Search by name or email..." 
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                    />
-                  </div>
-                  <div className="bg-slate-50 rounded-lg p-4">
-                    <p className="text-slate-600 text-center">No users found. Try a different search term.</p>
-                  </div>
                 </div>
               </div>
             )}

@@ -50,14 +50,14 @@ const PriceInputModal = ({ isOpen, onClose, onConfirm, bookTitle }: PriceInputMo
         <div className="space-y-4">
           <div className="relative">
             <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <DollarSign className="h-5 w-5 text-slate-500" />
+              <span className="text-slate-500 font-medium">CHF</span>
             </div>
             <Input
               type="number"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
               placeholder="0.00"
-              className="pl-10"
+              className="pl-12"
               min="0"
               step="0.01"
             />

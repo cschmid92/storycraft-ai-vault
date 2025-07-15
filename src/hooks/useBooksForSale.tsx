@@ -43,6 +43,7 @@ export const useBooksForSale = () => {
       sellerId: 999, // Current user ID
       bookId,
       price,
+      currency: 'CHF',
       condition: condition as any,
       location: 'My Location',
       distance: 0,

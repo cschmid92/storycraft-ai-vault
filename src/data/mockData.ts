@@ -184,6 +184,7 @@ export const booksForSale: BookForSale[] = [
     sellerId: 999, // Current user ID
     bookId: 3, // 1984 from mockBooks
     price: 12.99,
+    currency: 'CHF',
     condition: "Good",
     location: "My Location",
     distance: 0,
@@ -195,6 +196,7 @@ export const booksForSale: BookForSale[] = [
     sellerId: 999, // Current user ID
     bookId: 7, // The Lord of the Rings
     price: 8.99,
+    currency: 'CHF',
     condition: "Fair",
     location: "My Location", 
     distance: 0,
@@ -207,6 +209,7 @@ export const booksForSale: BookForSale[] = [
     sellerId: 1,
     bookId: 3, // 1984
     price: 12.99,
+    currency: 'CHF',
     condition: "Good",
     location: "Downtown",
     distance: 3.7,
@@ -219,6 +222,7 @@ export const booksForSale: BookForSale[] = [
     sellerId: 2,
     bookId: 4, // Pride and Prejudice
     price: 15.99,
+    currency: 'CHF',
     condition: "Excellent",
     location: "Uptown",
     distance: 9.2,
@@ -231,6 +235,7 @@ export const booksForSale: BookForSale[] = [
     sellerId: 3,
     bookId: 1, // The Great Gatsby
     price: 10.99,
+    currency: 'CHF',
     condition: "Fair",
     location: "Midtown",
     distance: 1.9,
@@ -243,6 +248,7 @@ export const booksForSale: BookForSale[] = [
     sellerId: 4,
     bookId: 6, // Dune
     price: 18.50,
+    currency: 'CHF',
     condition: "Like New",
     location: "Westside",
     distance: 5.1,
