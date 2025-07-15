@@ -114,7 +114,7 @@ const ContactSellerModal = ({ bookForSale, isOpen, onClose, onMessageSent }: Con
               <h4 className="font-medium text-slate-800 line-clamp-1">{book.title}</h4>
               <p className="text-sm text-slate-600">{book.author}</p>
               <div className="flex items-center justify-between mt-1">
-                <span className="text-lg font-bold text-green-600">${bookForSale.price}</span>
+                <span className="text-lg font-bold text-green-600">{bookForSale.currency} {bookForSale.price}</span>
                 <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded">
                   {bookForSale.condition}
                 </span>

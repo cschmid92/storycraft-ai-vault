@@ -43,7 +43,7 @@ const BooksForSale = ({ books, onBookClick }: BooksForSaleProps) => {
             <p className="text-slate-600 text-xs truncate">{sale.book?.author}</p>
             <div className="flex items-center gap-1 mt-1">
               <Tag className="h-3 w-3 text-green-600" />
-              <span className="text-green-600 font-medium text-sm">${sale.price}</span>
+              <span className="text-green-600 font-medium text-sm">{sale.currency} {sale.price}</span>
             </div>
           </div>
         </div>

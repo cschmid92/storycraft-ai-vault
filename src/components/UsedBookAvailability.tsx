@@ -62,7 +62,7 @@ const UsedBookAvailability = ({ bookTitle }: UsedBookAvailabilityProps) => {
                   </div>
               )}
             </div>
-            <span className="font-semibold text-green-600">${sale.price}</span>
+            <span className="font-semibold text-green-600">{sale.currency} {sale.price}</span>
           </div>
         ))}
         
