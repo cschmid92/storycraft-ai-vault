@@ -183,7 +183,7 @@ export const booksForSale: BookForSale[] = [
     id: 101,
     sellerId: 999, // Current user ID
     bookId: 3, // 1984 from mockBooks
-    price: 12.50,
+    price: 12.99,
     condition: "Good",
     location: "My Location",
     distance: 0,
@@ -194,7 +194,7 @@ export const booksForSale: BookForSale[] = [
     id: 102,
     sellerId: 999, // Current user ID
     bookId: 7, // The Lord of the Rings
-    price: 9.00,
+    price: 8.99,
     condition: "Fair",
     location: "My Location", 
     distance: 0,
@@ -206,7 +206,7 @@ export const booksForSale: BookForSale[] = [
     id: 201,
     sellerId: 1,
     bookId: 3, // 1984
-    price: 13.00,
+    price: 12.99,
     condition: "Good",
     location: "Downtown",
     distance: 3.7,
@@ -218,7 +218,7 @@ export const booksForSale: BookForSale[] = [
     id: 202,
     sellerId: 2,
     bookId: 4, // Pride and Prejudice
-    price: 16.00,
+    price: 15.99,
     condition: "Excellent",
     location: "Uptown",
     distance: 9.2,
@@ -230,7 +230,7 @@ export const booksForSale: BookForSale[] = [
     id: 203,
     sellerId: 3,
     bookId: 1, // The Great Gatsby
-    price: 10.50,
+    price: 10.99,
     condition: "Fair",
     location: "Midtown",
     distance: 1.9,

@@ -102,6 +102,7 @@ export interface BookForSale extends BaseEntity {
   sellerId: number;
   bookId: number;
   price: number;
+  currency: string;
   condition: BookCondition;
   location?: string;
   seller?: User;
