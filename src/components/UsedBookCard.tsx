@@ -49,9 +49,6 @@ const UsedBookCard = ({ bookForSale, onBookClick, onContactSeller }: UsedBookCar
           </span>
           <span className="text-slate-500">{book.year}</span>
         </div>
-        <p className="text-slate-600 text-xs mt-2 line-clamp-2">
-          {book.description}
-        </p>
         
         {/* Seller Info */}
         {bookForSale.seller && (
