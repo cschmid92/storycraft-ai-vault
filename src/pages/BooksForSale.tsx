@@ -302,7 +302,7 @@ const BooksForSale = () => {
                           </div>
                         </div>
                         
-                        <div className="flex flex-wrap gap-2">
+                        <div className="grid grid-cols-2 grid-rows-2 gap-2">
                           <Button
                             variant="outline"
                             size="sm"
