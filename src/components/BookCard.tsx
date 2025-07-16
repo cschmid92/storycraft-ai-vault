@@ -120,10 +120,6 @@ const BookCard = ({
           <span className="text-slate-500">{book.year}</span>
         </div>
 
-        {/* Description Preview */}
-        <p className="text-slate-600 text-xs mt-2 line-clamp-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-          {book.description}
-        </p>
       </div>
     </div>
   );
