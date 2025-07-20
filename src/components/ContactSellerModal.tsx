@@ -131,7 +131,7 @@ const ContactSellerModal = ({ bookForSale, isOpen, onClose, onMessageSent }: Con
               <Input
                 id="phone"
                 type="tel"
-                placeholder="e.g., (555) 123-4567"
+                placeholder="e.g., +41 79 123 45 67"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
               />
