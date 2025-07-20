@@ -92,7 +92,6 @@ const UserProfile = () => {
                 </Avatar>
                 <div className="text-center md:text-left">
                   <h1 className="text-2xl font-bold">{user.firstName} {user.lastName}</h1>
-                  <p className="text-muted-foreground">@{user.username}</p>
                 </div>
               </div>
 
@@ -127,26 +126,13 @@ const UserProfile = () => {
                         })}
                       </p>
                       <p className="text-xs text-muted-foreground">Member since</p>
-                    </div>
-                  </div>
-                </div>
-
-                <Separator />
-
-                <div className="flex flex-wrap gap-2">
-                  <Badge variant="secondary">
-                    <BookOpen className="h-3 w-3 mr-1" />
-                    Verified Seller
-                  </Badge>
-                  <Badge variant="outline">
-                    <MapPin className="h-3 w-3 mr-1" />
-                    Fast Shipping
-                  </Badge>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
+                     </div>
+                   </div>
+                 </div>
+               </div>
+             </div>
+           </CardContent>
+         </Card>
 
         {/* Books for Sale */}
         <Card>
