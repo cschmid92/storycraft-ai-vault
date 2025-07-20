@@ -5,10 +5,11 @@ import { Badge } from '../components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Separator } from '../components/ui/separator';
 import { Button } from '../components/ui/button';
-import { Star, MapPin, Calendar, BookOpen, ShoppingBag } from 'lucide-react';
+import { Star, MapPin, Calendar, BookOpen, ShoppingBag, UserCircle } from 'lucide-react';
 import StarRating from '../components/StarRating';
 import UsedBookCard from '../components/UsedBookCard';
 import SharedLayout from '../components/SharedLayout';
+import PageHeader from '../components/PageHeader';
 import { User, BookForSale } from '../types/entities';
 import { useBooksForSale } from '../hooks/useBooksForSale';
 
@@ -78,6 +79,12 @@ const UserProfile = () => {
 
   return (
     <SharedLayout>
+      <PageHeader 
+        title={`${user.firstName} ${user.lastName}`}
+        subtitle="Seller Profile"
+        icon={UserCircle}
+        iconGradient="from-purple-600 to-blue-600"
+      />
       <div className="container mx-auto px-4 py-8 space-y-6">
         {/* Profile Header */}
         <Card>
