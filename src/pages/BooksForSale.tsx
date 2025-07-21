@@ -12,7 +12,6 @@ import CollectionModal from '../components/CollectionModal';
 import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import PriceInputModal from '../components/PriceInputModal';
-import RatingModal from '../components/RatingModal';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
@@ -36,8 +35,6 @@ const BooksForSale = () => {
   const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
   const [selectedBookForEdit, setSelectedBookForEdit] = useState<BookForSale | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isRatingModalOpen, setIsRatingModalOpen] = useState(false);
-  const [selectedBookForRating, setSelectedBookForRating] = useState<BookForSale | null>(null);
 
   const handleCollectionSelect = (collection: any) => {
     setSelectedCollection(collection);
@@ -105,19 +102,6 @@ const BooksForSale = () => {
   const handleChangeStatus = (bookId: number, newStatus: BookForSaleStatus) => {
     updateBookForSaleStatus(bookId, newStatus);
     console.log(`Changed book ${bookId} status to ${newStatus}`);
-  };
-
-  const handlePickedClick = (bookForSale: BookForSale) => {
-    // First update the status to Picked
-    handleChangeStatus(bookForSale.id, 'Picked');
-    // Then open rating modal
-    setSelectedBookForRating(bookForSale);
-    setIsRatingModalOpen(true);
-  };
-
-  const handleRatingComplete = () => {
-    console.log('Rating completed for book:', selectedBookForRating?.book?.title);
-    setSelectedBookForRating(null);
   };
 
   const getStatusBadge = (status: string = 'Available') => {
@@ -267,7 +251,7 @@ const BooksForSale = () => {
                                  <Button
                                    variant="outline"
                                    size="sm"
-                                    onClick={() => handlePickedClick(bookForSale)}
+                                    onClick={() => handleChangeStatus(bookForSale.id, 'Picked')}
                                      disabled={!canChangeStatus || (status as BookForSaleStatus) === 'Picked'}
                                    className="text-purple-600 hover:bg-purple-50 disabled:opacity-50 disabled:cursor-not-allowed"
                                  >
@@ -352,7 +336,7 @@ const BooksForSale = () => {
                            <Button
                              variant="outline"
                              size="sm"
-                              onClick={() => handlePickedClick(bookForSale)}
+                              onClick={() => handleChangeStatus(bookForSale.id, 'Picked')}
                               disabled={!canChangeStatus || (status as BookForSaleStatus) === 'Picked'}
                              className="text-purple-600 hover:bg-purple-50 disabled:opacity-50 disabled:cursor-not-allowed flex-1 min-w-0"
                            >
@@ -413,15 +397,6 @@ const BooksForSale = () => {
         }}
         onConfirm={handleUpdateBook}
         bookTitle={selectedBookForEdit?.book?.title || ""}
-      />
-
-      <RatingModal
-        isOpen={isRatingModalOpen}
-        onClose={() => setIsRatingModalOpen(false)}
-        bookTitle={selectedBookForRating?.book?.title || ""}
-        sellerName="Buyer" // In real app, this would be the actual buyer's name
-        sellerId={1} // In real app, this would be the actual buyer's ID
-        onRatingComplete={handleRatingComplete}
       />
     </div>
   );
