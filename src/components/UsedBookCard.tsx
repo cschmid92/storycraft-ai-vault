@@ -2,7 +2,6 @@ import React from 'react';
 import { Star, MapPin, User } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { BookForSale } from '../types/entities';
-import { Link } from 'react-router-dom';
 
 interface UsedBookCardProps {
   bookForSale: BookForSale;
@@ -53,27 +52,21 @@ const UsedBookCard = ({ bookForSale, onBookClick, onContactSeller }: UsedBookCar
         
         {/* Seller Info */}
         {bookForSale.seller && (
-          <Link 
-            to={`/user/${bookForSale.sellerId}`}
-            className="block mt-3"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center space-x-2 p-2 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors">
-              <img 
-                src={bookForSale.seller.avatar} 
-                alt={`${bookForSale.seller.firstName} ${bookForSale.seller.lastName}`}
-                className="w-6 h-6 rounded-full object-cover"
-              />
-              <div className="flex-1 min-w-0">
-                <p className="text-xs font-medium text-slate-700 truncate">{bookForSale.seller.firstName} {bookForSale.seller.lastName}</p>
-                <div className="flex items-center space-x-1">
-                  <Star className="h-2.5 w-2.5 text-yellow-500 fill-yellow-500" />
-                  <span className="text-xs text-slate-600">{bookForSale.seller.rating}</span>
-                </div>
+          <div className="flex items-center space-x-2 mt-3 p-2 bg-slate-50 rounded-lg">
+            <img 
+              src={bookForSale.seller.avatar} 
+              alt={`${bookForSale.seller.firstName} ${bookForSale.seller.lastName}`}
+              className="w-6 h-6 rounded-full object-cover"
+            />
+            <div className="flex-1 min-w-0">
+              <p className="text-xs font-medium text-slate-700 truncate">{bookForSale.seller.firstName} {bookForSale.seller.lastName}</p>
+              <div className="flex items-center space-x-1">
+                <Star className="h-2.5 w-2.5 text-yellow-500 fill-yellow-500" />
+                <span className="text-xs text-slate-600">{bookForSale.seller.rating}</span>
               </div>
-              <User className="h-3 w-3 text-slate-400" />
             </div>
-          </Link>
+            <User className="h-3 w-3 text-slate-400" />
+          </div>
         )}
         
         <Button 
