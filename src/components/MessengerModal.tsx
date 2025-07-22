@@ -204,23 +204,36 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                     <div className="flex items-center gap-2">
                       {currentConversation?.status && (
                         <Badge variant={currentConversation.status === 'Available' ? 'secondary' : 
-                                      currentConversation.status === 'Picked' ? 'default' : 'destructive'}>
+                                      currentConversation.status === 'Sold' ? 'default' : 'destructive'}>
                           {currentConversation.status}
                         </Badge>
                       )}
                       
-                      {/* Status Update Buttons (only show if user is the buyer and book is available) */}
-                      {currentConversation?.status === 'Available' && currentConversation?.user1Id === 999 && (
+                      {/* Status Update Buttons (only show if user is the buyer) */}
+                      {currentConversation?.user1Id === 999 && (
                         <div className="flex gap-1">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleStatusUpdate('Picked')}
-                            className="text-xs"
-                          >
-                            <Package className="h-3 w-3 mr-1" />
-                            Mark as Picked
-                          </Button>
+                          {currentConversation?.status === 'Available' && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleStatusUpdate('Sold')}
+                              className="text-xs"
+                            >
+                              <Package className="h-3 w-3 mr-1" />
+                              Mark as Sold
+                            </Button>
+                          )}
+                          {currentConversation?.status === 'Sold' && (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleStatusUpdate('Picked')}
+                              className="text-xs"
+                            >
+                              <Package className="h-3 w-3 mr-1" />
+                              Mark as Picked
+                            </Button>
+                          )}
                         </div>
                       )}
                     </div>
