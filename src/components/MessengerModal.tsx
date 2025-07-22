@@ -121,13 +121,13 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-4xl h-[600px] p-0 mx-4">
-        <DialogHeader className="px-6 py-4 border-b">
-          <DialogTitle>Messages</DialogTitle>
+      <DialogContent className="max-w-4xl h-[600px] md:h-[600px] h-[90vh] p-0 mx-2 md:mx-4">
+        <DialogHeader className="px-4 md:px-6 py-3 md:py-4 border-b">
+          <DialogTitle className="text-base md:text-lg">Messages</DialogTitle>
         </DialogHeader>
         
-        <div className="flex h-[calc(600px-80px)] md:flex-row flex-col">
-          {/* Conversations List */}
+        <div className="flex h-[calc(90vh-60px)] md:h-[calc(600px-80px)] md:flex-row flex-col">
+          {/* Conversations List - Desktop */}
           <div className="md:w-1/3 w-full border-r bg-slate-50 md:block hidden">
             <ScrollArea className="h-full">
               <div className="p-4">
@@ -175,25 +175,88 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
             </ScrollArea>
           </div>
 
+          {/* Mobile Conversations List */}
+          {!selectedConversation && (
+            <div className="md:hidden w-full bg-slate-50">
+              <ScrollArea className="h-full">
+                <div className="p-3">
+                  <h3 className="font-semibold text-slate-800 mb-3 text-center">Select a Conversation</h3>
+                  <div className="space-y-2">
+                    {conversations.map(conversation => (
+                      <div
+                        key={conversation.id}
+                        className="p-3 rounded-lg cursor-pointer transition-colors bg-white hover:bg-slate-100 border"
+                        onClick={() => setSelectedConversation(conversation.id)}
+                      >
+                        <div className="flex items-center gap-3">
+                          <img
+                            src={conversation.participantAvatar}
+                            alt={conversation.participantName}
+                            className="w-10 h-10 rounded-full"
+                          />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center justify-between">
+                              <p className="font-medium text-slate-800 truncate">
+                                {conversation.participantName}
+                              </p>
+                              {conversation.unreadCount > 0 && (
+                                <span className="bg-blue-500 text-white text-xs px-2 py-1 rounded-full">
+                                  {conversation.unreadCount}
+                                </span>
+                              )}
+                            </div>
+                            {conversation.bookForSale?.book && (
+                              <p className="text-xs text-slate-500 truncate">
+                                {conversation.bookForSale.book.title}
+                              </p>
+                            )}
+                            <p className="text-sm text-slate-600 truncate">
+                              {conversation.lastMessage}
+                            </p>
+                            <p className="text-xs text-slate-500">
+                              {formatTime(conversation.lastMessageTime)}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </ScrollArea>
+            </div>
+          )}
+
           {/* Message Area */}
           <div className="flex-1 flex flex-col">
             {selectedConversation ? (
               <>
+                {/* Mobile Back Button */}
+                <div className="md:hidden p-2 border-b bg-white">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setSelectedConversation(null)}
+                    className="text-blue-600"
+                  >
+                    ← Back to Conversations
+                  </Button>
+                </div>
+
                 {/* Conversation Header */}
-                <div className="p-4 border-b bg-white">
+                <div className="p-3 md:p-4 border-b bg-white">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-2 md:gap-3">
                       <img
                         src={currentConversation?.participantAvatar}
                         alt={currentConversation?.participantName}
-                        className="w-8 h-8 rounded-full"
+                        className="w-6 h-6 md:w-8 md:h-8 rounded-full"
                       />
                       <div>
-                        <h4 className="font-medium text-slate-800">
+                        <h4 className="font-medium text-slate-800 text-sm md:text-base">
                           {currentConversation?.participantName}
                         </h4>
                         {currentConversation?.bookForSale?.book && (
-                          <p className="text-sm text-slate-600">
+                          <p className="text-xs md:text-sm text-slate-600">
                             {currentConversation.bookForSale.book.title}
                           </p>
                         )}
@@ -201,7 +264,7 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                     </div>
                     
                     {/* Status Controls */}
-                    <div className="flex items-center gap-2">
+                    <div className="flex items-center gap-1 md:gap-2">
                       {currentConversation?.status && (
                         <Badge variant={currentConversation.status === 'Available' ? 'secondary' : 
                                       currentConversation.status === 'Sold' ? 'default' : 'destructive'}>
@@ -211,16 +274,16 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                       
                       {/* Status Update Buttons (only show if user is the buyer) */}
                       {currentConversation?.user1Id === 999 && (
-                        <div className="flex gap-1">
+                        <div className="flex flex-col md:flex-row gap-1">
                           {currentConversation?.status === 'Available' && (
                             <Button
                               size="sm"
                               variant="outline"
                               onClick={() => handleStatusUpdate('Sold')}
-                              className="text-xs"
+                              className="text-xs whitespace-nowrap"
                             >
-                              <Package className="h-3 w-3 mr-1" />
-                              Mark as Sold
+                              <Package className="h-3 w-3 md:mr-1" />
+                              <span className="hidden md:inline">Mark as </span>Sold
                             </Button>
                           )}
                           {currentConversation?.status === 'Sold' && (
@@ -228,10 +291,10 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                               size="sm"
                               variant="outline"
                               onClick={() => handleStatusUpdate('Picked')}
-                              className="text-xs"
+                              className="text-xs whitespace-nowrap"
                             >
-                              <Package className="h-3 w-3 mr-1" />
-                              Mark as Picked
+                              <Package className="h-3 w-3 md:mr-1" />
+                              <span className="hidden md:inline">Mark as </span>Picked
                             </Button>
                           )}
                         </div>
@@ -241,8 +304,8 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                 </div>
 
                 {/* Messages */}
-                <ScrollArea className="flex-1 p-4">
-                  <div className="space-y-4">
+                <ScrollArea className="flex-1 p-2 md:p-4">
+                  <div className="space-y-3 md:space-y-4">
                     {messages.map(message => (
                       <div
                         key={message.id}
@@ -252,14 +315,14 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                         }`}
                       >
                         <div
-                          className={`px-4 py-2 rounded-lg ${
+                          className={`px-3 md:px-4 py-2 rounded-lg ${
                             message.type === 'status_update' 
                               ? 'bg-green-100 text-green-800 text-center text-sm border border-green-200'
                             : message.type === 'rating_request'
                               ? 'bg-yellow-100 text-yellow-800 text-center text-sm border border-yellow-200'
                             : message.isFromMe
-                              ? 'bg-blue-500 text-white max-w-xs lg:max-w-md'
-                              : 'bg-slate-200 text-slate-800 max-w-xs lg:max-w-md'
+                              ? 'bg-blue-500 text-white max-w-[85%] md:max-w-xs lg:max-w-md'
+                              : 'bg-slate-200 text-slate-800 max-w-[85%] md:max-w-xs lg:max-w-md'
                           }`}
                         >
                           {message.type === 'status_update' && (
@@ -311,10 +374,10 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
 
                 {/* Rating UI */}
                 {showRating && (
-                  <div className="p-4 border-t bg-blue-50">
+                  <div className="p-3 md:p-4 border-t bg-blue-50">
                     <div className="text-center">
-                      <h4 className="font-medium text-slate-800 mb-2">Rate your experience</h4>
-                      <p className="text-sm text-slate-600 mb-3">How was your transaction?</p>
+                      <h4 className="font-medium text-slate-800 mb-2 text-sm md:text-base">Rate your experience</h4>
+                      <p className="text-xs md:text-sm text-slate-600 mb-3">How was your transaction?</p>
                       <div className="flex justify-center gap-1 mb-3">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Button
@@ -325,7 +388,7 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                             className="p-1"
                           >
                             <Star
-                              className={`h-6 w-6 ${
+                              className={`h-5 w-5 md:h-6 md:w-6 ${
                                 star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300'
                               }`}
                             />
@@ -337,6 +400,7 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                           size="sm"
                           variant="outline"
                           onClick={() => setShowRating(false)}
+                          className="text-xs md:text-sm"
                         >
                           Skip
                         </Button>
@@ -344,6 +408,7 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                           size="sm"
                           onClick={handleRatingSubmit}
                           disabled={rating === 0}
+                          className="text-xs md:text-sm"
                         >
                           Submit Rating
                         </Button>
@@ -353,16 +418,16 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                 )}
 
                 {/* Message Input */}
-                <div className="p-4 border-t bg-white">
+                <div className="p-3 md:p-4 border-t bg-white">
                   <div className="flex gap-2">
                     <Input
                       value={newMessage}
                       onChange={(e) => setNewMessage(e.target.value)}
                       placeholder="Type a message..."
                       onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-                      className="flex-1"
+                      className="flex-1 text-sm md:text-base"
                     />
-                    <Button onClick={handleSendMessage} size="sm">
+                    <Button onClick={handleSendMessage} size="sm" className="px-2 md:px-3">
                       <Send className="h-4 w-4" />
                     </Button>
                   </div>
@@ -382,44 +447,6 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
               </div>
             )}
             
-            {/* Mobile conversation list */}
-            <div className="md:hidden w-full bg-slate-50 border-t">
-              <ScrollArea className="h-32">
-                <div className="p-2">
-                  <div className="flex gap-2 overflow-x-auto">
-                    {conversations.map(conversation => (
-                      <div
-                        key={conversation.id}
-                        className={`flex-shrink-0 p-2 rounded-lg cursor-pointer transition-colors ${
-                          selectedConversation === conversation.id
-                            ? 'bg-blue-100 border-blue-300'
-                            : 'bg-white hover:bg-slate-100'
-                        }`}
-                        onClick={() => setSelectedConversation(conversation.id)}
-                      >
-                        <div className="flex items-center gap-2 w-32">
-                          <img
-                            src={conversation.participantAvatar}
-                            alt={conversation.participantName}
-                            className="w-8 h-8 rounded-full"
-                          />
-                          <div className="flex-1 min-w-0">
-                            <p className="font-medium text-slate-800 truncate text-xs">
-                              {conversation.participantName}
-                            </p>
-                            {conversation.unreadCount && conversation.unreadCount > 0 && (
-                              <span className="bg-blue-500 text-white text-xs px-1 py-0.5 rounded-full">
-                                {conversation.unreadCount}
-                              </span>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </ScrollArea>
-            </div>
           </div>
         </div>
       </DialogContent>
