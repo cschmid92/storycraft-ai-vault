@@ -49,12 +49,15 @@ export class ConversationService {
       user1Id: 999, // Current user
       user2Id: seller.id,
       bookId: bookForSale.bookId,
+      bookForSaleId: bookForSale.id,
+      status: bookForSale.status,
       updatedAt: new Date(),
       participantName: `${seller.firstName} ${seller.lastName}`,
       participantAvatar: seller.avatar,
       lastMessage: initialMessage,
       lastMessageTime: new Date(),
-      unreadCount: 0
+      unreadCount: 0,
+      bookForSale
     };
 
     this.conversations.push(newConversation);
@@ -65,12 +68,14 @@ export class ConversationService {
     return newConversation;
   }
 
-  static addMessage(conversationId: number, senderId: number, content: string): Message {
+  static addMessage(conversationId: number, senderId: number, content: string, type: 'text' | 'status_update' | 'rating_request' = 'text', metadata?: any): Message {
     const newMessage: Message = {
       id: this.messages.length + 1,
       conversationId,
       senderId,
       content,
+      type,
+      metadata,
       createdAt: new Date(),
       seen: false,
       senderName: senderId === 999 ? "You" : "Seller",
@@ -84,9 +89,29 @@ export class ConversationService {
     if (conversation) {
       conversation.lastMessageId = newMessage.id;
       conversation.updatedAt = new Date();
+      
+      // Update conversation status if it's a status update
+      if (type === 'status_update' && metadata?.status) {
+        conversation.status = metadata.status;
+      }
     }
 
     return newMessage;
+  }
+
+  static updateBookStatus(conversationId: number, status: 'Available' | 'Sold' | 'Picked', senderId: number): Message {
+    const statusMessage = status === 'Picked' ? 'Book marked as picked up' : `Book marked as ${status.toLowerCase()}`;
+    return this.addMessage(conversationId, senderId, statusMessage, 'status_update', { status });
+  }
+
+  static requestRating(conversationId: number, senderId: number, ratedUserId: number): Message {
+    const ratingMessage = 'Please rate your experience with this transaction';
+    return this.addMessage(conversationId, senderId, ratingMessage, 'rating_request', { ratedUserId });
+  }
+
+  static submitRating(conversationId: number, senderId: number, rating: number, ratedUserId: number): Message {
+    const ratingMessage = `Rated ${rating} stars`;
+    return this.addMessage(conversationId, senderId, ratingMessage, 'text', { rating, ratedUserId });
   }
 
   static markMessagesAsSeen(conversationId: number): void {

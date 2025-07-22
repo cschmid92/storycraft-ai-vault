@@ -122,14 +122,17 @@ export interface Conversation extends BaseEntity {
   user1Id: number;
   user2Id: number;
   bookId: number;
+  bookForSaleId?: number;
   lastMessageId?: number;
   updatedAt: Date;
+  status?: BookForSaleStatus;
   // Extended properties for UI
   participantName?: string;
   participantAvatar?: string;
   lastMessage?: string;
   lastMessageTime?: Date;
   unreadCount?: number;
+  bookForSale?: BookForSale;
 }
 
 // Message entity
@@ -139,6 +142,12 @@ export interface Message extends BaseEntity {
   content: string;
   createdAt: Date;
   seen: boolean;
+  type?: 'text' | 'status_update' | 'rating_request';
+  metadata?: {
+    status?: BookForSaleStatus;
+    rating?: number;
+    ratedUserId?: number;
+  };
   // Extended properties for UI
   senderName?: string;
   isFromMe?: boolean;

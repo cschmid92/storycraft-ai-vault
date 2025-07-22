@@ -1,11 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { Send, User } from 'lucide-react';
+import { Send, User, Package, Star } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Conversation, Message } from '../types/entities';
+import { Badge } from "@/components/ui/badge";
+import { Conversation, Message, BookForSaleStatus } from '../types/entities';
 import { ConversationService } from '../services/conversationService';
+import { useBooksForSale } from '../hooks/useBooksForSale';
+import { useUserRatings } from '../hooks/useUserRatings';
 
 interface MessengerModalProps {
   isOpen: boolean;
@@ -18,6 +21,11 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
   const [newMessage, setNewMessage] = useState('');
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [showRating, setShowRating] = useState(false);
+  const [rating, setRating] = useState(0);
+  
+  const { updateBookForSaleStatus } = useBooksForSale();
+  const { rateBook } = useUserRatings();
 
   useEffect(() => {
     if (isOpen) {
@@ -57,6 +65,42 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
     loadMessages(selectedConversation);
     loadConversations(); // Refresh to update last message
     setNewMessage('');
+  };
+
+  const handleStatusUpdate = (status: BookForSaleStatus) => {
+    if (!selectedConversation || !currentConversation?.bookForSaleId) return;
+
+    // Update status in conversation service
+    ConversationService.updateBookStatus(selectedConversation, status, 999);
+    
+    // Update book for sale status
+    updateBookForSaleStatus(currentConversation.bookForSaleId, status);
+    
+    // If marking as picked, show rating option
+    if (status === 'Picked') {
+      setShowRating(true);
+    }
+    
+    loadMessages(selectedConversation);
+    loadConversations();
+  };
+
+  const handleRatingSubmit = () => {
+    if (!selectedConversation || !currentConversation?.bookForSale || rating === 0) return;
+
+    // Submit rating
+    const ratedUserId = currentConversation.user2Id === 999 ? currentConversation.user1Id : currentConversation.user2Id;
+    ConversationService.submitRating(selectedConversation, 999, rating, ratedUserId);
+    
+    // Save rating to user ratings
+    if (currentConversation.bookForSale.book) {
+      rateBook(currentConversation.bookForSale.book.id, rating);
+    }
+    
+    setShowRating(false);
+    setRating(0);
+    loadMessages(selectedConversation);
+    loadConversations();
   };
 
   const formatTime = (date: Date) => {
@@ -137,15 +181,49 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
               <>
                 {/* Conversation Header */}
                 <div className="p-4 border-b bg-white">
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={currentConversation?.participantAvatar}
-                      alt={currentConversation?.participantName}
-                      className="w-8 h-8 rounded-full"
-                    />
-                    <h4 className="font-medium text-slate-800">
-                      {currentConversation?.participantName}
-                    </h4>
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={currentConversation?.participantAvatar}
+                        alt={currentConversation?.participantName}
+                        className="w-8 h-8 rounded-full"
+                      />
+                      <div>
+                        <h4 className="font-medium text-slate-800">
+                          {currentConversation?.participantName}
+                        </h4>
+                        {currentConversation?.bookForSale?.book && (
+                          <p className="text-sm text-slate-600">
+                            {currentConversation.bookForSale.book.title}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    
+                    {/* Status Controls */}
+                    <div className="flex items-center gap-2">
+                      {currentConversation?.status && (
+                        <Badge variant={currentConversation.status === 'Available' ? 'secondary' : 
+                                      currentConversation.status === 'Picked' ? 'default' : 'destructive'}>
+                          {currentConversation.status}
+                        </Badge>
+                      )}
+                      
+                      {/* Status Update Buttons (only show if user is the buyer and book is available) */}
+                      {currentConversation?.status === 'Available' && currentConversation?.user1Id === 999 && (
+                        <div className="flex gap-1">
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => handleStatusUpdate('Picked')}
+                            className="text-xs"
+                          >
+                            <Package className="h-3 w-3 mr-1" />
+                            Mark as Picked
+                          </Button>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
 
@@ -155,18 +233,60 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                     {messages.map(message => (
                       <div
                         key={message.id}
-                        className={`flex ${message.isFromMe ? 'justify-end' : 'justify-start'}`}
+                        className={`flex ${
+                          message.type === 'status_update' ? 'justify-center' : 
+                          message.isFromMe ? 'justify-end' : 'justify-start'
+                        }`}
                       >
                         <div
-                          className={`max-w-xs lg:max-w-md px-4 py-2 rounded-lg ${
-                            message.isFromMe
-                              ? 'bg-blue-500 text-white'
-                              : 'bg-slate-200 text-slate-800'
+                          className={`px-4 py-2 rounded-lg ${
+                            message.type === 'status_update' 
+                              ? 'bg-green-100 text-green-800 text-center text-sm border border-green-200'
+                            : message.type === 'rating_request'
+                              ? 'bg-yellow-100 text-yellow-800 text-center text-sm border border-yellow-200'
+                            : message.isFromMe
+                              ? 'bg-blue-500 text-white max-w-xs lg:max-w-md'
+                              : 'bg-slate-200 text-slate-800 max-w-xs lg:max-w-md'
                           }`}
                         >
-                          <p className="text-sm">{message.content}</p>
+                          {message.type === 'status_update' && (
+                            <div className="flex items-center justify-center gap-2">
+                              <Package className="h-4 w-4" />
+                              <p>{message.content}</p>
+                            </div>
+                          )}
+                          
+                          {message.type === 'rating_request' && (
+                            <div className="flex items-center justify-center gap-2">
+                              <Star className="h-4 w-4" />
+                              <p>{message.content}</p>
+                            </div>
+                          )}
+                          
+                          {!message.type || message.type === 'text' && (
+                            <>
+                              <p className="text-sm">{message.content}</p>
+                              {message.metadata?.rating && (
+                                <div className="flex items-center gap-1 mt-1">
+                                  {[...Array(5)].map((_, i) => (
+                                    <Star
+                                      key={i}
+                                      className={`h-3 w-3 ${
+                                        i < message.metadata.rating 
+                                          ? 'fill-yellow-400 text-yellow-400' 
+                                          : 'text-slate-300'
+                                      }`}
+                                    />
+                                  ))}
+                                </div>
+                              )}
+                            </>
+                          )}
+                          
                           <p className={`text-xs mt-1 ${
-                            message.isFromMe ? 'text-blue-100' : 'text-slate-500'
+                            message.type === 'status_update' || message.type === 'rating_request'
+                              ? 'text-slate-500'
+                            : message.isFromMe ? 'text-blue-100' : 'text-slate-500'
                           }`}>
                             {formatTime(message.createdAt)}
                           </p>
@@ -175,6 +295,49 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                     ))}
                   </div>
                 </ScrollArea>
+
+                {/* Rating UI */}
+                {showRating && (
+                  <div className="p-4 border-t bg-blue-50">
+                    <div className="text-center">
+                      <h4 className="font-medium text-slate-800 mb-2">Rate your experience</h4>
+                      <p className="text-sm text-slate-600 mb-3">How was your transaction?</p>
+                      <div className="flex justify-center gap-1 mb-3">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <Button
+                            key={star}
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setRating(star)}
+                            className="p-1"
+                          >
+                            <Star
+                              className={`h-6 w-6 ${
+                                star <= rating ? 'fill-yellow-400 text-yellow-400' : 'text-slate-300'
+                              }`}
+                            />
+                          </Button>
+                        ))}
+                      </div>
+                      <div className="flex gap-2 justify-center">
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => setShowRating(false)}
+                        >
+                          Skip
+                        </Button>
+                        <Button
+                          size="sm"
+                          onClick={handleRatingSubmit}
+                          disabled={rating === 0}
+                        >
+                          Submit Rating
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Message Input */}
                 <div className="p-4 border-t bg-white">
