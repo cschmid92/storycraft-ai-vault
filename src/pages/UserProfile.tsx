@@ -9,6 +9,7 @@ import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
 import { useBooksForSale } from '../hooks/useBooksForSale';
+import { mockUsers } from '../data/mockData';
 import { Book, Collection } from '../types/entities';
 
 const UserProfile = () => {
@@ -24,14 +25,18 @@ const UserProfile = () => {
   // For demo purposes, use current user (999) if no userId provided
   const targetUserId = userId ? parseInt(userId) : 999;
   
+  // Get user data from mock users
+  const user = mockUsers.find(u => u.id === targetUserId);
+  const isCurrentUser = targetUserId === 999;
+  
   // Get user's books for sale
   const userBooksForSale = booksForSale.filter(sale => 
     sale.sellerId === targetUserId && sale.status === 'Available'
   );
   
-  // Calculate user's average rating (mock data for now)
-  const averageRating = 4.2;
-  const totalRatings = 15;
+  // Use actual user rating or fallback for current user
+  const userRating = user?.rating || 4.2;
+  const totalSales = user?.totalSales || 15;
   
   const booksReadCount = getBooksReadCount();
 
@@ -58,6 +63,15 @@ const UserProfile = () => {
       />
     ));
   };
+
+  // Get display name and avatar
+  const displayName = user 
+    ? `${user.firstName} ${user.lastName}` 
+    : isCurrentUser 
+    ? "My Profile" 
+    : `User ${targetUserId}`;
+    
+  const displayAvatar = user?.avatar;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
@@ -106,17 +120,25 @@ const UserProfile = () => {
           {/* User Rating Section */}
           <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 p-6 mb-6">
             <div className="flex items-center gap-4 mb-4">
-              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
-                <UserIcon className="h-8 w-8" />
-              </div>
+              {displayAvatar ? (
+                <img 
+                  src={displayAvatar} 
+                  alt={displayName}
+                  className="w-16 h-16 rounded-full object-cover border-2 border-white shadow-lg"
+                />
+              ) : (
+                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                  <UserIcon className="h-8 w-8" />
+                </div>
+              )}
               <div>
-                <h1 className="text-2xl font-bold text-slate-800">User {targetUserId}</h1>
+                <h1 className="text-2xl font-bold text-slate-800">{displayName}</h1>
                 <div className="flex items-center gap-2 mt-1">
                   <div className="flex items-center">
-                    {renderStars(averageRating)}
+                    {renderStars(userRating)}
                   </div>
                   <span className="text-slate-600 text-sm">
-                    {averageRating} ({totalRatings} ratings)
+                    {userRating} ({totalSales} sales)
                   </span>
                 </div>
               </div>
