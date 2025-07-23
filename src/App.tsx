@@ -8,7 +8,6 @@ import Collections from "./pages/Collections";
 import BuyUsedBooks from "./pages/BuyUsedBooks";
 import AdvancedSearch from "./pages/AdvancedSearch";
 import About from "./pages/About";
-import UserProfile from "./pages/UserProfile";
 
 const App = () => (
   <Routes>
@@ -19,8 +18,6 @@ const App = () => (
     <Route path="/buy-used-books" element={<BuyUsedBooks />} />
     <Route path="/advanced-search" element={<AdvancedSearch />} />
     <Route path="/about" element={<About />} />
-    <Route path="/user/:userId" element={<UserProfile />} />
-    <Route path="/profile" element={<UserProfile />} />
     {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
     <Route path="*" element={<NotFound />} />
   </Routes>
