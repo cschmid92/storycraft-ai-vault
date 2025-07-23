@@ -1,5 +1,6 @@
 import React from 'react';
 import { Star, MapPin, User } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { BookForSale } from '../types/entities';
 
@@ -11,7 +12,14 @@ interface UsedBookCardProps {
 
 const UsedBookCard = ({ bookForSale, onBookClick, onContactSeller }: UsedBookCardProps) => {
   const book = bookForSale.book;
+  const navigate = useNavigate();
+  
   if (!book) return null;
+
+  const handleSellerClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    navigate(`/user/${bookForSale.sellerId}`);
+  };
 
   return (
     <div 
@@ -52,7 +60,10 @@ const UsedBookCard = ({ bookForSale, onBookClick, onContactSeller }: UsedBookCar
         
         {/* Seller Info */}
         {bookForSale.seller && (
-          <div className="flex items-center space-x-2 mt-3 p-2 bg-slate-50 rounded-lg">
+          <div 
+            className="flex items-center space-x-2 mt-3 p-2 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100 transition-colors"
+            onClick={handleSellerClick}
+          >
             <img 
               src={bookForSale.seller.avatar} 
               alt={`${bookForSale.seller.firstName} ${bookForSale.seller.lastName}`}

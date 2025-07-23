@@ -1,15 +1,25 @@
-import React from 'react';
-import { useParams } from 'react-router-dom';
-import { Star, Package } from 'lucide-react';
-import AppLayout from '../components/layout/AppLayout';
+import React, { useState } from 'react';
+import { useParams, Link } from 'react-router-dom';
+import { Star, Package, User as UserIcon, ArrowLeft } from 'lucide-react';
+import { Button } from "@/components/ui/button";
+import UnifiedHeader from '../components/layout/UnifiedHeader';
+import AppSidebar from '../components/layout/AppSidebar';
 import UsedBookCard from '../components/UsedBookCard';
+import { useCollections } from '../hooks/useCollections';
+import { useBooks } from '../hooks/useBooks';
+import { useBooksRead } from '../hooks/useBooksRead';
 import { useBooksForSale } from '../hooks/useBooksForSale';
-import { useUserRatings } from '../hooks/useUserRatings';
+import { Book, Collection } from '../types/entities';
 
 const UserProfile = () => {
   const { userId } = useParams<{ userId: string }>();
+  const { books } = useBooks();
+  const { collections } = useCollections();
+  const { getBooksReadCount } = useBooksRead();
   const { booksForSale } = useBooksForSale();
-  const { userRatings } = useUserRatings();
+  
+  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   
   // For demo purposes, use current user (999) if no userId provided
   const targetUserId = userId ? parseInt(userId) : 999;
@@ -22,6 +32,17 @@ const UserProfile = () => {
   // Calculate user's average rating (mock data for now)
   const averageRating = 4.2;
   const totalRatings = 15;
+  
+  const booksReadCount = getBooksReadCount();
+
+  const handleSelectCollection = (collection: Collection | null) => {
+    setSelectedCollection(collection);
+    setIsSidebarOpen(false);
+  };
+
+  const handleBookClick = (book: Book) => {
+    // Handle book click if needed
+  };
   
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
@@ -39,60 +60,99 @@ const UserProfile = () => {
   };
 
   return (
-    <AppLayout 
-      headerTitle="User Profile"
-      headerSubtitle="View seller information"
-    >
-      <div className="max-w-6xl mx-auto p-4 md:p-6">
-        {/* User Rating Section */}
-        <div className="bg-white/80 backdrop-blur-md rounded-xl p-6 border border-slate-200 mb-6">
-          <div className="flex items-center gap-4 mb-4">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
-              U{targetUserId}
-            </div>
-            <div>
-              <h1 className="text-2xl font-bold text-slate-800">User {targetUserId}</h1>
-              <div className="flex items-center gap-2 mt-1">
-                <div className="flex items-center">
-                  {renderStars(averageRating)}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
+      <UnifiedHeader 
+        showMobileMenu={true}
+        onMobileMenuClick={() => setIsSidebarOpen(true)}
+      />
+
+      <div className="flex">
+        {/* Sidebar - Mobile overlay */}
+        {isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-50 md:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+        
+        {/* Sidebar */}
+        <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-50 md:z-auto`}>
+          <AppSidebar 
+            collections={collections}
+            selectedCollection={selectedCollection}
+            onSelectCollection={handleSelectCollection}
+            onOpenCollectionModal={() => {}}
+            books={books}
+            onBookClick={handleBookClick}
+            booksReadCount={booksReadCount}
+          />
+        </div>
+
+        {/* Main Content */}
+        <main className="flex-1 p-4 md:p-6">
+          {/* Back button and title */}
+          <div className="flex items-center mb-8">
+            <Link to="/">
+              <Button variant="ghost" size="sm" className="mr-4">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back
+              </Button>
+            </Link>
+            <h2 className="text-2xl md:text-3xl font-bold text-slate-800">
+              User Profile
+            </h2>
+          </div>
+
+          {/* User Rating Section */}
+          <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 p-6 mb-6">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
+                <UserIcon className="h-8 w-8" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-slate-800">User {targetUserId}</h1>
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="flex items-center">
+                    {renderStars(averageRating)}
+                  </div>
+                  <span className="text-slate-600 text-sm">
+                    {averageRating} ({totalRatings} ratings)
+                  </span>
                 </div>
-                <span className="text-slate-600 text-sm">
-                  {averageRating} ({totalRatings} ratings)
-                </span>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Books for Sale Section */}
-        <div className="bg-white/80 backdrop-blur-md rounded-xl p-6 border border-slate-200">
-          <div className="flex items-center gap-3 mb-6">
-            <Package className="h-6 w-6 text-blue-600" />
-            <h2 className="text-xl font-bold text-slate-800">
-              Books for Sale ({userBooksForSale.length})
-            </h2>
+          {/* Books for Sale Section */}
+          <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <Package className="h-6 w-6 text-blue-600" />
+              <h2 className="text-xl font-bold text-slate-800">
+                Books for Sale ({userBooksForSale.length})
+              </h2>
+            </div>
+            
+            {userBooksForSale.length === 0 ? (
+              <div className="text-center py-12">
+                <Package className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                <p className="text-slate-500">No books for sale</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {userBooksForSale.map((sale) => (
+                  <UsedBookCard
+                    key={sale.id}
+                    bookForSale={sale}
+                    onBookClick={() => {}}
+                    onContactSeller={() => {}}
+                  />
+                ))}
+              </div>
+            )}
           </div>
-          
-          {userBooksForSale.length === 0 ? (
-            <div className="text-center py-12">
-              <Package className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-              <p className="text-slate-500">No books for sale</p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {userBooksForSale.map((sale) => (
-                <UsedBookCard
-                  key={sale.id}
-                  bookForSale={sale}
-                  onBookClick={() => {}}
-                  onContactSeller={() => {}}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+        </main>
       </div>
-    </AppLayout>
+    </div>
   );
 };
 
