@@ -1,97 +1,93 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import { Star, User } from 'lucide-react';
+import { Star, Package } from 'lucide-react';
 import AppLayout from '../components/layout/AppLayout';
-import { useBooksForSale } from '../hooks/useBooksForSale';
-import { booksForSale } from '../data/mockData';
 import UsedBookCard from '../components/UsedBookCard';
-import { BookForSale } from '../types/entities';
+import { useBooksForSale } from '../hooks/useBooksForSale';
+import { useUserRatings } from '../hooks/useUserRatings';
 
 const UserProfile = () => {
-  const { userId } = useParams();
-  const { booksForSale: allBooksForSale } = useBooksForSale();
+  const { userId } = useParams<{ userId: string }>();
+  const { booksForSale } = useBooksForSale();
+  const { userRatings } = useUserRatings();
   
-  // For demo purposes, we'll show a mock user profile
-  // In a real app, you'd fetch user data based on userId
-  const user = {
-    id: 999,
-    firstName: 'John',
-    lastName: 'Doe',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-    rating: 4.8,
-    totalSales: 15
-  };
-
-  // Get books for sale by this user
-  const userBooksForSale = userId 
-    ? allBooksForSale.filter(sale => sale.sellerId === parseInt(userId))
-    : booksForSale.filter(sale => sale.seller?.id === user.id);
-
-  const handleBookClick = (bookForSale: BookForSale) => {
-    // Handle book click - could open detail modal
-    console.log('Book clicked:', bookForSale);
-  };
-
-  const handleContactSeller = (bookForSale: BookForSale) => {
-    // Handle contact seller
-    console.log('Contact seller:', bookForSale);
+  // For demo purposes, use current user (999) if no userId provided
+  const targetUserId = userId ? parseInt(userId) : 999;
+  
+  // Get user's books for sale
+  const userBooksForSale = booksForSale.filter(sale => 
+    sale.sellerId === targetUserId && sale.status === 'Available'
+  );
+  
+  // Calculate user's average rating (mock data for now)
+  const averageRating = 4.2;
+  const totalRatings = 15;
+  
+  const renderStars = (rating: number) => {
+    return Array.from({ length: 5 }, (_, i) => (
+      <Star
+        key={i}
+        className={`h-4 w-4 ${
+          i < Math.floor(rating) 
+            ? 'text-yellow-400 fill-yellow-400' 
+            : i < rating 
+            ? 'text-yellow-400 fill-yellow-400/50' 
+            : 'text-slate-300'
+        }`}
+      />
+    ));
   };
 
   return (
-    <AppLayout headerTitle="User Profile" showSidebar={false}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* User Profile Header */}
-        <div className="bg-white/80 backdrop-blur-md rounded-xl border border-slate-200 p-6 mb-8">
-          <div className="flex items-center space-x-4">
-            <img 
-              src={user.avatar} 
-              alt={`${user.firstName} ${user.lastName}`}
-              className="w-20 h-20 rounded-full object-cover border-4 border-white shadow-lg"
-            />
-            <div className="flex-1">
-              <h1 className="text-2xl font-bold text-slate-800">
-                {user.firstName} {user.lastName}
-              </h1>
-              <div className="flex items-center space-x-4 mt-2">
-                <div className="flex items-center space-x-1">
-                  <Star className="h-5 w-5 text-yellow-500 fill-yellow-500" />
-                  <span className="text-lg font-semibold text-slate-700">{user.rating}</span>
-                  <span className="text-slate-500">({user.totalSales} sales)</span>
-                </div>
-              </div>
+    <AppLayout 
+      headerTitle="User Profile"
+      headerSubtitle="View seller information"
+    >
+      <div className="max-w-6xl mx-auto p-4 md:p-6">
+        {/* User Rating Section */}
+        <div className="bg-white/80 backdrop-blur-md rounded-xl p-6 border border-slate-200 mb-6">
+          <div className="flex items-center gap-4 mb-4">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white text-xl font-bold">
+              U{targetUserId}
             </div>
-            <div className="text-right">
-              <div className="flex items-center justify-end space-x-1 text-slate-500">
-                <User className="h-4 w-4" />
-                <span className="text-sm">Seller Profile</span>
+            <div>
+              <h1 className="text-2xl font-bold text-slate-800">User {targetUserId}</h1>
+              <div className="flex items-center gap-2 mt-1">
+                <div className="flex items-center">
+                  {renderStars(averageRating)}
+                </div>
+                <span className="text-slate-600 text-sm">
+                  {averageRating} ({totalRatings} ratings)
+                </span>
               </div>
             </div>
           </div>
         </div>
 
         {/* Books for Sale Section */}
-        <div className="mb-8">
-          <h2 className="text-xl font-bold text-slate-800 mb-6">
-            Books for Sale ({userBooksForSale.length})
-          </h2>
+        <div className="bg-white/80 backdrop-blur-md rounded-xl p-6 border border-slate-200">
+          <div className="flex items-center gap-3 mb-6">
+            <Package className="h-6 w-6 text-blue-600" />
+            <h2 className="text-xl font-bold text-slate-800">
+              Books for Sale ({userBooksForSale.length})
+            </h2>
+          </div>
           
-          {userBooksForSale.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6">
-              {userBooksForSale.map((bookForSale) => (
-                <UsedBookCard
-                  key={bookForSale.id}
-                  bookForSale={bookForSale}
-                  onBookClick={handleBookClick}
-                  onContactSeller={handleContactSeller}
-                />
-              ))}
+          {userBooksForSale.length === 0 ? (
+            <div className="text-center py-12">
+              <Package className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+              <p className="text-slate-500">No books for sale</p>
             </div>
           ) : (
-            <div className="text-center py-12">
-              <div className="bg-white/60 backdrop-blur-sm rounded-xl border border-slate-200 p-8">
-                <User className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                <p className="text-slate-600">No books for sale at the moment</p>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {userBooksForSale.map((sale) => (
+                <UsedBookCard
+                  key={sale.id}
+                  bookForSale={sale}
+                  onBookClick={() => {}}
+                  onContactSeller={() => {}}
+                />
+              ))}
             </div>
           )}
         </div>
