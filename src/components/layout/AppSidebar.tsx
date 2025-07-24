@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { Coins, ShoppingCart, Info, Plus, Facebook, Instagram, Linkedin, Twitter } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Book, Collection } from '../../types/entities';
 import { useFavorites } from '../../hooks/useFavorites';
@@ -28,6 +28,7 @@ const AppSidebar = ({
   booksReadCount,
   onDeleteCollection
 }: AppSidebarProps) => {
+  const navigate = useNavigate();
   const { getMyBooksForSale } = useBooksForSale();
   const { getFavoriteBooks } = useFavorites();
   
@@ -103,7 +104,7 @@ const AppSidebar = ({
             {standardCollections.map((collection) => (
               <button
                 key={collection.id}
-                onClick={() => onSelectCollection(collection as any)}
+                onClick={() => navigate(`/collections/${collection.id}`)}
                 className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
                   String(selectedCollection?.id) === String(collection.id)
                     ? 'bg-blue-100 text-blue-800 border border-blue-200' 
@@ -120,7 +121,7 @@ const AppSidebar = ({
             {collections.map((collection) => (
               <button
                 key={collection.id}
-                onClick={() => onSelectCollection(collection)}
+                onClick={() => navigate(`/collections/${collection.id}`)}
                 className={`w-full flex items-center space-x-3 px-3 py-2 rounded-lg transition-colors ${
                   String(selectedCollection?.id) === String(collection.id)
                     ? 'bg-blue-100 text-blue-800 border border-blue-200' 
