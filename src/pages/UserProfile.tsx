@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import UnifiedHeader from '../components/layout/UnifiedHeader';
 import AppSidebar from '../components/layout/AppSidebar';
 import UsedBookCard from '../components/UsedBookCard';
+import CollectionModal from '../components/CollectionModal';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
@@ -15,12 +16,13 @@ import { Book, Collection } from '../types/entities';
 const UserProfile = () => {
   const { userId } = useParams<{ userId: string }>();
   const { books } = useBooks();
-  const { collections } = useCollections();
+  const { collections, addCollection } = useCollections();
   const { getBooksReadCount } = useBooksRead();
   const { booksForSale } = useBooksForSale();
   
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   
   // For demo purposes, use current user (999) if no userId provided
   const targetUserId = userId ? parseInt(userId) : 999;
@@ -47,6 +49,11 @@ const UserProfile = () => {
 
   const handleBookClick = (book: Book) => {
     // Handle book click if needed
+  };
+
+  const handleCreateCollection = (name: string, color: string, description?: string) => {
+    addCollection(name, color, description);
+    setIsCollectionModalOpen(false);
   };
   
   const renderStars = (rating: number) => {
@@ -95,7 +102,7 @@ const UserProfile = () => {
             collections={collections}
             selectedCollection={selectedCollection}
             onSelectCollection={handleSelectCollection}
-            onOpenCollectionModal={() => {}}
+            onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
             books={books}
             onBookClick={handleBookClick}
             booksReadCount={booksReadCount}
@@ -174,6 +181,13 @@ const UserProfile = () => {
           </div>
         </main>
       </div>
+
+      {/* Collection Modal */}
+      <CollectionModal 
+        isOpen={isCollectionModalOpen}
+        onClose={() => setIsCollectionModalOpen(false)}
+        onCreateCollection={handleCreateCollection}
+      />
     </div>
   );
 };
