@@ -135,7 +135,11 @@ const AppSidebar = ({
             
             {/* New Collection Button */}
             <Button 
-              onClick={onOpenCollectionModal}
+              onClick={() => {
+                console.log('AppSidebar: New Collection button clicked');
+                onOpenCollectionModal();
+                console.log('AppSidebar: onOpenCollectionModal called');
+              }}
               variant="outline"
               className="w-full justify-start text-slate-600 border-dashed border-slate-300 hover:bg-slate-50 mt-2"
             >

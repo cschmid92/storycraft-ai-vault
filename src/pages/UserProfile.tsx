@@ -87,6 +87,9 @@ const UserProfile = () => {
     
   const displayAvatar = user?.avatar;
 
+  // Debug logging
+  console.log('UserProfile render: isCollectionModalOpen =', isCollectionModalOpen);
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
       <UnifiedHeader 
@@ -190,7 +193,7 @@ const UserProfile = () => {
       </div>
 
       {/* Collection Modal */}
-      <CollectionModal 
+      <CollectionModal
         isOpen={isCollectionModalOpen}
         onClose={() => {
           console.log('Closing collection modal');
