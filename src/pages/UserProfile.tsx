@@ -32,15 +32,27 @@ const UserProfile = () => {
   const isCurrentUser = targetUserId === 999;
   
   // Get user's books for sale
-  const userBooksForSale = booksForSale.filter(sale => 
-    sale.sellerId === targetUserId && sale.status === 'Available'
-  );
+  console.log('=== UserProfile Debug START ===');
+  console.log('targetUserId:', targetUserId, 'type:', typeof targetUserId);
+  console.log('booksForSale total:', booksForSale.length);
   
-  console.log('UserProfile Debug:');
-  console.log('- targetUserId:', targetUserId);
-  console.log('- booksForSale.length:', booksForSale.length);
-  console.log('- userBooksForSale.length:', userBooksForSale.length);
-  console.log('- userBooksForSale:', userBooksForSale);
+  // Log all seller IDs to see what's available
+  const allSellerIds = booksForSale.map(sale => ({ 
+    id: sale.id, 
+    sellerId: sale.sellerId, 
+    type: typeof sale.sellerId,
+    status: sale.status 
+  }));
+  console.log('All books for sale seller IDs:', allSellerIds);
+  
+  const userBooksForSale = booksForSale.filter(sale => {
+    const matches = sale.sellerId === targetUserId && sale.status === 'Available';
+    console.log(`Book ${sale.id}: sellerId=${sale.sellerId} === targetUserId=${targetUserId}? ${sale.sellerId === targetUserId}, status=${sale.status}, matches=${matches}`);
+    return matches;
+  });
+  
+  console.log('userBooksForSale result:', userBooksForSale.length, userBooksForSale);
+  console.log('=== UserProfile Debug END ===');
   
   // Use actual user rating or fallback for current user
   const userRating = user?.rating || 4.2;
