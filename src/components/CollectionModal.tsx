@@ -52,16 +52,8 @@ const CollectionModal = ({
     }
   }, [editMode, initialName, initialColor, initialDescription, isOpen]);
 
-  console.log('CollectionModal render - isOpen:', isOpen);
-
-  if (!isOpen) {
-    console.log('CollectionModal not rendering - isOpen is false');
-    return null;
-  }
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('CollectionModal handleSubmit:', { name, selectedColor, description });
     if (name.trim()) {
       onCreateCollection(name.trim(), selectedColor, description.trim() || undefined);
       if (!editMode) {
@@ -73,7 +65,9 @@ const CollectionModal = ({
     }
   };
 
-  console.log('CollectionModal rendering modal');
+  if (!isOpen) {
+    return null;
+  }
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">

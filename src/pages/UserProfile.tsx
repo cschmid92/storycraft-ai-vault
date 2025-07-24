@@ -58,8 +58,9 @@ const UserProfile = () => {
   };
 
   const handleOpenCollectionModal = () => {
-    console.log('Opening collection modal');
+    console.log('Opening collection modal - current state:', isCollectionModalOpen);
     setIsCollectionModalOpen(true);
+    console.log('Setting modal state to true');
   };
   
   const renderStars = (rating: number) => {
