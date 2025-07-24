@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Star, Package, User as UserIcon, ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import BookCard from '../components/BookCard';
 import UnifiedHeader from '../components/layout/UnifiedHeader';
 import AppSidebar from '../components/layout/AppSidebar';
 import UsedBookCard from '../components/UsedBookCard';
@@ -91,33 +90,6 @@ const UserProfile = () => {
   // Debug logging
   console.log('UserProfile render: isCollectionModalOpen =', isCollectionModalOpen);
 
-  // Get books for selected collection
-  const getCollectionBooks = () => {
-    if (!selectedCollection) return [];
-    
-    if (String(selectedCollection.id) === 'favorites') {
-      // Handle favorites collection
-      return books.filter(book => {
-        // You might need to implement favorites logic here
-        return false; // Placeholder
-      });
-    } else if (String(selectedCollection.id) === 'books-read') {
-      // Handle books read collection
-      return books.filter(book => {
-        // You might need to implement books read logic here
-        return false; // Placeholder
-      });
-    } else {
-      // Handle user collections
-      const collection = collections.find(c => c.id === selectedCollection.id);
-      if (!collection?.bookIds) return [];
-      
-      return books.filter(book => collection.bookIds.includes(book.id));
-    }
-  };
-
-  const collectionBooks = getCollectionBooks();
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
       <UnifiedHeader 
@@ -190,81 +162,33 @@ const UserProfile = () => {
             </div>
           </div>
 
-          {/* Collection Content or Books for Sale Section */}
-          {selectedCollection ? (
-            <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <div className={`w-6 h-6 rounded-full ${selectedCollection.color}`} />
-                <h2 className="text-xl font-bold text-slate-800">
-                  {selectedCollection.name} ({collectionBooks.length})
-                </h2>
-                <Button 
-                  variant="outline" 
-                  size="sm" 
-                  onClick={() => setSelectedCollection(null)}
-                  className="ml-auto"
-                >
-                  Close Collection
-                </Button>
-              </div>
-              
-              {collectionBooks.length === 0 ? (
-                <div className="text-center py-12">
-                  <Package className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                  <p className="text-slate-500">No books in this collection</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {collectionBooks.map((book) => (
-                    <BookCard
-                      key={book.id}
-                      book={book}
-                      onBookClick={handleBookClick}
-                      onToggleFavorite={() => {}}
-                      onAddToCollection={() => {}}
-                      onAddToBooksRead={() => {}}
-                      showRemoveFromCollection={true}
-                      onRemoveFromCollection={(bookId) => {
-                        // Remove book from current collection
-                        const collection = collections.find(c => c.id === selectedCollection?.id);
-                        if (collection) {
-                          // You'll need to implement removeBookFromCollection function
-                          console.log('Remove book', bookId, 'from collection', collection.id);
-                        }
-                      }}
-                    />
-                  ))}
-                </div>
-              )}
+          {/* Books for Sale Section */}
+          <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 p-6">
+            <div className="flex items-center gap-3 mb-6">
+              <Package className="h-6 w-6 text-blue-600" />
+              <h2 className="text-xl font-bold text-slate-800">
+                Books for Sale ({userBooksForSale.length})
+              </h2>
             </div>
-          ) : (
-            <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 p-6">
-              <div className="flex items-center gap-3 mb-6">
-                <Package className="h-6 w-6 text-blue-600" />
-                <h2 className="text-xl font-bold text-slate-800">
-                  Books for Sale ({userBooksForSale.length})
-                </h2>
+            
+            {userBooksForSale.length === 0 ? (
+              <div className="text-center py-12">
+                <Package className="h-12 w-12 text-slate-400 mx-auto mb-4" />
+                <p className="text-slate-500">No books for sale</p>
               </div>
-              
-              {userBooksForSale.length === 0 ? (
-                <div className="text-center py-12">
-                  <Package className="h-12 w-12 text-slate-400 mx-auto mb-4" />
-                  <p className="text-slate-500">No books for sale</p>
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {userBooksForSale.map((sale) => (
-                    <UsedBookCard
-                      key={sale.id}
-                      bookForSale={sale}
-                      onBookClick={() => {}}
-                      onContactSeller={() => {}}
-                    />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {userBooksForSale.map((sale) => (
+                  <UsedBookCard
+                    key={sale.id}
+                    bookForSale={sale}
+                    onBookClick={() => {}}
+                    onContactSeller={() => {}}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
         </main>
       </div>
 
