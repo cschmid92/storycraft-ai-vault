@@ -9,11 +9,15 @@ const loadBooksForSale = (): BookForSale[] => {
   try {
     const stored = localStorage.getItem(BOOKS_FOR_SALE_STORAGE_KEY);
     if (stored) {
-      return JSON.parse(stored);
+      console.log('Loading books for sale from localStorage:', stored.length, 'characters');
+      const parsed = JSON.parse(stored);
+      console.log('Parsed books for sale:', parsed.length, 'items');
+      return parsed;
     }
   } catch (error) {
     console.error('Error loading books for sale from localStorage:', error);
   }
+  console.log('Using mock books for sale data:', mockBooksForSale.length, 'items');
   return mockBooksForSale;
 };
 
