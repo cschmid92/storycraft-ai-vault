@@ -218,6 +218,32 @@ export const booksForSale: BookForSale[] = [
     book: mockBooks.find(b => b.id === 3)
   },
   {
+    id: 205,
+    sellerId: 1,
+    bookId: 2, // To Kill a Mockingbird
+    price: 14.99,
+    currency: 'CHF',
+    condition: "Very Good",
+    location: "Downtown",
+    distance: 3.7,
+    status: 'Available' as const,
+    seller: mockUsers[0],
+    book: mockBooks.find(b => b.id === 2)
+  },
+  {
+    id: 206,
+    sellerId: 1,
+    bookId: 5, // The Catcher in the Rye
+    price: 11.50,
+    currency: 'CHF',
+    condition: "Good",
+    location: "Downtown",
+    distance: 3.7,
+    status: 'Available' as const,
+    seller: mockUsers[0],
+    book: mockBooks.find(b => b.id === 5)
+  },
+  {
     id: 202,
     sellerId: 2,
     bookId: 4, // Pride and Prejudice
