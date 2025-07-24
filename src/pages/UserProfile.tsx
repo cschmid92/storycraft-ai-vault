@@ -103,7 +103,7 @@ const UserProfile = () => {
         )}
         
         {/* Sidebar */}
-        <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-50 md:z-auto`}>
+        <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-40 md:z-auto`}>
           <AppSidebar 
             collections={collections}
             selectedCollection={selectedCollection}
