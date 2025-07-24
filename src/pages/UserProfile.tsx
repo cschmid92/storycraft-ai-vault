@@ -36,6 +36,12 @@ const UserProfile = () => {
     sale.sellerId === targetUserId && sale.status === 'Available'
   );
   
+  console.log('UserProfile Debug:');
+  console.log('- targetUserId:', targetUserId);
+  console.log('- booksForSale.length:', booksForSale.length);
+  console.log('- userBooksForSale.length:', userBooksForSale.length);
+  console.log('- userBooksForSale:', userBooksForSale);
+  
   // Use actual user rating or fallback for current user
   const userRating = user?.rating || 4.2;
   const totalSales = user?.totalSales || 15;

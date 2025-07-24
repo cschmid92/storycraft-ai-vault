@@ -270,6 +270,32 @@ export const booksForSale: BookForSale[] = [
     book: mockBooks.find(b => b.id === 1)
   },
   {
+    id: 207,
+    sellerId: 3,
+    bookId: 4, // Pride and Prejudice
+    price: 13.99,
+    currency: 'CHF',
+    condition: "Very Good",
+    location: "Midtown",
+    distance: 1.9,
+    status: 'Available' as const,
+    seller: mockUsers[2],
+    book: mockBooks.find(b => b.id === 4)
+  },
+  {
+    id: 208,
+    sellerId: 3,
+    bookId: 7, // The Lord of the Rings
+    price: 22.99,
+    currency: 'CHF',
+    condition: "Like New",
+    location: "Midtown",
+    distance: 1.9,
+    status: 'Available' as const,
+    seller: mockUsers[2],
+    book: mockBooks.find(b => b.id === 7)
+  },
+  {
     id: 204,
     sellerId: 4,
     bookId: 6, // Dune
