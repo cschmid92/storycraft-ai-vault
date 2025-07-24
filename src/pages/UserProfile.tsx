@@ -52,8 +52,14 @@ const UserProfile = () => {
   };
 
   const handleCreateCollection = (name: string, color: string, description?: string) => {
+    console.log('UserProfile handleCreateCollection:', { name, color, description });
     addCollection(name, color, description);
     setIsCollectionModalOpen(false);
+  };
+
+  const handleOpenCollectionModal = () => {
+    console.log('Opening collection modal');
+    setIsCollectionModalOpen(true);
   };
   
   const renderStars = (rating: number) => {
@@ -102,7 +108,7 @@ const UserProfile = () => {
             collections={collections}
             selectedCollection={selectedCollection}
             onSelectCollection={handleSelectCollection}
-            onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
+            onOpenCollectionModal={handleOpenCollectionModal}
             books={books}
             onBookClick={handleBookClick}
             booksReadCount={booksReadCount}
@@ -185,7 +191,10 @@ const UserProfile = () => {
       {/* Collection Modal */}
       <CollectionModal 
         isOpen={isCollectionModalOpen}
-        onClose={() => setIsCollectionModalOpen(false)}
+        onClose={() => {
+          console.log('Closing collection modal');
+          setIsCollectionModalOpen(false);
+        }}
         onCreateCollection={handleCreateCollection}
       />
     </div>

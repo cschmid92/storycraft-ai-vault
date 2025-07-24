@@ -40,6 +40,7 @@ const CollectionModal = ({
   const [description, setDescription] = useState('');
 
   useEffect(() => {
+    console.log('CollectionModal isOpen:', isOpen);
     if (editMode && isOpen) {
       setName(initialName);
       setSelectedColor(initialColor);
@@ -51,10 +52,16 @@ const CollectionModal = ({
     }
   }, [editMode, initialName, initialColor, initialDescription, isOpen]);
 
-  if (!isOpen) return null;
+  console.log('CollectionModal render - isOpen:', isOpen);
+
+  if (!isOpen) {
+    console.log('CollectionModal not rendering - isOpen is false');
+    return null;
+  }
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log('CollectionModal handleSubmit:', { name, selectedColor, description });
     if (name.trim()) {
       onCreateCollection(name.trim(), selectedColor, description.trim() || undefined);
       if (!editMode) {
@@ -66,26 +73,28 @@ const CollectionModal = ({
     }
   };
 
+  console.log('CollectionModal rendering modal');
+
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-      <div className="bg-white/10 backdrop-blur-md rounded-xl border border-white/20 p-6 w-full max-w-md">
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-[9999] p-4">
+      <div className="bg-white/90 backdrop-blur-md rounded-xl border border-white/20 p-6 w-full max-w-md shadow-2xl">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-white">
+          <h2 className="text-xl font-bold text-slate-800">
             {editMode ? 'Edit Collection' : 'Create New Collection'}
           </h2>
           <Button
             variant="outline"
             size="sm"
             onClick={onClose}
-            className="w-8 h-8 p-0 bg-white/10 border-white/20 hover:bg-white/20"
+            className="w-8 h-8 p-0 bg-white/10 border-slate-300 hover:bg-white/20"
           >
-            <X className="h-4 w-4 text-white" />
+            <X className="h-4 w-4 text-slate-700" />
           </Button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-blue-200 mb-2">
+            <label className="block text-sm font-medium text-slate-700 mb-2">
               Collection Name
             </label>
             <Input
@@ -93,26 +102,26 @@ const CollectionModal = ({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="Enter collection name..."
-              className="bg-white/10 border-white/20 text-white placeholder:text-blue-300 focus:ring-blue-500"
+              className="bg-white/80 border-slate-300 text-slate-800 placeholder:text-slate-400 focus:ring-blue-500"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-blue-200 mb-2">
+            <label className="block text-sm font-medium text-slate-700 mb-2">
               Description (optional)
             </label>
             <Textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Enter collection description..."
-              className="bg-white/10 border-white/20 text-white placeholder:text-blue-300 focus:ring-blue-500"
+              className="bg-white/80 border-slate-300 text-slate-800 placeholder:text-slate-400 focus:ring-blue-500"
               rows={3}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-blue-200 mb-2">
+            <label className="block text-sm font-medium text-slate-700 mb-2">
               <Palette className="inline h-4 w-4 mr-1" />
               Choose Color
             </label>
@@ -124,8 +133,8 @@ const CollectionModal = ({
                   onClick={() => setSelectedColor(color)}
                   className={`w-12 h-12 rounded-lg ${color} border-2 transition-all duration-200 ${
                     selectedColor === color 
-                      ? 'border-white shadow-lg scale-110' 
-                      : 'border-white/30 hover:border-white/60'
+                      ? 'border-slate-800 shadow-lg scale-110' 
+                      : 'border-slate-300 hover:border-slate-500'
                   }`}
                 />
               ))}
@@ -137,7 +146,7 @@ const CollectionModal = ({
               type="button"
               variant="outline"
               onClick={onClose}
-              className="flex-1 bg-white/10 border-white/20 text-white hover:bg-white/20"
+              className="flex-1 bg-white/80 border-slate-300 text-slate-700 hover:bg-white/90"
             >
               Cancel
             </Button>
