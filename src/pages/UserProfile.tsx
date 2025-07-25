@@ -10,8 +10,9 @@ import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
 import { useBooksForSale } from '../hooks/useBooksForSale';
-import { mockUsers } from '../data/mockData';
+import { mockUsers, mockUserRatings } from '../data/mockData';
 import { Book, Collection } from '../types/entities';
+import UserReviews from '../components/UserReviews';
 
 const UserProfile = () => {
   const { userId } = useParams<{ userId: string }>();
@@ -32,33 +33,18 @@ const UserProfile = () => {
   const isCurrentUser = targetUserId === 999;
   
   // Get user's books for sale
-  console.log('=== UserProfile Debug START ===');
-  console.log('booksForSale hook result:', booksForSale);
-  console.log('targetUserId:', targetUserId, 'type:', typeof targetUserId);
-  
-  if (!booksForSale || booksForSale.length === 0) {
-    console.log('ERROR: booksForSale is empty or undefined!');
-  } else {
-    console.log('booksForSale total:', booksForSale.length);
-    
-    // Log all seller IDs to see what's available
-    const allSellerIds = booksForSale.map(sale => ({ 
-      id: sale.id, 
-      sellerId: sale.sellerId, 
-      type: typeof sale.sellerId,
-      status: sale.status 
-    }));
-    console.log('All books for sale seller IDs:', allSellerIds);
-  }
-  
   const userBooksForSale = booksForSale?.filter(sale => {
-    const matches = sale.sellerId === targetUserId && sale.status === 'Available';
-    console.log(`Book ${sale.id}: sellerId=${sale.sellerId} === targetUserId=${targetUserId}? ${sale.sellerId === targetUserId}, status=${sale.status}, matches=${matches}`);
-    return matches;
+    return sale.sellerId === targetUserId && sale.status === 'Available';
   }) || [];
   
-  console.log('userBooksForSale result:', userBooksForSale.length, userBooksForSale);
-  console.log('=== UserProfile Debug END ===');
+  // Get user ratings for this user
+  const userRatings = mockUserRatings.filter(rating => 
+    rating.bookId === targetUserId || (targetUserId === 1 && rating.bookId === 1)
+  ).sort((a, b) => {
+    const dateA = a.reviewDate ? new Date(a.reviewDate).getTime() : 0;
+    const dateB = b.reviewDate ? new Date(b.reviewDate).getTime() : 0;
+    return dateB - dateA; // Most recent first
+  });
   
   // Use actual user rating or fallback for current user
   const userRating = user?.rating || 4.2;
@@ -212,6 +198,18 @@ const UserProfile = () => {
                 ))}
               </div>
             )}
+          </div>
+
+          {/* User Reviews Section */}
+          <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 p-6 mt-6">
+            <div className="flex items-center gap-3 mb-6">
+              <Star className="h-6 w-6 text-yellow-500" />
+              <h2 className="text-xl font-bold text-slate-800">
+                Recent Reviews ({userRatings.length})
+              </h2>
+            </div>
+            
+            <UserReviews ratings={userRatings} users={mockUsers} />
           </div>
         </main>
       </div>

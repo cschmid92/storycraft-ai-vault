@@ -1,5 +1,5 @@
 
-import { Book, Collection, BookForSale, User, Favorites, BooksRead, Conversation, Message } from '../types/entities';
+import { Book, Collection, BookForSale, User, Favorites, BooksRead, Conversation, Message, UserRating } from '../types/entities';
 
 export const mockBooks: Book[] = [
   {
@@ -446,5 +446,49 @@ export const mockMessages: Message[] = [
     seen: true,
     senderName: "Bob Smith",
     isFromMe: false
+  }
+];
+
+// Mock user ratings with reviews
+export const mockUserRatings: UserRating[] = [
+  {
+    id: 1,
+    userId: 1, // Sarah Chen
+    bookId: 999, // Rating for user 1 (from another user's perspective)
+    rating: 5,
+    reviewText: "Excellent seller! Book was exactly as described and shipping was super fast. Would definitely buy from again!",
+    reviewDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3) // 3 days ago
+  },
+  {
+    id: 2,
+    userId: 2, // Mike Rodriguez 
+    bookId: 999, // Rating for user 1
+    rating: 4,
+    reviewText: "Good communication and fair pricing. The book had some wear but was as expected.",
+    reviewDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 7) // 1 week ago
+  },
+  {
+    id: 3,
+    userId: 3, // Emma Thompson
+    bookId: 999, // Rating for user 1  
+    rating: 5,
+    reviewText: "Amazing seller! Book came in perfect condition and was packaged beautifully. Highly recommended!",
+    reviewDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 14) // 2 weeks ago
+  },
+  {
+    id: 4,
+    userId: 4, // David Kim
+    bookId: 1, // Rating for user 1 (Sarah Chen)
+    rating: 5,
+    reviewText: "Sarah is fantastic to work with. Quick responses and the book was in excellent condition!",
+    reviewDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5) // 5 days ago
+  },
+  {
+    id: 5,
+    userId: 1, // Sarah Chen
+    bookId: 1, // Rating for user 1 (Sarah Chen) - self rating from buyer perspective
+    rating: 4,
+    reviewText: "Smooth transaction. Book arrived quickly and was well-packaged.",
+    reviewDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 10) // 10 days ago
   }
 ];

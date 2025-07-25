@@ -56,6 +56,8 @@ export interface UserRating extends BaseEntity {
   userId: number;
   bookId: number;
   rating: number;
+  reviewText?: string;
+  reviewDate?: Date;
 }
 
 // User entity
