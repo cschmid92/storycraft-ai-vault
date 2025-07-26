@@ -92,7 +92,7 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
 
     // Submit rating
     const ratedUserId = currentConversation.user2Id === 999 ? currentConversation.user1Id : currentConversation.user2Id;
-    ConversationService.submitRating(selectedConversation, 999, rating, ratedUserId);
+    ConversationService.submitRating(selectedConversation, 999, rating, ratedUserId, ratingComment.trim() || undefined);
     
     // Save rating to user ratings
     if (currentConversation.bookForSale.book) {

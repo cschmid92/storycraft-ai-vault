@@ -109,8 +109,8 @@ export class ConversationService {
     return this.addMessage(conversationId, senderId, ratingMessage, 'rating_request', { ratedUserId });
   }
 
-  static submitRating(conversationId: number, senderId: number, rating: number, ratedUserId: number): Message {
-    const ratingMessage = `Rated ${rating} stars`;
+  static submitRating(conversationId: number, senderId: number, rating: number, ratedUserId: number, comment?: string): Message {
+    const ratingMessage = comment || `Rated ${rating} stars`;
     return this.addMessage(conversationId, senderId, ratingMessage, 'text', { rating, ratedUserId });
   }
 
