@@ -49,16 +49,12 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
   }, [selectedConversation]);
 
   const loadConversations = () => {
-    console.log('Loading conversations...');
     const conversationData = ConversationService.getConversations();
-    console.log('Loaded conversations:', conversationData);
     setConversations(conversationData);
   };
 
   const loadMessages = (conversationId: number) => {
-    console.log(`Loading messages for conversation ${conversationId}`);
     const messageData = ConversationService.getMessagesForConversation(conversationId);
-    console.log(`Loaded messages:`, messageData);
     setMessages(messageData);
   };
 

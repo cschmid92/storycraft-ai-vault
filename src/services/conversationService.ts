@@ -6,8 +6,6 @@ export class ConversationService {
   private static messages: Message[] = [...mockMessages];
 
   static getConversations(): Conversation[] {
-    console.log('Getting conversations, total conversations:', this.conversations.length);
-    console.log('All conversations:', this.conversations);
     // Enhance conversations with message data
     return this.conversations.map(conv => {
       const messages = this.getMessagesForConversation(conv.id);
@@ -24,11 +22,8 @@ export class ConversationService {
   }
 
   static getMessagesForConversation(conversationId: number): Message[] {
-    console.log(`Getting messages for conversation ${conversationId}`, this.messages);
-    const filteredMessages = this.messages
-      .filter(m => m.conversationId === conversationId);
-    console.log(`Filtered messages for conversation ${conversationId}:`, filteredMessages);
-    return filteredMessages
+    return this.messages
+      .filter(m => m.conversationId === conversationId)
       .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime());
   }
 
