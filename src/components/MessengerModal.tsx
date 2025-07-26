@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Send, User, Package, Star } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
@@ -23,6 +24,7 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
   const [messages, setMessages] = useState<Message[]>([]);
   const [showRating, setShowRating] = useState(false);
   const [rating, setRating] = useState(0);
+  const [ratingComment, setRatingComment] = useState('');
   
   const { updateBookForSaleStatus } = useBooksForSale();
   const { rateBook } = useUserRatings();
@@ -99,6 +101,7 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
     
     setShowRating(false);
     setRating(0);
+    setRatingComment('');
     loadMessages(selectedConversation);
     loadConversations();
   };
@@ -378,7 +381,7 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                     <div className="text-center">
                       <h4 className="font-medium text-slate-800 mb-2 text-sm md:text-base">Rate your experience</h4>
                       <p className="text-xs md:text-sm text-slate-600 mb-3">How was your transaction?</p>
-                      <div className="flex justify-center gap-1 mb-3">
+                       <div className="flex justify-center gap-1 mb-4">
                         {[1, 2, 3, 4, 5].map((star) => (
                           <Button
                             key={star}
@@ -394,6 +397,15 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                             />
                           </Button>
                         ))}
+                      </div>
+                      <div className="mb-4">
+                        <Textarea
+                          value={ratingComment}
+                          onChange={(e) => setRatingComment(e.target.value)}
+                          placeholder="Add a comment about your experience (optional)..."
+                          className="text-sm resize-none"
+                          rows={3}
+                        />
                       </div>
                       <div className="flex gap-2 justify-center">
                         <Button
