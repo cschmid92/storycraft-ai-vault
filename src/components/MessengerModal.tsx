@@ -48,6 +48,10 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
     }
   }, [selectedConversation]);
 
+  useEffect(() => {
+    console.log('Messages state updated:', messages.length, messages);
+  }, [messages]);
+
   const loadConversations = () => {
     const conversationData = ConversationService.getConversations();
     setConversations(conversationData);
