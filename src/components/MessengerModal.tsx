@@ -346,17 +346,24 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                             <>
                               <p className="text-sm">{message.content}</p>
                               {message.metadata?.rating && (
-                                <div className="flex items-center gap-1 mt-1">
-                                  {[...Array(5)].map((_, i) => (
-                                    <Star
-                                      key={i}
-                                      className={`h-3 w-3 ${
-                                        i < message.metadata.rating 
-                                          ? 'fill-yellow-400 text-yellow-400' 
-                                          : 'text-slate-300'
-                                      }`}
-                                    />
-                                  ))}
+                                <div className="mt-2">
+                                  <div className="flex items-center gap-1 mb-1">
+                                    {[...Array(5)].map((_, i) => (
+                                      <Star
+                                        key={i}
+                                        className={`h-3 w-3 ${
+                                          i < message.metadata.rating 
+                                            ? 'fill-yellow-400 text-yellow-400' 
+                                            : 'text-slate-300'
+                                        }`}
+                                      />
+                                    ))}
+                                  </div>
+                                  {message.content && message.content !== `Rated ${message.metadata.rating} stars` && (
+                                    <p className="text-xs text-slate-600 italic mt-1">
+                                      "{message.content}"
+                                    </p>
+                                  )}
                                 </div>
                               )}
                             </>
