@@ -48,10 +48,6 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
     }
   }, [selectedConversation]);
 
-  useEffect(() => {
-    console.log('Messages state updated:', messages.length, messages);
-  }, [messages]);
-
   const loadConversations = () => {
     const conversationData = ConversationService.getConversations();
     setConversations(conversationData);
@@ -346,7 +342,7 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                             </div>
                           )}
                           
-                          {!message.type || message.type === 'text' && (
+                          {(!message.type || message.type === 'text') && (
                             <>
                               <p className="text-sm">{message.content}</p>
                               {message.metadata?.rating && (
