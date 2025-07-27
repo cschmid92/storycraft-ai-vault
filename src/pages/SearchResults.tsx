@@ -11,11 +11,11 @@ import CollectionModal from '../components/CollectionModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import BookDetailModal from '../components/BookDetailModal';
 import PriceInputModal from '../components/PriceInputModal';
-import { SearchService } from '../services/mockDataService';
+import { BookService } from '../services/bookService';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
-import { useFavorites } from '../hooks/useFavorites';
+import { useFavorites } from '../contexts/FavoritesContext';
 import { useBooksForSale } from '../hooks/useBooksForSale';
 import { useUserRatings } from '../hooks/useUserRatings';
 
@@ -42,7 +42,7 @@ const SearchResults = () => {
   const [selectedBookForSale, setSelectedBookForSale] = useState(null);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
-  const searchResults = SearchService.searchBooks(query, genre);
+  const searchResults = BookService.searchBooks(query, genre);
 
   const handleCollectionSelect = (collection) => {
     setSelectedCollection(collection);

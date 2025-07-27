@@ -9,7 +9,7 @@ import BookDetailsGrid from './BookDetailsGrid';
 import UsedBookAvailability from './UsedBookAvailability';
 import { Book } from '../types/entities';
 import { useBooksForSale } from '../hooks/useBooksForSale';
-import { useFavorites } from '../hooks/useFavorites';
+import { useFavorites } from '../contexts/FavoritesContext';
 import { useUserRatings } from '../hooks/useUserRatings';
 import { useBooks } from '../hooks/useBooks';
 

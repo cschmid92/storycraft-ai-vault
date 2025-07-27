@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import BooksForSale from './BooksForSale';
 import { Book } from '../types/entities';
 import { Collection } from '../hooks/useCollections';
-import { useFavorites } from '../hooks/useFavorites';
+import { useFavorites } from '../contexts/FavoritesContext';
 import { useBooksForSale } from '../hooks/useBooksForSale';
 
 interface CollectionSidebarProps {

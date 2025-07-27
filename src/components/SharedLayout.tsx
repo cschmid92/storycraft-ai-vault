@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import SharedSidebar from './SharedSidebar';
 import { useBooks } from '../hooks/useBooks';
 import { useCollections } from '../hooks/useCollections';
-import { useFavorites } from '../hooks/useFavorites';
+import { useFavorites } from '../contexts/FavoritesContext';
 import { useBooksForSale } from '../hooks/useBooksForSale';
 import { useBooksRead } from '../hooks/useBooksRead';
 import CollectionModal from './CollectionModal';

@@ -10,12 +10,12 @@ import CollectionModal from '../components/CollectionModal';
 import UnifiedHeader from '../components/layout/UnifiedHeader';
 import BookDetailModal from '../components/BookDetailModal';
 import CollectionSelectionModal from '../components/CollectionSelectionModal';
-import { SearchService } from '../services/mockDataService';
+import { BookService } from '../services/bookService';
 import { useNavigate } from 'react-router-dom';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
-import { useFavorites } from '../hooks/useFavorites';
+import { useFavorites } from '../contexts/FavoritesContext';
 import { useBooksForSale } from '../hooks/useBooksForSale';
 import { useUserRatings } from '../hooks/useUserRatings';
 import { Book, Collection } from '../types/entities';
@@ -50,7 +50,7 @@ const AdvancedSearch = () => {
     ratingMin: ''
   });
 
-  const genres = SearchService.getGenres();
+  const genres = BookService.getGenres();
 
   const handleInputChange = (field: string, value: string) => {
     setSearchForm(prev => ({ ...prev, [field]: value }));
@@ -69,7 +69,7 @@ const AdvancedSearch = () => {
       ratingMin: searchForm.ratingMin ? parseInt(searchForm.ratingMin) : undefined,
     };
 
-    const results = SearchService.advancedSearch(filters);
+    const results = BookService.advancedSearch(filters);
     console.log('Advanced search results:', results);
     
     // Navigate to search results with query

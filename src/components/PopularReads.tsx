@@ -2,7 +2,7 @@ import React from 'react';
 import { TrendingUp, Star, Heart, BookmarkPlus, BookOpen } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/entities';
-import { useFavorites } from '../hooks/useFavorites';
+import { useFavorites } from '../contexts/FavoritesContext';
 
 interface PopularReadsProps {
   books: Book[];

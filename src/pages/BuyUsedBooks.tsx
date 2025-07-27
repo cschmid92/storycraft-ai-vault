@@ -16,7 +16,7 @@ import MessengerModal from '../components/MessengerModal';
 import { useCollections, Collection } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
-import { useFavorites } from '../hooks/useFavorites';
+import { useFavorites } from '../contexts/FavoritesContext';
 import { useBooksForSale } from '../hooks/useBooksForSale';
 import { useUserRatings } from '../hooks/useUserRatings';
 import { booksForSale } from '../data/mockData';

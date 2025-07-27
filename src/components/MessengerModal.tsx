@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Send, User, Package, Star } from 'lucide-react';
+import { Send, Package, Star } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -455,7 +455,9 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
             ) : (
               <div className="flex-1 flex items-center justify-center bg-slate-50">
                 <div className="text-center px-4">
-                  <User className="h-16 w-16 text-slate-400 mx-auto mb-4" />
+                  <div className="h-16 w-16 bg-slate-300 rounded-full mx-auto mb-4 flex items-center justify-center">
+                    <Package className="h-8 w-8 text-slate-500" />
+                  </div>
                   <h3 className="text-lg font-medium text-slate-700 mb-2">
                     Select a conversation
                   </h3>

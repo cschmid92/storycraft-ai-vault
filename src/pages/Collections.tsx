@@ -13,7 +13,7 @@ import { Book, Collection } from '../types/entities';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
-import { useFavorites } from '../hooks/useFavorites';
+import { useFavorites } from '../contexts/FavoritesContext';
 import { useBooksForSale } from '../hooks/useBooksForSale';
 
 const Collections = () => {

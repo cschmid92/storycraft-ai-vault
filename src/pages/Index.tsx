@@ -17,7 +17,7 @@ import { Plus, Filter, Heart, Star, BookmarkPlus, Quote } from 'lucide-react';
 import { useCollections, Collection } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
-import { useFavorites } from '../hooks/useFavorites';
+import { useFavorites } from '../contexts/FavoritesContext';
 import { useUserRatings } from '../hooks/useUserRatings';
 import { useBooksForSale } from '../hooks/useBooksForSale';
 

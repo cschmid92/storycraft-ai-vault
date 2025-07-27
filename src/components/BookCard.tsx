@@ -3,7 +3,7 @@ import React from 'react';
 import { Star, Heart, BookmarkPlus, BookOpen, X } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Book } from '../types/entities';
-import { useFavorites } from '../hooks/useFavorites';
+import { useFavorites } from '../contexts/FavoritesContext';
 import { useBooksForSale } from '../hooks/useBooksForSale';
 
 interface BookCardProps {

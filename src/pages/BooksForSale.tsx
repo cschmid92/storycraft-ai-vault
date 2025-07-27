@@ -16,7 +16,7 @@ import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
 import { useBooksForSale } from '../hooks/useBooksForSale';
-import { useFavorites } from '../hooks/useFavorites';
+import { useFavorites } from '../contexts/FavoritesContext';
 
 const BooksForSale = () => {
   const { collections, addCollection } = useCollections();

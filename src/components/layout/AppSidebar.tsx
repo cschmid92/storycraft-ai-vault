@@ -4,7 +4,7 @@ import { Coins, ShoppingCart, Info, Plus, Facebook, Instagram, Linkedin, Twitter
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Book, Collection } from '../../types/entities';
-import { useFavorites } from '../../hooks/useFavorites';
+import { useFavorites } from '../../contexts/FavoritesContext';
 import { useBooksForSale } from '../../hooks/useBooksForSale';
 
 interface AppSidebarProps {

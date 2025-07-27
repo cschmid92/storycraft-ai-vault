@@ -4,7 +4,7 @@ import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
 import { useBooks } from '../../hooks/useBooks';
 import { useCollections } from '../../hooks/useCollections';
-import { useFavorites } from '../../hooks/useFavorites';
+import { useFavorites } from '../../contexts/FavoritesContext';
 import { useBooksForSale } from '../../hooks/useBooksForSale';
 import { useUserRatings } from '../../hooks/useUserRatings';
 import CollectionModal from '../CollectionModal';

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Book, Collection } from '../types/entities';
 import { booksForSale } from '../data/mockData';
-import { useFavorites } from '../hooks/useFavorites';
+import { useFavorites } from '../contexts/FavoritesContext';
 
 interface SharedSidebarProps {
   collections: Collection[];
