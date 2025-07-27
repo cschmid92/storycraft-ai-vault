@@ -4,6 +4,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { BookmarkPlus } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import CollectionContentArea from '../components/CollectionContentArea';
+import CollectionModal from '../components/CollectionModal';
 import AppLayout from '../components/layout/AppLayout';
 import { Book, Collection } from '../types/entities';
 import { useCollections } from '../hooks/useCollections';
@@ -97,19 +98,35 @@ const Collections = () => {
   return (
     <AppLayout headerTitle="Bacondo" headerSubtitle="Your Digital Library">
       {({ onBookClick, onAddToCollection }) => (
-      <CollectionContentArea
-        selectedCollection={selectedCollection}
-        collectionBooks={collectionBooks}
-        canEdit={canEdit}
-        booksReadList={booksReadList}
-        onToggleFavorite={toggleFavorite}
-        onBookClick={onBookClick}
-        onAddToCollection={onAddToCollection}
-        onAddToBooksRead={handleAddToBooksRead}
-        onRemoveFromCollection={canEdit ? handleRemoveFromCollection : undefined}
-        onEditCollection={handleEditCollection}
-        onDeleteCollection={handleDeleteCollection}
-      />
+        <>
+          <CollectionContentArea
+            selectedCollection={selectedCollection}
+            collectionBooks={collectionBooks}
+            canEdit={canEdit}
+            booksReadList={booksReadList}
+            onToggleFavorite={toggleFavorite}
+            onBookClick={onBookClick}
+            onAddToCollection={onAddToCollection}
+            onAddToBooksRead={handleAddToBooksRead}
+            onRemoveFromCollection={canEdit ? handleRemoveFromCollection : undefined}
+            onEditCollection={handleEditCollection}
+            onDeleteCollection={handleDeleteCollection}
+          />
+          
+          {/* Edit Collection Modal */}
+          <CollectionModal 
+            isOpen={isEditModalOpen}
+            onClose={() => {
+              setIsEditModalOpen(false);
+              setEditingCollection(null);
+            }}
+            onCreateCollection={handleUpdateCollection}
+            editMode={true}
+            initialName={editingCollection?.name}
+            initialColor={editingCollection?.color}
+            initialDescription={editingCollection?.description}
+          />
+        </>
       )}
     </AppLayout>
   );
