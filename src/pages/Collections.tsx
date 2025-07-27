@@ -102,8 +102,8 @@ const Collections = () => {
         canEdit={canEdit}
         booksReadList={booksReadList}
         onToggleFavorite={toggleFavorite}
-        onBookClick={() => {}}
-        onAddToCollection={() => {}}
+        onBookClick={(book) => console.log("Book clicked:", book.title)}
+        onAddToCollection={(bookId) => console.log("Add to collection:", bookId)}
         onAddToBooksRead={handleAddToBooksRead}
         onRemoveFromCollection={canEdit ? handleRemoveFromCollection : undefined}
         onEditCollection={handleEditCollection}

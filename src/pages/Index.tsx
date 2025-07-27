@@ -127,9 +127,9 @@ const Index = () => {
         {/* Popular Reads */}
         <PopularReads 
           books={books} 
-          onBookClick={() => {}}
-          onToggleFavorite={() => {}}
-          onAddToCollection={() => {}}
+          onBookClick={(book) => console.log("Book clicked:", book.title)}
+          onToggleFavorite={(bookId) => console.log("Toggle favorite:", bookId)}
+          onAddToCollection={(bookId) => console.log("Add to collection:", bookId)}
           onAddToBooksRead={handleAddToBooksRead}
           isInBooksRead={isInBooksRead}
         />
@@ -137,9 +137,9 @@ const Index = () => {
         {/* Recommendations */}
         <Recommendations 
           books={books} 
-          onBookClick={() => {}}
-          onToggleFavorite={() => {}}
-          onAddToCollection={() => {}}
+          onBookClick={(book) => console.log("Book clicked:", book.title)}
+          onToggleFavorite={(bookId) => console.log("Toggle favorite:", bookId)}
+          onAddToCollection={(bookId) => console.log("Add to collection:", bookId)}
           onAddToBooksRead={handleAddToBooksRead}
           isInBooksRead={isInBooksRead}
         />
