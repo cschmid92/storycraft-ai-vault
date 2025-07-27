@@ -47,9 +47,6 @@ const BuyUsedBooks = () => {
     return matchesSearch && matchesGenre && matchesDistance;
   });
 
-  const handleBookClick = (bookForSale: BookForSale) => {
-    // Will be handled by AppLayout modals
-  };
 
   const handleContactSeller = (bookForSale: BookForSale) => {
     setSelectedBookForContact(bookForSale);
@@ -63,7 +60,8 @@ const BuyUsedBooks = () => {
 
   return (
     <AppLayout headerTitle="Bacondo" headerSubtitle="Your Digital Library">
-      <div className="p-4 md:p-6">
+      {({ onBookClick }) => (
+        <div className="p-4 md:p-6">
           <div className="max-w-7xl mx-auto">
             {/* Back Button */}
             <div className="mb-4 md:mb-6">
@@ -93,24 +91,25 @@ const BuyUsedBooks = () => {
 
             <UsedBookGrid
               booksForSale={filteredBooks}
-              onBookClick={handleBookClick}
+              onBookClick={(bookForSale) => onBookClick(bookForSale.book!)}
               onContactSeller={handleContactSeller}
             />
           </div>
-        
-        <ContactSellerModal
-          bookForSale={selectedBookForContact}
-          isOpen={isContactSellerModalOpen}
-          onClose={() => setIsContactSellerModalOpen(false)}
-          onMessageSent={handleMessageSent}
-        />
-        
-        <MessengerModal
-          isOpen={isMessengerModalOpen}
-          onClose={() => setIsMessengerModalOpen(false)}
-          selectedConversationId={selectedConversationId}
-        />
-      </div>
+          
+          <ContactSellerModal
+            bookForSale={selectedBookForContact}
+            isOpen={isContactSellerModalOpen}
+            onClose={() => setIsContactSellerModalOpen(false)}
+            onMessageSent={handleMessageSent}
+          />
+          
+          <MessengerModal
+            isOpen={isMessengerModalOpen}
+            onClose={() => setIsMessengerModalOpen(false)}
+            selectedConversationId={selectedConversationId}
+          />
+        </div>
+      )}
     </AppLayout>
   );
 };
