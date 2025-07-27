@@ -124,9 +124,10 @@ export const useCollections = () => {
             return { ...c, bookIds: newBookIds, count: newBookIds.length, updatedAt: new Date() };
           } else {
             console.log(`Book ${bookId} already in collection ${c.name}`);
+            return c; // Return same object if no change needed
           }
         }
-        return c;
+        return c; // Return same object for non-matching collections
       });
       console.log('Collections after add:', updated.map(c => ({ name: c.name, count: c.bookIds?.length || 0 })));
       return updated;
