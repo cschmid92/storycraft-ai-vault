@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Star, DollarSign } from 'lucide-react';
+import { ArrowLeft, Star, DollarSign, Tag } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Book, BookForSale, BookForSaleStatus } from '../types/entities';
@@ -98,54 +98,60 @@ const BooksForSale = () => {
               {myBooks.map(sale => (
                 <div
                   key={`${sale.book.id}-${sale.price}`}
-                  className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200 hover:bg-white/80 transition-colors"
+                  className="flex items-center gap-3 p-3 bg-white/60 rounded-lg border border-slate-200 hover:bg-white/80 cursor-pointer transition-colors"
+                  onClick={() => {}}
                 >
-                  <div className="flex items-center gap-4">
-                    <img 
-                      src={sale.book.cover} 
-                      alt={sale.book.title}
-                      className="w-16 h-20 object-cover rounded"
-                    />
-                    <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-slate-800 text-lg mb-1">{sale.book.title}</h4>
-                      <p className="text-slate-600 mb-2">{sale.book.author}</p>
-                      <div className="flex items-center gap-4 mb-3">
-                        <div className="flex items-center gap-1">
-                          <DollarSign className="h-4 w-4 text-green-600" />
-                          <span className="text-green-600 font-bold text-lg">{sale.currency} {sale.price}</span>
-                        </div>
-                        {getStatusBadge(sale.status)}
-                      </div>
-                      <div className="flex gap-2">
-                        {sale.status === 'Available' && (
-                          <>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleStatusChange(sale.bookId, 'Picked')}
-                            >
-                              Mark as Picked
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleStatusChange(sale.bookId, 'Sold')}
-                            >
-                              Mark as Sold
-                            </Button>
-                          </>
-                        )}
-                        {sale.status !== 'Available' && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleStatusChange(sale.bookId, 'Available')}
-                          >
-                            Mark as Available
-                          </Button>
-                        )}
-                      </div>
+                  <img 
+                    src={sale.book.cover} 
+                    alt={sale.book.title}
+                    className="w-10 h-14 object-cover rounded"
+                  />
+                  <div className="flex-1 min-w-0">
+                    <h4 className="font-medium text-slate-800 text-sm truncate">{sale.book.title}</h4>
+                    <p className="text-slate-600 text-xs truncate">{sale.book.author}</p>
+                    <div className="flex items-center gap-1 mt-1">
+                      <Tag className="h-3 w-3 text-green-600" />
+                      <span className="text-green-600 font-medium text-sm">{sale.currency} {sale.price}</span>
                     </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {getStatusBadge(sale.status)}
+                    {sale.status === 'Available' && (
+                      <>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleStatusChange(sale.bookId, 'Picked');
+                          }}
+                        >
+                          Mark as Picked
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleStatusChange(sale.bookId, 'Sold');
+                          }}
+                        >
+                          Mark as Sold
+                        </Button>
+                      </>
+                    )}
+                    {sale.status !== 'Available' && (
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleStatusChange(sale.bookId, 'Available');
+                        }}
+                      >
+                        Mark as Available
+                      </Button>
+                    )}
                   </div>
                 </div>
               ))}
