@@ -93,22 +93,23 @@ const AppLayout = ({
   const selectedBookTitle = selectedBookId ? books.find(book => book.id === selectedBookId)?.title || '' : '';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 flex w-full">
-      {showSidebar && (
-        <AppSidebar
-          collections={collections}
-          selectedCollection={selectedCollection}
-          onSelectCollection={handleSelectCollection}
-          onOpenCollectionModal={handleOpenCollectionModal}
-          books={books}
-          onBookClick={handleBookClick}
-          booksReadCount={booksReadCount}
-          onDeleteCollection={deleteCollection}
-        />
-      )}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
+      {showHeader && <AppHeader title={headerTitle} subtitle={headerSubtitle} />}
       
-      <div className="flex-1 flex flex-col">
-        {showHeader && <AppHeader title={headerTitle} subtitle={headerSubtitle} />}
+      <div className="flex">
+        {showSidebar && (
+          <AppSidebar
+            collections={collections}
+            selectedCollection={selectedCollection}
+            onSelectCollection={handleSelectCollection}
+            onOpenCollectionModal={handleOpenCollectionModal}
+            books={books}
+            onBookClick={handleBookClick}
+            booksReadCount={booksReadCount}
+            onDeleteCollection={deleteCollection}
+          />
+        )}
+        
         <main className="flex-1">
           {children}
         </main>
