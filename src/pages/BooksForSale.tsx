@@ -17,8 +17,9 @@ const BooksForSale = () => {
   const [selectedBookForContact, setSelectedBookForContact] = useState<BookForSale | null>(null);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
 
-  // Get all books for sale with their details
-  const myBooks = booksForSale.map(sale => {
+  // Get my books for sale using the hook's helper function
+  const myBooksForSale = booksForSale.filter(sale => sale.sellerId === 999);
+  const myBooks = myBooksForSale.map(sale => {
     const book = books.find(b => b.id === sale.bookId);
     return { ...sale, book };
   }).filter(sale => sale.book) as (BookForSale & { book: Book })[];
@@ -40,8 +41,20 @@ const BooksForSale = () => {
   };
 
   const handleEditBook = (bookId: number) => {
-    // Handle edit functionality - could open a modal or navigate to edit page
+    // For now, just log - could open a modal or navigate to edit page
     console.log('Edit book:', bookId);
+    // TODO: Implement edit functionality (price change modal, condition update, etc.)
+  };
+
+  const getStatusBadge = (status: BookForSaleStatus) => {
+    switch (status) {
+      case 'Sold':
+        return <Badge className="bg-green-100 text-green-800 border-green-200">Sold</Badge>;
+      case 'Picked':
+        return <Badge className="bg-blue-100 text-blue-800 border-blue-200">Picked</Badge>;
+      default:
+        return <Badge variant="outline" className="bg-gray-50 text-gray-700">Available</Badge>;
+    }
   };
 
   const onBookClick = (book: Book) => {
@@ -110,9 +123,12 @@ const BooksForSale = () => {
                   <div className="flex-1 min-w-0">
                     <h4 className="font-medium text-slate-800 text-sm truncate">{sale.book?.title}</h4>
                     <p className="text-slate-600 text-xs truncate">{sale.book?.author}</p>
-                    <div className="flex items-center gap-1 mt-1">
-                      <Tag className="h-3 w-3 text-green-600" />
-                      <span className="text-green-600 font-medium text-sm">{sale.currency} {sale.price}</span>
+                    <div className="flex items-center gap-2 mt-1">
+                      <div className="flex items-center gap-1">
+                        <Tag className="h-3 w-3 text-green-600" />
+                        <span className="text-green-600 font-medium text-sm">{sale.currency} {sale.price}</span>
+                      </div>
+                      {getStatusBadge(sale.status)}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
