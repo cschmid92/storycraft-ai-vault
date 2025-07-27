@@ -55,8 +55,17 @@ const Collections = () => {
   const handleRemoveFromCollection = (bookId: number) => {
     if (selectedCollection && typeof selectedCollection.id === 'number') {
       removeBookFromCollection(selectedCollection.id, bookId);
-      console.log(`Removed book ${bookId} from collection ${selectedCollection.name}`);
     }
+  };
+
+  const handleAddToCollection = (bookId: number) => {
+    // This will be handled by AppLayout collection modal - but we need a function to trigger it
+    console.log('Add to collection triggered for book:', bookId);
+  };
+
+  const handleBookClick = (book: Book) => {
+    // This will be handled by AppLayout book detail modal - but we need a function to trigger it  
+    console.log('Book click triggered for book:', book.title);
   };
 
   const handleAddToBooksRead = (bookId: number) => {
@@ -99,8 +108,8 @@ const Collections = () => {
         canEdit={canEdit}
         booksReadList={booksReadList}
         onToggleFavorite={toggleFavorite}
-        onBookClick={() => {}} // Will be handled by AppLayout
-        onAddToCollection={() => {}} // Will be handled by AppLayout
+        onBookClick={handleBookClick}
+        onAddToCollection={handleAddToCollection}
         onAddToBooksRead={handleAddToBooksRead}
         onRemoveFromCollection={canEdit ? handleRemoveFromCollection : undefined}
         onEditCollection={handleEditCollection}
