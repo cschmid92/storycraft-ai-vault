@@ -7,6 +7,7 @@ import { useCollections } from '../../hooks/useCollections';
 import { useFavorites } from '../../contexts/FavoritesContext';
 import { useBooksForSale } from '../../hooks/useBooksForSale';
 import { useUserRatings } from '../../hooks/useUserRatings';
+import { useBooksRead } from '../../hooks/useBooksRead';
 import CollectionModal from '../CollectionModal';
 import CollectionSelectionModal from '../CollectionSelectionModal';
 import BookDetailModal from '../BookDetailModal';
@@ -37,6 +38,7 @@ const AppLayout = ({
   const { toggleFavorite } = useFavorites();
   const { addBookForSale, removeBookForSale } = useBooksForSale();
   const { rateBook } = useUserRatings();
+  const { getBooksReadCount } = useBooksRead();
   
   const { 
     collections, 
@@ -45,9 +47,8 @@ const AppLayout = ({
     addBookToCollection 
   } = useCollections();
 
-  // Compute derived values from books
-  const booksRead = books.filter(book => book.userRating && book.userRating > 0);
-  const booksReadCount = booksRead.length;
+  // Get books read count from the proper hook
+  const booksReadCount = getBooksReadCount();
 
   const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
   const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
