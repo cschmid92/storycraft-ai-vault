@@ -31,19 +31,22 @@ const BooksForSale = () => {
     setIsContactModalOpen(true);
   };
 
-  const handleStatusChange = (bookId: number, newStatus: BookForSaleStatus) => {
-    const sale = booksForSale.find(s => s.bookId === bookId);
-    if (sale) updateBookForSaleStatus(sale.id, newStatus);
+  const handleStatusChange = (saleId: number, newStatus: BookForSaleStatus) => {
+    updateBookForSaleStatus(saleId, newStatus);
   };
 
-  const handleDeleteBook = (bookId: number) => {
-    removeBookForSale(bookId);
+  const handleDeleteBook = (saleId: number) => {
+    const sale = booksForSale.find(s => s.id === saleId);
+    if (sale) removeBookForSale(sale.bookId);
   };
 
-  const handleEditBook = (bookId: number) => {
-    // For now, just log - could open a modal or navigate to edit page
-    console.log('Edit book:', bookId);
-    // TODO: Implement edit functionality (price change modal, condition update, etc.)
+  const handleEditBook = (saleId: number) => {
+    const sale = booksForSale.find(s => s.id === saleId);
+    if (sale) {
+      // TODO: Open edit modal with current sale data
+      console.log('Edit sale:', sale);
+      alert(`Edit functionality coming soon!\nCurrent price: ${sale.currency} ${sale.price}\nCondition: ${sale.condition}`);
+    }
   };
 
   const getStatusBadge = (status: BookForSaleStatus) => {
@@ -136,7 +139,7 @@ const BooksForSale = () => {
                       variant="outline"
                       size="sm"
                       className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
-                      onClick={() => handleStatusChange(sale.bookId, 'Sold')}
+                      onClick={() => handleStatusChange(sale.id, 'Sold')}
                     >
                       Sold
                     </Button>
@@ -144,14 +147,14 @@ const BooksForSale = () => {
                       variant="outline"
                       size="sm"
                       className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
-                      onClick={() => handleStatusChange(sale.bookId, 'Picked')}
+                      onClick={() => handleStatusChange(sale.id, 'Picked')}
                     >
                       Picked
                     </Button>
                     <Button
                       variant="outline"
                       size="sm"
-                      onClick={() => handleEditBook(sale.bookId)}
+                      onClick={() => handleEditBook(sale.id)}
                     >
                       <Edit className="h-3 w-3" />
                     </Button>
@@ -159,7 +162,7 @@ const BooksForSale = () => {
                       variant="outline"
                       size="sm"
                       className="hover:bg-red-50 hover:text-red-700 hover:border-red-200"
-                      onClick={() => handleDeleteBook(sale.bookId)}
+                      onClick={() => handleDeleteBook(sale.id)}
                     >
                       <Trash2 className="h-3 w-3" />
                     </Button>
