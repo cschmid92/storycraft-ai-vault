@@ -6,8 +6,8 @@ import { Button } from "@/components/ui/button";
 import { Book, Collection } from '../../types/entities';
 import { useFavorites } from '../../contexts/FavoritesContext';
 import { useBooksForSale } from '../../hooks/useBooksForSale';
-import { useBooksRead } from '../../hooks/useBooksRead';
-import { useCollections } from '../../hooks/useCollections';
+import { useBooksRead } from '../../contexts/BooksReadContext';
+import { useCollections } from '../../contexts/CollectionsContext';
 
 interface AppSidebarProps {
   selectedCollection: Collection | null;

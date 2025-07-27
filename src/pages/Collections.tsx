@@ -7,9 +7,9 @@ import CollectionContentArea from '../components/CollectionContentArea';
 import CollectionModal from '../components/CollectionModal';
 import AppLayout from '../components/layout/AppLayout';
 import { Book, Collection } from '../types/entities';
-import { useCollections } from '../hooks/useCollections';
+import { useCollections } from '../contexts/CollectionsContext';
 import { useBooks } from '../hooks/useBooks';
-import { useBooksRead } from '../hooks/useBooksRead';
+import { useBooksRead } from '../contexts/BooksReadContext';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useBooksForSale } from '../hooks/useBooksForSale';
 

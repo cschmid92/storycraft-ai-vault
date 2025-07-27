@@ -4,6 +4,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/toaster";
 import { FavoritesProvider } from "./contexts/FavoritesContext";
+import { CollectionsProvider } from "./contexts/CollectionsContext";
+import { BooksReadProvider } from "./contexts/BooksReadContext";
 import App from './App.tsx'
 import './index.css'
 
@@ -14,8 +16,12 @@ createRoot(document.getElementById("root")!).render(
     <BrowserRouter>
       <TooltipProvider>
         <FavoritesProvider>
-          <App />
-          <Toaster />
+          <CollectionsProvider>
+            <BooksReadProvider>
+              <App />
+              <Toaster />
+            </BooksReadProvider>
+          </CollectionsProvider>
         </FavoritesProvider>
       </TooltipProvider>
     </BrowserRouter>
