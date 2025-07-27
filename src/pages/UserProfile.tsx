@@ -1,29 +1,16 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { Star, Package, User as UserIcon, ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import UnifiedHeader from '../components/layout/UnifiedHeader';
-import AppSidebar from '../components/layout/AppSidebar';
 import UsedBookCard from '../components/UsedBookCard';
-import CollectionModal from '../components/CollectionModal';
-import { useCollections } from '../hooks/useCollections';
-import { useBooks } from '../hooks/useBooks';
-import { useBooksRead } from '../hooks/useBooksRead';
+import AppLayout from '../components/layout/AppLayout';
 import { useBooksForSale } from '../hooks/useBooksForSale';
 import { mockUsers, mockUserRatings } from '../data/mockData';
-import { Book, Collection } from '../types/entities';
 import UserReviews from '../components/UserReviews';
 
 const UserProfile = () => {
   const { userId } = useParams<{ userId: string }>();
-  const { books } = useBooks();
-  const { collections, addCollection } = useCollections();
-  const { getBooksReadCount } = useBooksRead();
   const { booksForSale } = useBooksForSale();
-  
-  const [selectedCollection, setSelectedCollection] = useState<Collection | null>(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
   
   // For demo purposes, use current user (999) if no userId provided
   const targetUserId = userId ? parseInt(userId) : 999;
@@ -50,29 +37,6 @@ const UserProfile = () => {
   const userRating = user?.rating || 4.2;
   const totalSales = user?.totalSales || 15;
   
-  const booksReadCount = getBooksReadCount();
-
-  const handleSelectCollection = (collection: Collection | null) => {
-    setSelectedCollection(collection);
-    setIsSidebarOpen(false);
-  };
-
-  const handleBookClick = (book: Book) => {
-    // Handle book click if needed
-  };
-
-  const handleCreateCollection = (name: string, color: string, description?: string) => {
-    console.log('UserProfile handleCreateCollection:', { name, color, description });
-    addCollection(name, color, description);
-    setIsCollectionModalOpen(false);
-  };
-
-  const handleOpenCollectionModal = () => {
-    console.log('Opening collection modal - current state:', isCollectionModalOpen);
-    setIsCollectionModalOpen(true);
-    console.log('Setting modal state to true');
-  };
-  
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
       <Star
@@ -97,40 +61,9 @@ const UserProfile = () => {
     
   const displayAvatar = user?.avatar;
 
-  // Debug logging
-  console.log('UserProfile render: isCollectionModalOpen =', isCollectionModalOpen);
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
-      <UnifiedHeader 
-        showMobileMenu={true}
-        onMobileMenuClick={() => setIsSidebarOpen(true)}
-      />
-
-      <div className="flex">
-        {/* Sidebar - Mobile overlay */}
-        {isSidebarOpen && (
-          <div 
-            className="fixed inset-0 bg-black/50 z-50 md:hidden"
-            onClick={() => setIsSidebarOpen(false)}
-          />
-        )}
-        
-        {/* Sidebar */}
-        <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-40 md:z-auto`}>
-          <AppSidebar 
-            collections={collections}
-            selectedCollection={selectedCollection}
-            onSelectCollection={handleSelectCollection}
-            onOpenCollectionModal={handleOpenCollectionModal}
-            books={books}
-            onBookClick={handleBookClick}
-            booksReadCount={booksReadCount}
-          />
-        </div>
-
-        {/* Main Content */}
-        <main className="flex-1 p-4 md:p-6">
+    <AppLayout headerTitle="Bacondo" headerSubtitle="Your Digital Library">
+      <div className="p-4 md:p-6">
           {/* Back button and title */}
           <div className="flex items-center mb-8">
             <Link to="/">
@@ -211,19 +144,8 @@ const UserProfile = () => {
             
             <UserReviews ratings={userRatings} users={mockUsers} />
           </div>
-        </main>
       </div>
-
-      {/* Collection Modal */}
-      <CollectionModal
-        isOpen={isCollectionModalOpen}
-        onClose={() => {
-          console.log('Closing collection modal');
-          setIsCollectionModalOpen(false);
-        }}
-        onCreateCollection={handleCreateCollection}
-      />
-    </div>
+    </AppLayout>
   );
 };
 
