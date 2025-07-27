@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowLeft, Star, DollarSign, Tag } from 'lucide-react';
+import { ArrowLeft, Star, DollarSign, Tag, Edit, Trash2 } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Book, BookForSale, BookForSaleStatus } from '../types/entities';
@@ -12,7 +12,7 @@ import { useBooksRead } from '../hooks/useBooksRead';
 
 const BooksForSale = () => {
   const { books } = useBooks();
-  const { booksForSale, updateBookForSaleStatus } = useBooksForSale();
+  const { booksForSale, updateBookForSaleStatus, removeBookForSale } = useBooksForSale();
   const { getBooksReadCount } = useBooksRead();
   const [selectedBookForContact, setSelectedBookForContact] = useState<BookForSale | null>(null);
   const [isContactModalOpen, setIsContactModalOpen] = useState(false);
@@ -33,6 +33,15 @@ const BooksForSale = () => {
   const handleStatusChange = (bookId: number, newStatus: BookForSaleStatus) => {
     const sale = booksForSale.find(s => s.bookId === bookId);
     if (sale) updateBookForSaleStatus(sale.id, newStatus);
+  };
+
+  const handleDeleteBook = (bookId: number) => {
+    removeBookForSale(bookId);
+  };
+
+  const handleEditBook = (bookId: number) => {
+    // Handle edit functionality - could open a modal or navigate to edit page
+    console.log('Edit book:', bookId);
   };
 
   const onBookClick = (book: Book) => {
@@ -90,13 +99,13 @@ const BooksForSale = () => {
               {myBooks.map(sale => (
                 <div
                   key={sale.id}
-                  className="flex items-center gap-3 p-3 bg-white/60 rounded-lg border border-slate-200 hover:bg-white/80 cursor-pointer transition-colors"
-                  onClick={() => sale.book && onBookClick(sale.book)}
+                  className="flex items-center gap-3 p-3 bg-white/60 rounded-lg border border-slate-200 hover:bg-white/80 transition-colors"
                 >
                   <img 
                     src={sale.book?.cover} 
                     alt={sale.book?.title}
-                    className="w-10 h-14 object-cover rounded"
+                    className="w-10 h-14 object-cover rounded cursor-pointer"
+                    onClick={() => sale.book && onBookClick(sale.book)}
                   />
                   <div className="flex-1 min-w-0">
                     <h4 className="font-medium text-slate-800 text-sm truncate">{sale.book?.title}</h4>
@@ -105,6 +114,39 @@ const BooksForSale = () => {
                       <Tag className="h-3 w-3 text-green-600" />
                       <span className="text-green-600 font-medium text-sm">{sale.currency} {sale.price}</span>
                     </div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="bg-green-50 hover:bg-green-100 text-green-700 border-green-200"
+                      onClick={() => handleStatusChange(sale.bookId, 'Sold')}
+                    >
+                      Sold
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="bg-blue-50 hover:bg-blue-100 text-blue-700 border-blue-200"
+                      onClick={() => handleStatusChange(sale.bookId, 'Picked')}
+                    >
+                      Picked
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleEditBook(sale.bookId)}
+                    >
+                      <Edit className="h-3 w-3" />
+                    </Button>
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="hover:bg-red-50 hover:text-red-700 hover:border-red-200"
+                      onClick={() => handleDeleteBook(sale.bookId)}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
                   </div>
                 </div>
               ))}
