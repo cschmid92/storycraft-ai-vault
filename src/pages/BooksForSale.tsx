@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Edit, Trash2, CheckCircle, Package } from 'lucide-react';
+import { ArrowLeft, Edit, Trash2, CheckCircle, Package, ShoppingCart, CircleCheck, Truck } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
@@ -57,10 +57,34 @@ const BooksForSale = () => {
             <h2 className="text-2xl font-bold text-slate-800 ml-2 inline-block">My Books for Sale</h2>
           </div>
 
-          <div className="mb-8">
-            <div className="flex gap-6 text-slate-600">
-              <p>{myBooks.filter(book => book.status === 'Available').length} books available for purchase</p>
-              <p>{myBooks.filter(book => book.status === 'Sold' || book.status === 'Picked').length} books sold</p>
+          {/* Status Stats */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 md:mb-8">
+            <div className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-slate-600 text-sm">Available</p>
+                  <p className="text-2xl font-bold text-slate-800">{myBooks.filter(book => book.status === 'Available').length}</p>
+                </div>
+                <ShoppingCart className="h-8 w-8 text-green-500" />
+              </div>
+            </div>
+            <div className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-slate-600 text-sm">Sold</p>
+                  <p className="text-2xl font-bold text-slate-800">{myBooks.filter(book => book.status === 'Sold').length}</p>
+                </div>
+                <CircleCheck className="h-8 w-8 text-blue-500" />
+              </div>
+            </div>
+            <div className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-slate-600 text-sm">Picked</p>
+                  <p className="text-2xl font-bold text-slate-800">{myBooks.filter(book => book.status === 'Picked').length}</p>
+                </div>
+                <Truck className="h-8 w-8 text-purple-500" />
+              </div>
             </div>
           </div>
 
