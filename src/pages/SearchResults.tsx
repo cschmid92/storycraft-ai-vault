@@ -5,78 +5,30 @@ import { Search as SearchIcon, ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import BookCard from '../components/BookCard';
 import SearchBar from '../components/SearchBar';
-import UnifiedHeader from '../components/layout/UnifiedHeader';
-import SharedSidebar from '../components/SharedSidebar';
-import CollectionModal from '../components/CollectionModal';
-import CollectionSelectionModal from '../components/CollectionSelectionModal';
-import BookDetailModal from '../components/BookDetailModal';
+import AppLayout from '../components/layout/AppLayout';
 import PriceInputModal from '../components/PriceInputModal';
 import { BookService } from '../services/bookService';
-import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksRead } from '../hooks/useBooksRead';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useBooksForSale } from '../hooks/useBooksForSale';
-import { useUserRatings } from '../hooks/useUserRatings';
 
 const SearchResults = () => {
-  const { collections, addCollection, addBookToCollection } = useCollections();
   const { books } = useBooks();
   const { toggleFavorite } = useFavorites();
   const { addBookForSale, removeBookForSale, isBookForSale } = useBooksForSale();
-  const { rateBook } = useUserRatings();
-  const { booksReadList, addToBooksRead, isInBooksRead, getBooksReadCount } = useBooksRead();
+  const { addToBooksRead, isInBooksRead } = useBooksRead();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const query = searchParams.get('q') || '';
   const genre = searchParams.get('genre') || '';
   
   const [searchTerm, setSearchTerm] = useState(query);
-  const [selectedCollection, setSelectedCollection] = useState(null);
-  const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
-  const [isBookDetailModalOpen, setIsBookDetailModalOpen] = useState(false);
-  const [isCollectionSelectionModalOpen, setIsCollectionSelectionModalOpen] = useState(false);
   const [isPriceModalOpen, setIsPriceModalOpen] = useState(false);
-  const [selectedBook, setSelectedBook] = useState(null);
-  const [selectedBookForCollection, setSelectedBookForCollection] = useState(null);
   const [selectedBookForSale, setSelectedBookForSale] = useState(null);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const searchResults = BookService.searchBooks(query, genre);
 
-  const handleCollectionSelect = (collection) => {
-    setSelectedCollection(collection);
-    if (String(collection?.id) === 'favorites') {
-      navigate('/collections/favorites');
-    } else if (String(collection?.id) === 'books-read') {
-      navigate('/collections/books-read');
-    } else if (collection && typeof collection.id === 'number') {
-      navigate(`/collections/${collection.id}`);
-    }
-    setIsSidebarOpen(false);
-  };
-
-  const handleBookClick = (book) => {
-    setSelectedBook(book);
-    setIsBookDetailModalOpen(true);
-  };
-
-  const handleCreateCollection = (name, color) => {
-    addCollection(name, color);
-  };
-
-  const handleAddToCollection = (bookId) => {
-    setSelectedBookForCollection(books.find(b => b.id === bookId));
-    setIsCollectionSelectionModalOpen(true);
-  };
-
-  const handleCollectionSelection = (collection) => {
-    if (collection && selectedBookForCollection) {
-      addBookToCollection(collection.id, selectedBookForCollection.id);
-    }
-    setSelectedBookForCollection(null);
-    setIsCollectionSelectionModalOpen(false);
-  };
 
   const handleToggleOwnedForSale = (bookId, price) => {
     if (!isBookForSale(bookId)) {
@@ -110,53 +62,25 @@ const SearchResults = () => {
     : "";
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
-      <UnifiedHeader 
-        showMobileMenu={true}
-        onMobileMenuClick={() => setIsSidebarOpen(true)}
-      />
-
-      <div className="flex">
-        {/* Sidebar - Mobile overlay */}
-        {isSidebarOpen && (
-          <div 
-            className="fixed inset-0 bg-black/50 z-50 md:hidden"
-            onClick={() => setIsSidebarOpen(false)}
-          />
-        )}
-        
-        {/* Sidebar */}
-        <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-50 md:z-auto`}>
-          <SharedSidebar 
-            collections={collections}
-            selectedCollection={selectedCollection}
-            onSelectCollection={handleCollectionSelect}
-            onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
-            books={books}
-            onBookClick={handleBookClick}
-            booksReadCount={getBooksReadCount()}
-          />
-        </div>
-
-        {/* Main Content */}
-        <main className="flex-1 p-4 md:p-6">
-          <div className="max-w-7xl mx-auto">
-            <div className="mb-6">
-              {/* Back button and title */}
-              <div className="flex items-center gap-4 mb-4">
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  onClick={() => navigate(-1)}
-                  className="flex items-center gap-2"
-                >
-                  <ArrowLeft className="h-4 w-4" />
-                  Back
-                </Button>
-                <h2 className="text-2xl font-bold text-slate-800">
-                  Search Results {query && `for "${query}"`}
-                </h2>
-              </div>
+    <AppLayout headerTitle="Search Results" headerSubtitle={query ? `Results for "${query}"` : "Search Results"}>
+      <div className="p-4 md:p-6">
+        <div className="max-w-7xl mx-auto">
+          <div className="mb-6">
+            {/* Back button and title */}
+            <div className="flex items-center gap-4 mb-4">
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate(-1)}
+                className="flex items-center gap-2"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back
+              </Button>
+              <h2 className="text-2xl font-bold text-slate-800">
+                Search Results {query && `for "${query}"`}
+              </h2>
+            </div>
               
               <div className="flex gap-2 mb-4">
                 <div className="flex-1">
@@ -179,59 +103,33 @@ const SearchResults = () => {
               </p>
             </div>
 
-            {searchResults.length > 0 ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {searchResults.map(book => (
-                  <BookCard
-                    key={book.id}
-                    book={book}
-                    onToggleFavorite={toggleFavorite}
-                    onAddToCollection={handleAddToCollection}
-                    onBookClick={handleBookClick}
-                    onToggleOwnedForSale={handleToggleOwnedForSale}
-                    onAddToBooksRead={handleAddToBooksRead}
-                    isInBooksRead={isInBooksRead(book.id)}
-                  />
-                ))}
-              </div>
-            ) : (
-              <div className="text-center py-12">
-                <SearchIcon className="h-16 w-16 text-slate-400 mx-auto mb-4 opacity-50" />
-                <h3 className="text-xl font-semibold text-slate-700 mb-2">No results found</h3>
-                <p className="text-slate-500">Try adjusting your search terms or browse our collection</p>
-                <Link to="/">
-                  <Button className="mt-4">Browse Books</Button>
-                </Link>
-              </div>
-            )}
-          </div>
-        </main>
+          {searchResults.length > 0 ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {searchResults.map(book => (
+                <BookCard
+                  key={book.id}
+                  book={book}
+                  onToggleFavorite={toggleFavorite}
+                  onAddToCollection={() => {}}
+                  onBookClick={() => {}}
+                  onToggleOwnedForSale={handleToggleOwnedForSale}
+                  onAddToBooksRead={handleAddToBooksRead}
+                  isInBooksRead={isInBooksRead(book.id)}
+                />
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <SearchIcon className="h-16 w-16 text-slate-400 mx-auto mb-4 opacity-50" />
+              <h3 className="text-xl font-semibold text-slate-700 mb-2">No results found</h3>
+              <p className="text-slate-500">Try adjusting your search terms or browse our collection</p>
+              <Link to="/">
+                <Button className="mt-4">Browse Books</Button>
+              </Link>
+            </div>
+          )}
+        </div>
       </div>
-
-      {/* Modals */}
-      <CollectionModal 
-        isOpen={isCollectionModalOpen}
-        onClose={() => setIsCollectionModalOpen(false)}
-        onCreateCollection={handleCreateCollection}
-      />
-
-      <CollectionSelectionModal
-        isOpen={isCollectionSelectionModalOpen}
-        onClose={() => setIsCollectionSelectionModalOpen(false)}
-        collections={collections}
-        onSelectCollection={handleCollectionSelection}
-        bookTitle={selectedBookForCollection?.title || ""}
-      />
-
-      <BookDetailModal
-        book={selectedBook}
-        isOpen={isBookDetailModalOpen}
-        onClose={() => setIsBookDetailModalOpen(false)}
-        onToggleFavorite={toggleFavorite}
-        onAddToCollection={handleAddToCollection}
-        onToggleOwnedForSale={handleToggleOwnedForSale}
-        onRateBook={rateBook}
-      />
 
       <PriceInputModal 
         isOpen={isPriceModalOpen}
@@ -242,7 +140,7 @@ const SearchResults = () => {
         onConfirm={handleSetSalePrice}
         bookTitle={selectedBookForSaleTitle}
       />
-    </div>
+    </AppLayout>
   );
 };
 

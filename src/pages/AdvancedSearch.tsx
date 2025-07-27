@@ -4,36 +4,12 @@ import { Search, ArrowLeft } from 'lucide-react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Link } from 'react-router-dom';
-import SharedSidebar from '../components/SharedSidebar';
-import CollectionModal from '../components/CollectionModal';
-import UnifiedHeader from '../components/layout/UnifiedHeader';
-import BookDetailModal from '../components/BookDetailModal';
-import CollectionSelectionModal from '../components/CollectionSelectionModal';
-import { BookService } from '../services/bookService';
 import { useNavigate } from 'react-router-dom';
-import { useCollections } from '../hooks/useCollections';
-import { useBooks } from '../hooks/useBooks';
-import { useBooksRead } from '../hooks/useBooksRead';
-import { useFavorites } from '../contexts/FavoritesContext';
-import { useBooksForSale } from '../hooks/useBooksForSale';
-import { useUserRatings } from '../hooks/useUserRatings';
-import { Book, Collection } from '../types/entities';
+import AppLayout from '../components/layout/AppLayout';
+import { BookService } from '../services/bookService';
 
 const AdvancedSearch = () => {
   const navigate = useNavigate();
-  const { collections, addCollection, deleteCollection, addBookToCollection } = useCollections();
-  const { books } = useBooks();
-  const { toggleFavorite } = useFavorites();
-  const { addBookForSale, removeBookForSale } = useBooksForSale();
-  const { rateBook } = useUserRatings();
-  const { getBooksReadCount } = useBooksRead();
-  const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
-  const [isBookDetailModalOpen, setIsBookDetailModalOpen] = useState(false);
-  const [isCollectionSelectionModalOpen, setIsCollectionSelectionModalOpen] = useState(false);
-  const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
   
   const [searchForm, setSearchForm] = useState({
     title: '',
@@ -95,90 +71,24 @@ const AdvancedSearch = () => {
     });
   };
 
-  const handleCollectionSelect = (collection: Collection | { id: string; name: string; count: number; color: string } | null) => {
-    if (collection?.id === 'favorites') {
-      navigate('/collections/favorites');
-    } else if (collection?.id === 'books-read') {
-      navigate('/collections/books-read');
-    } else if (collection && typeof collection.id === 'number') {
-      navigate(`/collections/${collection.id}`);
-    }
-    setIsSidebarOpen(false);
-  };
-
-  const handleBookClick = (book: Book) => {
-    setSelectedBook(book);
-    setIsBookDetailModalOpen(true);
-  };
-
-  const handleAddToCollection = (bookId: number) => {
-    const book = books.find(b => Number(b.id) === bookId);
-    if (book) {
-      setSelectedBookForCollection(book);
-      setIsCollectionSelectionModalOpen(true);
-    }
-  };
-
-  const handleCollectionSelection = (collection: Collection) => {
-    if (collection && selectedBookForCollection) {
-      addBookToCollection(collection.id, Number(selectedBookForCollection.id));
-    }
-    setSelectedBookForCollection(null);
-    setIsCollectionSelectionModalOpen(false);
-  };
-
-  const handleCreateCollection = (name: string, color: string) => {
-    addCollection(name, color);
-  };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
-      <UnifiedHeader 
-        title="Bacondo"
-        subtitle="Your Digital Library"
-        showMobileMenu={true}
-        onMobileMenuClick={() => setIsSidebarOpen(true)}
-      />
-
-      <div className="flex">
-        {/* Sidebar - Mobile overlay */}
-        {isSidebarOpen && (
-          <div 
-            className="fixed inset-0 bg-black/50 z-50 md:hidden"
-            onClick={() => setIsSidebarOpen(false)}
-          />
-        )}
-        
-        {/* Sidebar */}
-        <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:sticky md:top-16 z-50 md:z-auto h-screen md:h-[calc(100vh-4rem)]`}>
-          <SharedSidebar 
-            collections={collections}
-            selectedCollection={null}
-            onSelectCollection={handleCollectionSelect}
-            onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
-            books={books}
-            onBookClick={handleBookClick}
-            booksReadCount={getBooksReadCount()}
-            onDeleteCollection={deleteCollection}
-          />
-        </div>
-
-        {/* Main Content */}
-        <main className="flex-1 p-4 md:p-6">
-          <div className="max-w-4xl mx-auto">
-            {/* Back button and title */}
-            <div className="flex items-center gap-4 mb-6">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate(-1)}
-                className="flex items-center gap-2"
-              >
-                <ArrowLeft className="h-4 w-4" />
-                Back
-              </Button>
-              <h1 className="text-2xl font-bold text-slate-800">Advanced Search</h1>
-            </div>
+    <AppLayout headerTitle="Advanced Search" headerSubtitle="Find the perfect book">
+      <div className="p-4 md:p-6">
+        <div className="max-w-4xl mx-auto">
+          {/* Back button and title */}
+          <div className="flex items-center gap-4 mb-6">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate(-1)}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </Button>
+            <h1 className="text-2xl font-bold text-slate-800">Advanced Search</h1>
+          </div>
             
             <div className="bg-white/70 backdrop-blur-md rounded-xl border border-slate-200 p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -356,39 +266,10 @@ const AdvancedSearch = () => {
                   Clear All Filters
                 </Button>
               </div>
-            </div>
           </div>
-        </main>
+        </div>
       </div>
-
-      {/* Modals */}
-      <CollectionModal 
-        isOpen={isCollectionModalOpen}
-        onClose={() => setIsCollectionModalOpen(false)}
-        onCreateCollection={handleCreateCollection}
-      />
-
-      <CollectionSelectionModal
-        isOpen={isCollectionSelectionModalOpen}
-        onClose={() => setIsCollectionSelectionModalOpen(false)}
-        collections={collections}
-        onSelectCollection={handleCollectionSelection}
-        bookTitle={selectedBookForCollection?.title || ""}
-      />
-
-      <BookDetailModal
-        book={selectedBook}
-        isOpen={isBookDetailModalOpen}
-        onClose={() => setIsBookDetailModalOpen(false)}
-        onToggleFavorite={toggleFavorite}
-        onAddToCollection={handleAddToCollection}
-        onToggleOwnedForSale={(bookId, price) => {
-          if (price) addBookForSale(bookId, price, 'Good');
-          else removeBookForSale(bookId);
-        }}
-        onRateBook={rateBook}
-      />
-    </div>
+    </AppLayout>
   );
 };
 

@@ -17,13 +17,15 @@ interface AppLayoutProps {
   headerTitle?: string;
   headerSubtitle?: string;
   showSidebar?: boolean;
+  showHeader?: boolean;
 }
 
 const AppLayout = ({ 
   children, 
   headerTitle,
   headerSubtitle,
-  showSidebar = true 
+  showSidebar = true,
+  showHeader = true
 }: AppLayoutProps) => {
   const { books } = useBooks();
   const { toggleFavorite } = useFavorites();
@@ -106,7 +108,7 @@ const AppLayout = ({
       )}
       
       <div className="flex-1 flex flex-col">
-        <AppHeader title={headerTitle} subtitle={headerSubtitle} />
+        {showHeader && <AppHeader title={headerTitle} subtitle={headerSubtitle} />}
         <main className="flex-1">
           {children}
         </main>
