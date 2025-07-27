@@ -115,4 +115,4 @@ const BuyUsedBooks = () => {
   );
 };
 
-export default BooksForSale;
+export default BuyUsedBooks;
