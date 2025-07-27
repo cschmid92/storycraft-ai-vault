@@ -73,7 +73,7 @@ const AdvancedSearch = () => {
 
 
   return (
-    <AppLayout headerTitle="Advanced Search" headerSubtitle="Find the perfect book">
+    <AppLayout headerTitle="Bacondo" headerSubtitle="Your Digital Library">
       <div className="p-4 md:p-6">
         <div className="max-w-4xl mx-auto">
           {/* Back button and title */}

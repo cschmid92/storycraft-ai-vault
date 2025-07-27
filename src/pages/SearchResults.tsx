@@ -62,7 +62,7 @@ const SearchResults = () => {
     : "";
 
   return (
-    <AppLayout headerTitle="Search Results" headerSubtitle={query ? `Results for "${query}"` : "Search Results"}>
+    <AppLayout headerTitle="Bacondo" headerSubtitle="Your Digital Library">
       <div className="p-4 md:p-6">
         <div className="max-w-7xl mx-auto">
           <div className="mb-6">
