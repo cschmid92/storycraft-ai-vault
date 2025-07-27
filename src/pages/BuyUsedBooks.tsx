@@ -9,8 +9,8 @@ import BuyUsedBooksFilters from '../components/BuyUsedBooksFilters';
 import UsedBookGrid from '../components/UsedBookGrid';
 import ContactSellerModal from '../components/ContactSellerModal';
 import MessengerModal from '../components/MessengerModal';
-import { useCollections, Collection } from '../hooks/useCollections';
-import { useBooksRead } from '../hooks/useBooksRead';
+import { useCollections, Collection } from '../contexts/CollectionsContext';
+import { useBooksRead } from '../contexts/BooksReadContext';
 import { booksForSale } from '../data/mockData';
 
 const BuyUsedBooks = () => {

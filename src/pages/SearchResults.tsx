@@ -9,7 +9,7 @@ import AppLayout from '../components/layout/AppLayout';
 import PriceInputModal from '../components/PriceInputModal';
 import { BookService } from '../services/bookService';
 import { useBooks } from '../hooks/useBooks';
-import { useBooksRead } from '../hooks/useBooksRead';
+import { useBooksRead } from '../contexts/BooksReadContext';
 import { useFavorites } from '../contexts/FavoritesContext';
 import { useBooksForSale } from '../hooks/useBooksForSale';
 

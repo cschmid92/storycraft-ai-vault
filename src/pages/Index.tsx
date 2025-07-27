@@ -7,7 +7,7 @@ import Recommendations from '../components/Recommendations';
 import AppLayout from '../components/layout/AppLayout';
 import { Button } from "@/components/ui/button";
 import { useBooks } from '../hooks/useBooks';
-import { useBooksRead } from '../hooks/useBooksRead';
+import { useBooksRead } from '../contexts/BooksReadContext';
 import { useFavorites } from '../contexts/FavoritesContext';
 
 const Index = () => {
