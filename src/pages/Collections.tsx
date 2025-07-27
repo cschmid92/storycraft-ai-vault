@@ -1,9 +1,14 @@
+
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { BookmarkPlus } from 'lucide-react';
 import { Button } from "@/components/ui/button";
-import AppLayout from '../components/layout/AppLayout';
+import UnifiedHeader from '../components/layout/UnifiedHeader';
 import CollectionContentArea from '../components/CollectionContentArea';
+import AppSidebar from '../components/layout/AppSidebar';
+import CollectionModal from '../components/CollectionModal';
+import BookDetailModal from '../components/BookDetailModal';
+import CollectionSelectionModal from '../components/CollectionSelectionModal';
 import { Book, Collection } from '../types/entities';
 import { useCollections } from '../hooks/useCollections';
 import { useBooks } from '../hooks/useBooks';
@@ -19,6 +24,14 @@ const Collections = () => {
   const { booksReadList, addToBooksRead, isInBooksRead, getBooksReadCount } = useBooksRead();
   const { toggleFavorite, isFavorite, getFavoriteBooks } = useFavorites();
   const { isBookForSale, addBookForSale, removeBookForSale } = useBooksForSale();
+  const [isCollectionModalOpen, setIsCollectionModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [editingCollection, setEditingCollection] = useState<Collection | null>(null);
+  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [selectedBook, setSelectedBook] = useState<Book | null>(null);
+  const [isBookDetailModalOpen, setIsBookDetailModalOpen] = useState(false);
+  const [isCollectionSelectionModalOpen, setIsCollectionSelectionModalOpen] = useState(false);
+  const [selectedBookForCollection, setSelectedBookForCollection] = useState<Book | null>(null);
   
   // Handle both standard and user collections
   let selectedCollection: Collection | { id: string; name: string; count: number; color: string } | null = null;
@@ -40,7 +53,11 @@ const Collections = () => {
   }
 
   const handleEditCollection = (collectionId: number) => {
-    // This will be handled by AppLayout collection modal
+    const collection = collections.find(c => c.id === collectionId);
+    if (collection) {
+      setEditingCollection(collection);
+      setIsEditModalOpen(true);
+    }
   };
 
   const handleDeleteCollection = () => {
@@ -52,20 +69,48 @@ const Collections = () => {
     }
   };
 
-  const handleRemoveFromCollection = (bookId: number) => {
-    if (selectedCollection && typeof selectedCollection.id === 'number') {
-      removeBookFromCollection(selectedCollection.id, bookId);
+  const handleCollectionSelect = (collection: Collection | { id: string; name: string; count: number; color: string } | null) => {
+    if (collection?.id === 'favorites') {
+      navigate('/collections/favorites');
+    } else if (collection?.id === 'books-read') {
+      navigate('/collections/books-read');
+    } else if (collection && typeof collection.id === 'number') {
+      navigate(`/collections/${collection.id}`);
     }
-  };
-
-  const handleAddToCollection = (bookId: number) => {
-    // This will be handled by AppLayout collection modal - but we need a function to trigger it
-    console.log('Add to collection triggered for book:', bookId);
+    setIsSidebarOpen(false); // Close sidebar on mobile after selection
   };
 
   const handleBookClick = (book: Book) => {
-    // This will be handled by AppLayout book detail modal - but we need a function to trigger it  
-    console.log('Book click triggered for book:', book.title);
+    setSelectedBook(book);
+    setIsBookDetailModalOpen(true);
+  };
+
+  const handleToggleFavorite = (bookId: number) => {
+    toggleFavorite(bookId);
+  };
+
+  const handleAddToCollection = (bookId: number) => {
+    const book = books.find(b => Number(b.id) === bookId);
+    if (book) {
+      setSelectedBookForCollection(book);
+      setIsCollectionSelectionModalOpen(true);
+    }
+  };
+
+  const handleCollectionSelection = (collection: Collection) => {
+    if (collection && selectedBookForCollection) {
+      addBookToCollection(collection.id, Number(selectedBookForCollection.id));
+      console.log(`Added "${selectedBookForCollection.title}" to collection "${collection.name}"`);
+    }
+    setSelectedBookForCollection(null);
+    setIsCollectionSelectionModalOpen(false);
+  };
+
+  const handleRemoveFromCollection = (bookId: number) => {
+    if (selectedCollection && typeof selectedCollection.id === 'number') {
+      removeBookFromCollection(selectedCollection.id, bookId);
+      console.log(`Removed book ${bookId} from collection ${selectedCollection.name}`);
+    }
   };
 
   const handleAddToBooksRead = (bookId: number) => {
@@ -84,9 +129,21 @@ const Collections = () => {
     rateBook(bookId, rating);
   };
 
+  const handleCreateCollection = (name: string, color: string, description?: string) => {
+    addCollection(name, color, description);
+  };
+
+  const handleUpdateCollection = (name: string, color: string, description?: string) => {
+    if (editingCollection) {
+      updateCollection(editingCollection.id, { name, color, description });
+      setIsEditModalOpen(false);
+      setEditingCollection(null);
+    }
+  };
+
   if (!selectedCollection) {
     return (
-      <AppLayout>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
             <BookmarkPlus className="h-16 w-16 text-slate-400 mx-auto mb-4" />
@@ -94,28 +151,94 @@ const Collections = () => {
             <Button onClick={() => navigate('/')}>Go back to library</Button>
           </div>
         </div>
-      </AppLayout>
+      </div>
     );
   }
 
   const canEdit = typeof selectedCollection.id === 'number';
 
   return (
-    <AppLayout>
-      <CollectionContentArea
-        selectedCollection={selectedCollection}
-        collectionBooks={collectionBooks}
-        canEdit={canEdit}
-        booksReadList={booksReadList}
-        onToggleFavorite={toggleFavorite}
-        onBookClick={handleBookClick}
-        onAddToCollection={handleAddToCollection}
-        onAddToBooksRead={handleAddToBooksRead}
-        onRemoveFromCollection={canEdit ? handleRemoveFromCollection : undefined}
-        onEditCollection={handleEditCollection}
-        onDeleteCollection={handleDeleteCollection}
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
+      <UnifiedHeader 
+        showMobileMenu={true}
+        onMobileMenuClick={() => setIsSidebarOpen(true)}
       />
-    </AppLayout>
+
+      <div className="flex">
+        {/* Sidebar - Mobile overlay */}
+        {isSidebarOpen && (
+          <div 
+            className="fixed inset-0 bg-black/50 z-50 md:hidden"
+            onClick={() => setIsSidebarOpen(false)}
+          />
+        )}
+        
+        {/* Sidebar */}
+        <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:sticky md:top-16 z-50 md:z-auto h-screen md:h-[calc(100vh-4rem)]`}>
+          <AppSidebar 
+            collections={collections}
+            selectedCollection={selectedCollection as Collection}
+            onSelectCollection={handleCollectionSelect}
+            onOpenCollectionModal={() => setIsCollectionModalOpen(true)}
+            books={books}
+            onBookClick={handleBookClick}
+            booksReadCount={getBooksReadCount()}
+          />
+        </div>
+
+        <CollectionContentArea
+          selectedCollection={selectedCollection}
+          collectionBooks={collectionBooks}
+          canEdit={canEdit}
+          booksReadList={booksReadList}
+          onToggleFavorite={handleToggleFavorite}
+          onBookClick={handleBookClick}
+          onAddToCollection={handleAddToCollection}
+          onAddToBooksRead={handleAddToBooksRead}
+          onRemoveFromCollection={canEdit ? handleRemoveFromCollection : undefined}
+          onEditCollection={handleEditCollection}
+          onDeleteCollection={handleDeleteCollection}
+        />
+      </div>
+
+      {/* Modals */}
+      <CollectionModal 
+        isOpen={isCollectionModalOpen}
+        onClose={() => setIsCollectionModalOpen(false)}
+        onCreateCollection={handleCreateCollection}
+      />
+
+      <CollectionModal 
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setEditingCollection(null);
+        }}
+        onCreateCollection={handleUpdateCollection}
+        editMode={true}
+        initialName={editingCollection?.name}
+        initialColor={editingCollection?.color}
+        initialDescription={editingCollection?.description}
+      />
+
+      <CollectionSelectionModal
+        isOpen={isCollectionSelectionModalOpen}
+        onClose={() => setIsCollectionSelectionModalOpen(false)}
+        collections={collections}
+        onSelectCollection={handleCollectionSelection}
+        bookTitle={selectedBookForCollection?.title || ""}
+      />
+
+      <BookDetailModal
+        book={selectedBook}
+        isOpen={isBookDetailModalOpen}
+        onClose={() => setIsBookDetailModalOpen(false)}
+        onToggleFavorite={handleToggleFavorite}
+        onAddToCollection={handleAddToCollection}
+        onToggleOwnedForSale={handleToggleOwnedForSale}
+        onRateBook={handleRateBook}
+      />
+    </div>
   );
 };
 

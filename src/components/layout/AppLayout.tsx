@@ -18,7 +18,6 @@ interface AppLayoutProps {
   headerSubtitle?: string;
   showSidebar?: boolean;
   showHeader?: boolean;
-  showMobileMenu?: boolean;
 }
 
 const AppLayout = ({ 
@@ -26,8 +25,7 @@ const AppLayout = ({
   headerTitle,
   headerSubtitle,
   showSidebar = true,
-  showHeader = true,
-  showMobileMenu = true
+  showHeader = true
 }: AppLayoutProps) => {
   const { books } = useBooks();
   const { toggleFavorite } = useFavorites();
@@ -51,7 +49,6 @@ const AppLayout = ({
   const [selectedBookId, setSelectedBookId] = useState<number | null>(null);
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [isBookDetailOpen, setIsBookDetailOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const handleSelectCollection = (collection: Collection | null) => {
     setSelectedCollection(collection);
@@ -97,40 +94,20 @@ const AppLayout = ({
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
-      {showHeader && (
-        <AppHeader 
-          title={headerTitle} 
-          subtitle={headerSubtitle} 
-          showMobileMenu={showMobileMenu}
-          onMobileMenuClick={() => setIsSidebarOpen(true)}
-        />
-      )}
+      {showHeader && <AppHeader title={headerTitle} subtitle={headerSubtitle} />}
       
       <div className="flex">
-        {/* Sidebar - Mobile overlay */}
-        {showSidebar && isSidebarOpen && (
-          <div 
-            className="fixed inset-0 bg-black/50 z-50 md:hidden"
-            onClick={() => setIsSidebarOpen(false)}
-          />
-        )}
-        
         {showSidebar && (
-          <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:translate-x-0 transition-transform duration-300 ease-in-out fixed md:relative z-50 md:z-auto`}>
-            <AppSidebar
-              collections={collections}
-              selectedCollection={selectedCollection}
-              onSelectCollection={(collection) => {
-                handleSelectCollection(collection);
-                setIsSidebarOpen(false); // Close mobile sidebar on selection
-              }}
-              onOpenCollectionModal={handleOpenCollectionModal}
-              books={books}
-              onBookClick={handleBookClick}
-              booksReadCount={booksReadCount}
-              onDeleteCollection={deleteCollection}
-            />
-          </div>
+          <AppSidebar
+            collections={collections}
+            selectedCollection={selectedCollection}
+            onSelectCollection={handleSelectCollection}
+            onOpenCollectionModal={handleOpenCollectionModal}
+            books={books}
+            onBookClick={handleBookClick}
+            booksReadCount={booksReadCount}
+            onDeleteCollection={deleteCollection}
+          />
         )}
         
         <main className="flex-1">
