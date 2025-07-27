@@ -30,7 +30,7 @@ const AppSidebar = ({
   const navigate = useNavigate();
   const { getMyBooksForSale } = useBooksForSale();
   const { getFavoriteBooks } = useFavorites();
-  const { getBooksReadCount, booksReadList } = useBooksRead();
+  const { booksReadList } = useBooksRead();
   
   const myBooksForSale = getMyBooksForSale();
   const booksForSaleCount = myBooksForSale.filter(sale => 
@@ -42,7 +42,7 @@ const AppSidebar = ({
     if (collectionId === 'favorites') {
       return getFavoriteBooks().length;
     } else if (collectionId === 'books-read') {
-      return getBooksReadCount();
+      return booksReadList.length;
     } else {
       const collection = collections.find(c => c.id === collectionId);
       return collection?.bookIds.length || 0;
@@ -50,11 +50,20 @@ const AppSidebar = ({
   };
 
   // Standard collections that appear before user collections
-  // Recalculate counts on every render to ensure they're up-to-date
-  // Using booksReadList.length to ensure reactivity to books read changes
+  // Using reactive state to ensure immediate updates
   const standardCollections = [
-    { id: 'favorites', name: "Favorites ❤️", count: getFavoriteBooks().length, color: "bg-red-500" },
-    { id: 'books-read', name: "Books read 📖", count: booksReadList.length, color: "bg-green-500" },
+    { 
+      id: 'favorites', 
+      name: "Favorites ❤️", 
+      count: getFavoriteBooks().length, 
+      color: "bg-red-500" 
+    },
+    { 
+      id: 'books-read', 
+      name: "Books read 📖", 
+      count: booksReadList.length, 
+      color: "bg-green-500" 
+    },
   ];
 
 
@@ -120,7 +129,7 @@ const AppSidebar = ({
               </button>
             ))}
 
-            {/* User Collections */}
+            {/* User Collections - Using reactive count calculation */}
             {collections.map((collection) => (
               <button
                 key={collection.id}
@@ -133,7 +142,7 @@ const AppSidebar = ({
               >
                 <div className={`w-3 h-3 rounded-full ${collection.color}`} />
                 <span className="text-sm flex-1 truncate text-left">{collection.name}</span>
-                <span className="text-xs text-slate-500">{getCollectionCount(collection.id)}</span>
+                <span className="text-xs text-slate-500">{collection.bookIds?.length || 0}</span>
               </button>
             ))}
             
