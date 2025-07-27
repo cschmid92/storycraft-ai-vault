@@ -42,7 +42,7 @@ const AppSidebar = ({
     sale.status === 'Available'
   ).length;
   
-  // Calculate actual counts for collections
+  // Calculate counts fresh on every render (like Favorites does)
   const getCollectionCount = (collectionId: number | string) => {
     if (collectionId === 'favorites') {
       return getFavoriteBooks().length;
@@ -50,12 +50,11 @@ const AppSidebar = ({
       return booksReadList.length;
     } else {
       const collection = collections.find(c => c.id === collectionId);
-      return collection?.bookIds.length || 0;
+      return collection?.bookIds?.length || 0;
     }
   };
 
-  // Standard collections that appear before user collections
-  // Using reactive state to ensure immediate updates
+  // Standard collections - recalculated every render
   const standardCollections = [
     { 
       id: 'favorites', 
@@ -147,7 +146,7 @@ const AppSidebar = ({
               >
                 <div className={`w-3 h-3 rounded-full ${collection.color}`} />
                 <span className="text-sm flex-1 truncate text-left">{collection.name}</span>
-                <span className="text-xs text-slate-500">{collection.bookIds?.length || 0}</span>
+                <span className="text-xs text-slate-500">{getCollectionCount(collection.id)}</span>
               </button>
             ))}
             
