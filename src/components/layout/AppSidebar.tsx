@@ -32,8 +32,7 @@ const AppSidebar = ({
   const { getMyBooksForSale } = useBooksForSale();
   const { getFavoriteBooks } = useFavorites();
   
-  const myBooksForSale = getMyBooksForSale();
-  const booksForSaleCount = myBooksForSale.filter(sale => 
+  const booksForSaleCount = getMyBooksForSale().filter(sale => 
     sale.status === 'Available'
   ).length;
   
