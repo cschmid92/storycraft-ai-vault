@@ -96,19 +96,21 @@ const Collections = () => {
 
   return (
     <AppLayout headerTitle="Bacondo" headerSubtitle="Your Digital Library">
+      {({ onBookClick, onAddToCollection }) => (
       <CollectionContentArea
         selectedCollection={selectedCollection}
         collectionBooks={collectionBooks}
         canEdit={canEdit}
         booksReadList={booksReadList}
         onToggleFavorite={toggleFavorite}
-        onBookClick={(book) => console.log("Book clicked:", book.title)}
-        onAddToCollection={(bookId) => console.log("Add to collection:", bookId)}
+        onBookClick={onBookClick}
+        onAddToCollection={onAddToCollection}
         onAddToBooksRead={handleAddToBooksRead}
         onRemoveFromCollection={canEdit ? handleRemoveFromCollection : undefined}
         onEditCollection={handleEditCollection}
         onDeleteCollection={handleDeleteCollection}
       />
+      )}
     </AppLayout>
   );
 };

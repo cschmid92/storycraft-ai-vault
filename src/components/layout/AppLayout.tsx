@@ -13,7 +13,13 @@ import BookDetailModal from '../BookDetailModal';
 import { Book, Collection } from '../../types/entities';
 
 interface AppLayoutProps {
-  children: React.ReactNode;
+  children: React.ReactNode | ((handlers: {
+    onBookClick: (book: Book) => void;
+    onAddToCollection: (bookId: number) => void;
+    onToggleFavorite: (bookId: number) => void;
+    onToggleOwnedForSale: (bookId: number, price?: number) => void;
+    onRateBook: (bookId: number, rating: number) => void;
+  }) => React.ReactNode);
   headerTitle?: string;
   headerSubtitle?: string;
   showSidebar?: boolean;
@@ -72,6 +78,16 @@ const AppLayout = ({
     setIsSelectionModalOpen(true);
   };
 
+  const handleBookClick = (book: Book) => {
+    setSelectedBook(book);
+    setIsBookDetailOpen(true);
+  };
+
+  const handleToggleOwnedForSale = (bookId: number, price?: number) => {
+    if (price) addBookForSale(bookId, price, 'Good');
+    else removeBookForSale(bookId);
+  };
+
   const handleConfirmAddToCollection = (collection: Collection) => {
     if (selectedBookId) {
       addBookToCollection(collection.id, selectedBookId);
@@ -80,9 +96,12 @@ const AppLayout = ({
     }
   };
 
-  const handleBookClick = (book: Book) => {
-    setSelectedBook(book);
-    setIsBookDetailOpen(true);
+  const handlers = {
+    onBookClick: handleBookClick,
+    onAddToCollection: handleAddToCollection,
+    onToggleFavorite: toggleFavorite,
+    onToggleOwnedForSale: handleToggleOwnedForSale,
+    onRateBook: rateBook,
   };
 
   const handleCloseBookDetail = () => {
@@ -111,7 +130,7 @@ const AppLayout = ({
         )}
         
         <main className="flex-1">
-          {children}
+          {typeof children === 'function' ? children(handlers) : children}
         </main>
       </div>
 

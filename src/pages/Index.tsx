@@ -37,6 +37,7 @@ const Index = () => {
 
   return (
     <AppLayout headerTitle="Bacondo" headerSubtitle="Your Digital Library">
+      {({ onBookClick, onAddToCollection, onToggleFavorite }) => (
       <div className="p-4 md:p-6">
         {/* Search and Filters */}
         <div className="mb-6 md:mb-8">
@@ -127,9 +128,9 @@ const Index = () => {
         {/* Popular Reads */}
         <PopularReads 
           books={books} 
-          onBookClick={(book) => console.log("Book clicked:", book.title)}
-          onToggleFavorite={(bookId) => console.log("Toggle favorite:", bookId)}
-          onAddToCollection={(bookId) => console.log("Add to collection:", bookId)}
+          onBookClick={onBookClick}
+          onToggleFavorite={onToggleFavorite}
+          onAddToCollection={onAddToCollection}
           onAddToBooksRead={handleAddToBooksRead}
           isInBooksRead={isInBooksRead}
         />
@@ -137,13 +138,14 @@ const Index = () => {
         {/* Recommendations */}
         <Recommendations 
           books={books} 
-          onBookClick={(book) => console.log("Book clicked:", book.title)}
-          onToggleFavorite={(bookId) => console.log("Toggle favorite:", bookId)}
-          onAddToCollection={(bookId) => console.log("Add to collection:", bookId)}
+          onBookClick={onBookClick}
+          onToggleFavorite={onToggleFavorite}
+          onAddToCollection={onAddToCollection}
           onAddToBooksRead={handleAddToBooksRead}
           isInBooksRead={isInBooksRead}
         />
       </div>
+      )}
     </AppLayout>
   );
 };
