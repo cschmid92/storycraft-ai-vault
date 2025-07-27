@@ -125,7 +125,6 @@ const AppLayout = ({
             onOpenCollectionModal={handleOpenCollectionModal}
             books={books}
             onBookClick={handleBookClick}
-            booksReadCount={booksReadCount}
             onDeleteCollection={deleteCollection}
           />
         )}

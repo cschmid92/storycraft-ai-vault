@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Book, Collection } from '../../types/entities';
 import { useFavorites } from '../../contexts/FavoritesContext';
 import { useBooksForSale } from '../../hooks/useBooksForSale';
+import { useBooksRead } from '../../hooks/useBooksRead';
 
 interface AppSidebarProps {
   collections: Collection[];
@@ -14,7 +15,6 @@ interface AppSidebarProps {
   onOpenCollectionModal: () => void;
   books: Book[];
   onBookClick: (book: Book) => void;
-  booksReadCount: number;
   onDeleteCollection?: (collectionId: number | string) => void;
 }
 
@@ -25,12 +25,12 @@ const AppSidebar = ({
   onOpenCollectionModal,
   books,
   onBookClick,
-  booksReadCount,
   onDeleteCollection
 }: AppSidebarProps) => {
   const navigate = useNavigate();
   const { getMyBooksForSale } = useBooksForSale();
   const { getFavoriteBooks } = useFavorites();
+  const { getBooksReadCount } = useBooksRead();
   
   const myBooksForSale = getMyBooksForSale();
   const booksForSaleCount = myBooksForSale.filter(sale => 
@@ -42,7 +42,7 @@ const AppSidebar = ({
     if (collectionId === 'favorites') {
       return getFavoriteBooks().length;
     } else if (collectionId === 'books-read') {
-      return booksReadCount;
+      return getBooksReadCount();
     } else {
       const collection = collections.find(c => c.id === collectionId);
       return collection?.bookIds.length || 0;
@@ -53,7 +53,7 @@ const AppSidebar = ({
   // Recalculate counts on every render to ensure they're up-to-date
   const standardCollections = [
     { id: 'favorites', name: "Favorites ❤️", count: getFavoriteBooks().length, color: "bg-red-500" },
-    { id: 'books-read', name: "Books read 📖", count: booksReadCount, color: "bg-green-500" },
+    { id: 'books-read', name: "Books read 📖", count: getBooksReadCount(), color: "bg-green-500" },
   ];
 
 
