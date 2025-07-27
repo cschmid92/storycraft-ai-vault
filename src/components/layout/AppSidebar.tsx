@@ -30,7 +30,7 @@ const AppSidebar = ({
   const navigate = useNavigate();
   const { getMyBooksForSale } = useBooksForSale();
   const { getFavoriteBooks } = useFavorites();
-  const { getBooksReadCount } = useBooksRead();
+  const { getBooksReadCount, booksReadList } = useBooksRead();
   
   const myBooksForSale = getMyBooksForSale();
   const booksForSaleCount = myBooksForSale.filter(sale => 
@@ -51,9 +51,10 @@ const AppSidebar = ({
 
   // Standard collections that appear before user collections
   // Recalculate counts on every render to ensure they're up-to-date
+  // Using booksReadList.length to ensure reactivity to books read changes
   const standardCollections = [
     { id: 'favorites', name: "Favorites ❤️", count: getFavoriteBooks().length, color: "bg-red-500" },
-    { id: 'books-read', name: "Books read 📖", count: getBooksReadCount(), color: "bg-green-500" },
+    { id: 'books-read', name: "Books read 📖", count: booksReadList.length, color: "bg-green-500" },
   ];
 
 
