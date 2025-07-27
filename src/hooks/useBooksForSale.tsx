@@ -6,9 +6,6 @@ import { useBooks } from './useBooks';
 const BOOKS_FOR_SALE_STORAGE_KEY = 'bacondo-books-for-sale';
 
 const loadBooksForSale = (): BookForSale[] => {
-  // Temporarily clear localStorage to ensure fresh data
-  localStorage.removeItem(BOOKS_FOR_SALE_STORAGE_KEY);
-  
   try {
     const stored = localStorage.getItem(BOOKS_FOR_SALE_STORAGE_KEY);
     if (stored) {
