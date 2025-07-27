@@ -119,7 +119,6 @@ const AppLayout = ({
       <div className="flex">
         {showSidebar && (
           <AppSidebar
-            collections={collections}
             selectedCollection={selectedCollection}
             onSelectCollection={handleSelectCollection}
             onOpenCollectionModal={handleOpenCollectionModal}

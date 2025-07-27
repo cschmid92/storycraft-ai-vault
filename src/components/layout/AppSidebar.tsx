@@ -7,9 +7,9 @@ import { Book, Collection } from '../../types/entities';
 import { useFavorites } from '../../contexts/FavoritesContext';
 import { useBooksForSale } from '../../hooks/useBooksForSale';
 import { useBooksRead } from '../../hooks/useBooksRead';
+import { useCollections } from '../../hooks/useCollections';
 
 interface AppSidebarProps {
-  collections: Collection[];
   selectedCollection: Collection | null;
   onSelectCollection: (collection: Collection | null) => void;
   onOpenCollectionModal: () => void;
@@ -19,7 +19,6 @@ interface AppSidebarProps {
 }
 
 const AppSidebar = ({ 
-  collections, 
   selectedCollection, 
   onSelectCollection, 
   onOpenCollectionModal,
@@ -28,6 +27,7 @@ const AppSidebar = ({
   onDeleteCollection
 }: AppSidebarProps) => {
   const navigate = useNavigate();
+  const { collections } = useCollections(); // Use own hook for reactive updates
   const { getMyBooksForSale } = useBooksForSale();
   const { getFavoriteBooks } = useFavorites();
   const { booksReadList } = useBooksRead();
