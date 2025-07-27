@@ -113,31 +113,41 @@ export const useCollections = () => {
   };
 
   const addBookToCollection = (collectionId: number | string, bookId: number) => {
-    setCollections(prev => prev.map(c => {
-      if (c.id === collectionId) {
-        const bookIds = c.bookIds || [];
-        if (!bookIds.includes(bookId)) {
-          const newBookIds = [...bookIds, bookId];
-          console.log(`Added book ${bookId} to collection ${c.name}`);
-          return { ...c, bookIds: newBookIds, count: newBookIds.length, updatedAt: new Date() };
-        } else {
-          console.log(`Book ${bookId} already in collection ${c.name}`);
+    console.log(`addBookToCollection called: ${collectionId}, ${bookId}`);
+    setCollections(prev => {
+      const updated = prev.map(c => {
+        if (c.id === collectionId) {
+          const bookIds = c.bookIds || [];
+          if (!bookIds.includes(bookId)) {
+            const newBookIds = [...bookIds, bookId];
+            console.log(`Added book ${bookId} to collection ${c.name}. New count: ${newBookIds.length}`);
+            return { ...c, bookIds: newBookIds, count: newBookIds.length, updatedAt: new Date() };
+          } else {
+            console.log(`Book ${bookId} already in collection ${c.name}`);
+          }
         }
-      }
-      return c;
-    }));
+        return c;
+      });
+      console.log('Collections after add:', updated.map(c => ({ name: c.name, count: c.bookIds?.length || 0 })));
+      return updated;
+    });
   };
 
   const removeBookFromCollection = (collectionId: number | string, bookId: number) => {
-    setCollections(prev => prev.map(c => {
-      if (c.id === collectionId) {
-        const bookIds = c.bookIds || [];
-        const newBookIds = bookIds.filter(id => id !== bookId);
-        console.log(`Removed book ${bookId} from collection ${c.name}`);
-        return { ...c, bookIds: newBookIds, count: newBookIds.length, updatedAt: new Date() };
-      }
-      return c;
-    }));
+    console.log(`removeBookFromCollection called: ${collectionId}, ${bookId}`);
+    setCollections(prev => {
+      const updated = prev.map(c => {
+        if (c.id === collectionId) {
+          const bookIds = c.bookIds || [];
+          const newBookIds = bookIds.filter(id => id !== bookId);
+          console.log(`Removed book ${bookId} from collection ${c.name}. New count: ${newBookIds.length}`);
+          return { ...c, bookIds: newBookIds, count: newBookIds.length, updatedAt: new Date() };
+        }
+        return c;
+      });
+      console.log('Collections after remove:', updated.map(c => ({ name: c.name, count: c.bookIds?.length || 0 })));
+      return updated;
+    });
   };
 
   const isBookInCollection = (collectionId: number | string, bookId: number): boolean => {
