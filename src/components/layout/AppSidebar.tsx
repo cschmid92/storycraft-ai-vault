@@ -50,9 +50,10 @@ const AppSidebar = ({
   };
 
   // Standard collections that appear before user collections
+  // Recalculate counts on every render to ensure they're up-to-date
   const standardCollections = [
-    { id: 'favorites', name: "Favorites ❤️", count: getCollectionCount('favorites'), color: "bg-red-500" },
-    { id: 'books-read', name: "Books read 📖", count: getCollectionCount('books-read'), color: "bg-green-500" },
+    { id: 'favorites', name: "Favorites ❤️", count: getFavoriteBooks().length, color: "bg-red-500" },
+    { id: 'books-read', name: "Books read 📖", count: booksReadCount, color: "bg-green-500" },
   ];
 
 
