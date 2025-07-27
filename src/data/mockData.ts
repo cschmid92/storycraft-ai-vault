@@ -140,7 +140,7 @@ export const mockUsers: User[] = [
     username: "sarahc",
     firstName: "Sarah",
     lastName: "Chen",
-    avatar: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=100&h=100&fit=crop&crop=face",
+    avatar: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=100&h=100&fit=crop&crop=face",
     rating: 4.8,
     totalSales: 23
   },
