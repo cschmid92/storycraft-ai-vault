@@ -94,46 +94,57 @@ const BooksForSale = () => {
           </div>
 
           {myBooks.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="space-y-3">
               {myBooks.map(sale => (
-                <div key={`${sale.book.id}-${sale.price}`} className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200">
-                  <UsedBookCard
-                    bookForSale={sale}
-                    onBookClick={() => {}}
-                    onContactSeller={() => handleContactSeller(sale)}
-                  />
-                  <div className="mt-4 flex justify-between items-center">
-                    <div className="flex gap-2">
-                      {getStatusBadge(sale.status)}
-                    </div>
-                    <div className="flex gap-2">
-                      {sale.status === 'Available' && (
-                        <>
+                <div
+                  key={`${sale.book.id}-${sale.price}`}
+                  className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200 hover:bg-white/80 transition-colors"
+                >
+                  <div className="flex items-center gap-4">
+                    <img 
+                      src={sale.book.cover} 
+                      alt={sale.book.title}
+                      className="w-16 h-20 object-cover rounded"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-semibold text-slate-800 text-lg mb-1">{sale.book.title}</h4>
+                      <p className="text-slate-600 mb-2">{sale.book.author}</p>
+                      <div className="flex items-center gap-4 mb-3">
+                        <div className="flex items-center gap-1">
+                          <DollarSign className="h-4 w-4 text-green-600" />
+                          <span className="text-green-600 font-bold text-lg">{sale.currency} {sale.price}</span>
+                        </div>
+                        {getStatusBadge(sale.status)}
+                      </div>
+                      <div className="flex gap-2">
+                        {sale.status === 'Available' && (
+                          <>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleStatusChange(sale.bookId, 'Picked')}
+                            >
+                              Mark as Picked
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleStatusChange(sale.bookId, 'Sold')}
+                            >
+                              Mark as Sold
+                            </Button>
+                          </>
+                        )}
+                        {sale.status !== 'Available' && (
                           <Button
                             variant="outline"
                             size="sm"
-                            onClick={() => handleStatusChange(sale.bookId, 'Picked')}
+                            onClick={() => handleStatusChange(sale.bookId, 'Available')}
                           >
-                            Mark as Picked
+                            Mark as Available
                           </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleStatusChange(sale.bookId, 'Sold')}
-                          >
-                            Mark as Sold
-                          </Button>
-                        </>
-                      )}
-                      {sale.status !== 'Available' && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleStatusChange(sale.bookId, 'Available')}
-                        >
-                          Mark as Available
-                        </Button>
-                      )}
+                        )}
+                      </div>
                     </div>
                   </div>
                 </div>
