@@ -5,7 +5,6 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Book, BookForSale, BookForSaleStatus } from '../types/entities';
 import AppLayout from '../components/layout/AppLayout';
-import UsedBookCard from '../components/UsedBookCard';
 import ContactSellerModal from '../components/ContactSellerModal';
 import { useBooks } from '../hooks/useBooks';
 import { useBooksForSale } from '../hooks/useBooksForSale';
@@ -36,15 +35,8 @@ const BooksForSale = () => {
     if (sale) updateBookForSaleStatus(sale.id, newStatus);
   };
 
-  const getStatusBadge = (status: BookForSaleStatus) => {
-    switch (status) {
-      case 'Sold':
-        return <Badge variant="secondary" className="bg-green-100 text-green-800">Sold</Badge>;
-      case 'Picked':
-        return <Badge variant="secondary" className="bg-blue-100 text-blue-800">Picked</Badge>;
-      default:
-        return <Badge variant="outline">Available</Badge>;
-    }
+  const onBookClick = (book: Book) => {
+    // Handle book click if needed
   };
 
   return (
@@ -97,61 +89,22 @@ const BooksForSale = () => {
             <div className="space-y-3">
               {myBooks.map(sale => (
                 <div
-                  key={`${sale.book.id}-${sale.price}`}
+                  key={sale.id}
                   className="flex items-center gap-3 p-3 bg-white/60 rounded-lg border border-slate-200 hover:bg-white/80 cursor-pointer transition-colors"
-                  onClick={() => {}}
+                  onClick={() => sale.book && onBookClick(sale.book)}
                 >
                   <img 
-                    src={sale.book.cover} 
-                    alt={sale.book.title}
+                    src={sale.book?.cover} 
+                    alt={sale.book?.title}
                     className="w-10 h-14 object-cover rounded"
                   />
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-slate-800 text-sm truncate">{sale.book.title}</h4>
-                    <p className="text-slate-600 text-xs truncate">{sale.book.author}</p>
+                    <h4 className="font-medium text-slate-800 text-sm truncate">{sale.book?.title}</h4>
+                    <p className="text-slate-600 text-xs truncate">{sale.book?.author}</p>
                     <div className="flex items-center gap-1 mt-1">
                       <Tag className="h-3 w-3 text-green-600" />
                       <span className="text-green-600 font-medium text-sm">{sale.currency} {sale.price}</span>
                     </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    {getStatusBadge(sale.status)}
-                    {sale.status === 'Available' && (
-                      <>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleStatusChange(sale.bookId, 'Picked');
-                          }}
-                        >
-                          Mark as Picked
-                        </Button>
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleStatusChange(sale.bookId, 'Sold');
-                          }}
-                        >
-                          Mark as Sold
-                        </Button>
-                      </>
-                    )}
-                    {sale.status !== 'Available' && (
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          handleStatusChange(sale.bookId, 'Available');
-                        }}
-                      >
-                        Mark as Available
-                      </Button>
-                    )}
                   </div>
                 </div>
               ))}
