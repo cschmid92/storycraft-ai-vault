@@ -114,17 +114,17 @@ const AppLayout = ({
   const selectedBookTitle = selectedBookId ? books.find(book => book.id === selectedBookId)?.title || '' : '';
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 w-full flex flex-col">
-        {showHeader && (
-          <AppHeader 
-            title={headerTitle} 
-            subtitle={headerSubtitle} 
-            showMobileMenu={showSidebar}
-            onMobileMenuClick={() => {}}
-          />
-        )}
-        
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 w-full flex flex-col">
+      {showHeader && (
+        <AppHeader 
+          title={headerTitle} 
+          subtitle={headerSubtitle} 
+          showMobileMenu={showSidebar}
+          onMobileMenuClick={() => {}}
+        />
+      )}
+      
+      <SidebarProvider>
         <div className="flex flex-1 overflow-hidden">
           {showSidebar && (
             <AppSidebar
@@ -141,7 +141,7 @@ const AppLayout = ({
             {typeof children === 'function' ? children(handlers) : children}
           </main>
         </div>
-      </div>
+      </SidebarProvider>
 
       <CollectionModal
         isOpen={isCollectionModalOpen}
@@ -169,7 +169,7 @@ const AppLayout = ({
         }}
         onRateBook={rateBook}
       />
-    </SidebarProvider>
+    </div>
   );
 };
 
