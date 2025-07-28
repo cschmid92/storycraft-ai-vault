@@ -12,6 +12,7 @@ import CollectionModal from '../CollectionModal';
 import CollectionSelectionModal from '../CollectionSelectionModal';
 import BookDetailModal from '../BookDetailModal';
 import { Book, Collection } from '../../types/entities';
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 
 interface AppLayoutProps {
   children: React.ReactNode | ((handlers: {
@@ -113,24 +114,31 @@ const AppLayout = ({
   const selectedBookTitle = selectedBookId ? books.find(book => book.id === selectedBookId)?.title || '' : '';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100">
-      {showHeader && <AppHeader title={headerTitle} subtitle={headerSubtitle} />}
-      
-      <div className="flex">
-        {showSidebar && (
-          <AppSidebar
-            selectedCollection={selectedCollection}
-            onSelectCollection={handleSelectCollection}
-            onOpenCollectionModal={handleOpenCollectionModal}
-            books={books}
-            onBookClick={handleBookClick}
-            onDeleteCollection={deleteCollection}
-          />
+    <SidebarProvider>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 w-full">
+        {showHeader && (
+          <div className="flex items-center">
+            {showSidebar && <SidebarTrigger className="ml-2" />}
+            <AppHeader title={headerTitle} subtitle={headerSubtitle} />
+          </div>
         )}
         
-        <main className="flex-1">
-          {typeof children === 'function' ? children(handlers) : children}
-        </main>
+        <div className="flex w-full">
+          {showSidebar && (
+            <AppSidebar
+              selectedCollection={selectedCollection}
+              onSelectCollection={handleSelectCollection}
+              onOpenCollectionModal={handleOpenCollectionModal}
+              books={books}
+              onBookClick={handleBookClick}
+              onDeleteCollection={deleteCollection}
+            />
+          )}
+          
+          <main className="flex-1">
+            {typeof children === 'function' ? children(handlers) : children}
+          </main>
+        </div>
       </div>
 
       <CollectionModal
@@ -159,7 +167,7 @@ const AppLayout = ({
         }}
         onRateBook={rateBook}
       />
-    </div>
+    </SidebarProvider>
   );
 };
 
