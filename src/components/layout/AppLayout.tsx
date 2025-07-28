@@ -114,17 +114,17 @@ const AppLayout = ({
   const selectedBookTitle = selectedBookId ? books.find(book => book.id === selectedBookId)?.title || '' : '';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 w-full flex flex-col">
-      {showHeader && (
-        <AppHeader 
-          title={headerTitle} 
-          subtitle={headerSubtitle} 
-          showMobileMenu={showSidebar}
-          onMobileMenuClick={() => {}}
-        />
-      )}
-      
-      <SidebarProvider>
+    <SidebarProvider>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 w-full flex flex-col">
+        {showHeader && (
+          <AppHeader 
+            title={headerTitle} 
+            subtitle={headerSubtitle} 
+            showMobileMenu={showSidebar}
+            onMobileMenuClick={() => {}}
+          />
+        )}
+        
         <div className="flex flex-1 overflow-hidden">
           {showSidebar && (
             <AppSidebar
@@ -141,35 +141,35 @@ const AppLayout = ({
             {typeof children === 'function' ? children(handlers) : children}
           </main>
         </div>
-      </SidebarProvider>
 
-      <CollectionModal
-        isOpen={isCollectionModalOpen}
-        onClose={handleCloseCollectionModal}
-        onCreateCollection={handleAddCollection}
-      />
+        <CollectionModal
+          isOpen={isCollectionModalOpen}
+          onClose={handleCloseCollectionModal}
+          onCreateCollection={handleAddCollection}
+        />
 
-      <CollectionSelectionModal
-        isOpen={isSelectionModalOpen}
-        onClose={() => setIsSelectionModalOpen(false)}
-        onSelectCollection={handleConfirmAddToCollection}
-        collections={collections}
-        bookTitle={selectedBookTitle}
-      />
+        <CollectionSelectionModal
+          isOpen={isSelectionModalOpen}
+          onClose={() => setIsSelectionModalOpen(false)}
+          onSelectCollection={handleConfirmAddToCollection}
+          collections={collections}
+          bookTitle={selectedBookTitle}
+        />
 
-      <BookDetailModal
-        book={selectedBook}
-        isOpen={isBookDetailOpen}
-        onClose={handleCloseBookDetail}
-        onToggleFavorite={toggleFavorite}
-        onAddToCollection={handleAddToCollection}
-        onToggleOwnedForSale={(bookId, price) => {
-          if (price) addBookForSale(bookId, price, 'Good');
-          else removeBookForSale(bookId);
-        }}
-        onRateBook={rateBook}
-      />
-    </div>
+        <BookDetailModal
+          book={selectedBook}
+          isOpen={isBookDetailOpen}
+          onClose={handleCloseBookDetail}
+          onToggleFavorite={toggleFavorite}
+          onAddToCollection={handleAddToCollection}
+          onToggleOwnedForSale={(bookId, price) => {
+            if (price) addBookForSale(bookId, price, 'Good');
+            else removeBookForSale(bookId);
+          }}
+          onRateBook={rateBook}
+        />
+      </div>
+    </SidebarProvider>
   );
 };
 
