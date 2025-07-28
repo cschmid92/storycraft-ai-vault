@@ -219,14 +219,14 @@ const BooksForSale = () => {
                         </div>
                       </div>
                       
-                      {/* Mobile Actions */}
-                      <div className="flex flex-wrap gap-2">
+                      {/* Mobile Actions - 2x2 Grid */}
+                      <div className="grid grid-cols-2 gap-2">
                         <Button
                           variant="outline"
                           size="sm"
                           onClick={() => handleEditBook(bookForSale)}
                           disabled={!canEdit}
-                          className="text-blue-600 hover:bg-blue-50 disabled:opacity-50 text-xs flex-1"
+                          className="text-blue-600 hover:bg-blue-50 disabled:opacity-50 text-xs h-8"
                         >
                           <Edit className="h-3 w-3 mr-1" />
                           Edit
@@ -236,7 +236,7 @@ const BooksForSale = () => {
                           size="sm"
                           onClick={() => handleRemoveFromSale(bookForSale.id)}
                           disabled={!canDelete}
-                          className="text-red-600 hover:bg-red-50 disabled:opacity-50 text-xs flex-1"
+                          className="text-red-600 hover:bg-red-50 disabled:opacity-50 text-xs h-8"
                         >
                           <Trash2 className="h-3 w-3 mr-1" />
                           Remove
@@ -246,7 +246,7 @@ const BooksForSale = () => {
                           size="sm"
                           onClick={() => handleChangeStatus(bookForSale.id, 'Sold')}
                           disabled={!canChangeStatus || status === 'Sold'}
-                          className="text-green-600 hover:bg-green-50 disabled:opacity-50 text-xs flex-1"
+                          className="text-green-600 hover:bg-green-50 disabled:opacity-50 text-xs h-8"
                         >
                           <CheckCircle className="h-3 w-3 mr-1" />
                           Sold
@@ -256,7 +256,7 @@ const BooksForSale = () => {
                           size="sm"
                           onClick={() => handleChangeStatus(bookForSale.id, 'Picked')}
                           disabled={!canChangeStatus || (status as BookForSaleStatus) === 'Picked'}
-                          className="text-purple-600 hover:bg-purple-50 disabled:opacity-50 text-xs flex-1"
+                          className="text-purple-600 hover:bg-purple-50 disabled:opacity-50 text-xs h-8"
                         >
                           <Package className="h-3 w-3 mr-1" />
                           Picked

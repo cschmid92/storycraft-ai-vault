@@ -25,7 +25,7 @@ const AppHeader = ({
 
   return (
     <>
-      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 z-40 w-full">
+      <header className="bg-white/80 backdrop-blur-md border-b border-slate-200 z-40 w-full flex-shrink-0">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
