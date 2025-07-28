@@ -84,7 +84,7 @@ const AppSidebar = ({
 
   return (
     <Sidebar className="bg-white/60 backdrop-blur-md border-r border-slate-200">
-      <SidebarContent className="p-4 pt-20">
+      <SidebarContent className="p-4">
         {/* Quick Access */}
         <SidebarGroup>
           <SidebarGroupLabel className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
