@@ -114,37 +114,36 @@ const AppLayout = ({
   const selectedBookTitle = selectedBookId ? books.find(book => book.id === selectedBookId)?.title || '' : '';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 w-full">
-      {showHeader && (
-        <AppHeader 
-          title={headerTitle} 
-          subtitle={headerSubtitle} 
-          showMobileMenu={showSidebar}
-          onMobileMenuClick={() => {}} // SidebarTrigger will handle this
-        />
-      )}
-      
-      <SidebarProvider>
+    <SidebarProvider>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 w-full">
+        {showHeader && (
+          <header className="w-full z-50 relative">
+            <AppHeader 
+              title={headerTitle} 
+              subtitle={headerSubtitle} 
+              showMobileMenu={showSidebar}
+              onMobileMenuClick={() => {}} // Will be handled by SidebarTrigger
+            />
+          </header>
+        )}
+        
         <div className="flex w-full">
           {showSidebar && (
-            <>
-              <SidebarTrigger className="fixed top-4 left-4 z-50 lg:hidden" />
-              <AppSidebar
-                selectedCollection={selectedCollection}
-                onSelectCollection={handleSelectCollection}
-                onOpenCollectionModal={handleOpenCollectionModal}
-                books={books}
-                onBookClick={handleBookClick}
-                onDeleteCollection={deleteCollection}
-              />
-            </>
+            <AppSidebar
+              selectedCollection={selectedCollection}
+              onSelectCollection={handleSelectCollection}
+              onOpenCollectionModal={handleOpenCollectionModal}
+              books={books}
+              onBookClick={handleBookClick}
+              onDeleteCollection={deleteCollection}
+            />
           )}
           
-          <main className="flex-1">
+          <main className="flex-1 min-h-0">
             {typeof children === 'function' ? children(handlers) : children}
           </main>
         </div>
-      </SidebarProvider>
+      </div>
 
       <CollectionModal
         isOpen={isCollectionModalOpen}
@@ -172,7 +171,7 @@ const AppLayout = ({
         }}
         onRateBook={rateBook}
       />
-    </div>
+    </SidebarProvider>
   );
 };
 

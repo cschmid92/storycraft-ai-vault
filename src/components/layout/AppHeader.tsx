@@ -1,8 +1,9 @@
 
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, User, MessageSquare, Menu } from 'lucide-react';
+import { BookOpen, User, MessageSquare } from 'lucide-react';
 import { Button } from "@/components/ui/button";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 import AccountModal from '../AccountModal';
 import MessengerModal from '../MessengerModal';
 
@@ -28,16 +29,9 @@ const AppHeader = ({
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between h-16">
             <div className="flex items-center space-x-3">
-              {/* Mobile menu button */}
+              {/* Mobile sidebar trigger */}
               {showMobileMenu && (
-                <Button
-                  variant="ghost"
-                  size="sm"
-                  className="md:hidden"
-                  onClick={onMobileMenuClick}
-                >
-                  <Menu className="h-5 w-5" />
-                </Button>
+                <SidebarTrigger className="md:hidden" />
               )}
               <Link to="/" className="flex items-center space-x-3">
                 <div className="p-2 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-xl">
