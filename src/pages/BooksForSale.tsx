@@ -187,6 +187,85 @@ const BooksForSale = () => {
                   </TableBody>
                 </Table>
               </div>
+
+              {/* Mobile Card View */}
+              <div className="md:hidden space-y-4 p-4">
+                {myBooks.map(bookForSale => {
+                  const book = bookForSale.book;
+                  if (!book) return null;
+                  const status: BookForSaleStatus = bookForSale.status;
+                  const canEdit = status !== 'Sold' && status !== 'Picked';
+                  const canChangeStatus = status !== 'Picked';
+                  const canDelete = status !== 'Sold' && status !== 'Picked';
+                  
+                  return (
+                    <div key={bookForSale.id} className="bg-white rounded-lg p-4 shadow-sm border border-slate-200">
+                      <div className="flex gap-3 mb-3">
+                        <img 
+                          src={book.cover} 
+                          alt={book.title}
+                          className="w-16 h-20 object-cover rounded"
+                        />
+                        <div className="flex-1 min-w-0">
+                          <h3 className="font-medium text-slate-800 truncate">{book.title}</h3>
+                          <p className="text-slate-600 text-sm truncate">{book.author}</p>
+                          <div className="flex items-center gap-2 mt-2">
+                            <Badge variant="outline" className="text-xs">{bookForSale.condition}</Badge>
+                            {getStatusBadge(status)}
+                          </div>
+                        </div>
+                        <div className="text-right">
+                          <p className="font-semibold text-green-600">{bookForSale.currency || 'CHF'} {bookForSale.price}</p>
+                        </div>
+                      </div>
+                      
+                      {/* Mobile Actions */}
+                      <div className="flex flex-wrap gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleEditBook(bookForSale)}
+                          disabled={!canEdit}
+                          className="text-blue-600 hover:bg-blue-50 disabled:opacity-50 text-xs flex-1"
+                        >
+                          <Edit className="h-3 w-3 mr-1" />
+                          Edit
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleRemoveFromSale(bookForSale.id)}
+                          disabled={!canDelete}
+                          className="text-red-600 hover:bg-red-50 disabled:opacity-50 text-xs flex-1"
+                        >
+                          <Trash2 className="h-3 w-3 mr-1" />
+                          Remove
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleChangeStatus(bookForSale.id, 'Sold')}
+                          disabled={!canChangeStatus || status === 'Sold'}
+                          className="text-green-600 hover:bg-green-50 disabled:opacity-50 text-xs flex-1"
+                        >
+                          <CheckCircle className="h-3 w-3 mr-1" />
+                          Sold
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleChangeStatus(bookForSale.id, 'Picked')}
+                          disabled={!canChangeStatus || (status as BookForSaleStatus) === 'Picked'}
+                          className="text-purple-600 hover:bg-purple-50 disabled:opacity-50 text-xs flex-1"
+                        >
+                          <Package className="h-3 w-3 mr-1" />
+                          Picked
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
           ) : (
             <div className="text-center py-12">

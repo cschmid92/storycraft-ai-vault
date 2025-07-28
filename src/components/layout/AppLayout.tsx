@@ -115,19 +115,17 @@ const AppLayout = ({
 
   return (
     <SidebarProvider>
-      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 w-full">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-slate-100 w-full flex flex-col">
         {showHeader && (
-          <header className="w-full z-50 relative">
-            <AppHeader 
-              title={headerTitle} 
-              subtitle={headerSubtitle} 
-              showMobileMenu={showSidebar}
-              onMobileMenuClick={() => {}} // Will be handled by SidebarTrigger
-            />
-          </header>
+          <AppHeader 
+            title={headerTitle} 
+            subtitle={headerSubtitle} 
+            showMobileMenu={showSidebar}
+            onMobileMenuClick={() => {}}
+          />
         )}
         
-        <div className="flex w-full">
+        <div className="flex flex-1 overflow-hidden">
           {showSidebar && (
             <AppSidebar
               selectedCollection={selectedCollection}
@@ -139,7 +137,7 @@ const AppLayout = ({
             />
           )}
           
-          <main className="flex-1 min-h-0">
+          <main className="flex-1 overflow-auto">
             {typeof children === 'function' ? children(handlers) : children}
           </main>
         </div>
