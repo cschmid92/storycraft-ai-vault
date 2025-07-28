@@ -84,9 +84,9 @@ const AppSidebar = ({
 
   return (
     <Sidebar className="bg-white/60 backdrop-blur-md border-r border-slate-200">
-      <SidebarContent className="p-4">
+      <SidebarContent className="p-4 pt-20">
         {/* Quick Access */}
-        <SidebarGroup className="mt-4">{/* Add margin-top to avoid header overlap */}
+        <SidebarGroup>
           <SidebarGroupLabel className="text-sm font-semibold text-slate-700 uppercase tracking-wide">
             Quick Access
           </SidebarGroupLabel>
