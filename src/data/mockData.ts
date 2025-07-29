@@ -136,40 +136,40 @@ export const mockBooks: Book[] = [
 export const mockUsers: User[] = [
   {
     id: 1,
-    email: "sarah.chen@email.com",
-    username: "sarahc",
-    firstName: "Sarah",
-    lastName: "Chen",
+    email: "anna.mueller@email.com",
+    username: "annam",
+    firstName: "Anna",
+    lastName: "Müller",
     avatar: "https://images.unsplash.com/photo-1649972904349-6e44c42644a7?w=100&h=100&fit=crop&crop=face",
     rating: 4.8,
     totalSales: 23
   },
   {
     id: 2,
-    email: "mike.rodriguez@email.com",
-    username: "mikerod",
-    firstName: "Mike",
-    lastName: "Rodriguez",
+    email: "max.fischer@email.com",
+    username: "maxf",
+    firstName: "Max",
+    lastName: "Fischer",
     avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
     rating: 4.5,
     totalSales: 15
   },
   {
     id: 3,
-    email: "emma.thompson@email.com",
-    username: "emmat",
-    firstName: "Emma",
-    lastName: "Thompson",
+    email: "sophia.weber@email.com",
+    username: "sophiaw",
+    firstName: "Sophia",
+    lastName: "Weber",
     avatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
     rating: 4.9,
     totalSales: 41
   },
   {
     id: 4,
-    email: "david.kim@email.com",
-    username: "davidk",
-    firstName: "David",
-    lastName: "Kim",
+    email: "lukas.schmid@email.com",
+    username: "lukass",
+    firstName: "Lukas",
+    lastName: "Schmid",
     avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
     rating: 4.7,
     totalSales: 32
@@ -364,7 +364,7 @@ export const mockConversations: Conversation[] = [
     bookId: 3, // 1984
     lastMessageId: 3,
     updatedAt: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
-    participantName: "Alice Johnson",
+    participantName: "Anna Müller",
     participantAvatar: "https://images.unsplash.com/photo-1494790108755-2616b2e99b65?w=40&h=40&fit=crop&crop=face",
     lastMessage: "Is the book still available?",
     lastMessageTime: new Date(Date.now() - 1000 * 60 * 30),
@@ -377,7 +377,7 @@ export const mockConversations: Conversation[] = [
     bookId: 7, // The Lord of the Rings
     lastMessageId: 6,
     updatedAt: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-    participantName: "Bob Smith",
+    participantName: "Max Fischer",
     participantAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
     lastMessage: "Great, I'll take it!",
     lastMessageTime: new Date(Date.now() - 1000 * 60 * 60 * 2),
@@ -394,7 +394,7 @@ export const mockMessages: Message[] = [
     content: "Hi! I'm interested in your copy of '1984'. Is it still available?",
     createdAt: new Date(Date.now() - 1000 * 60 * 60), // 1 hour ago
     seen: true,
-    senderName: "Alice Johnson",
+    senderName: "Anna Müller",
     isFromMe: false
   },
   {
@@ -414,7 +414,7 @@ export const mockMessages: Message[] = [
     content: "Is the book still available?",
     createdAt: new Date(Date.now() - 1000 * 60 * 30), // 30 minutes ago
     seen: false,
-    senderName: "Alice Johnson",
+    senderName: "Anna Müller",
     isFromMe: false
   },
   {
@@ -424,7 +424,7 @@ export const mockMessages: Message[] = [
     content: "Hello! I saw your listing for 'The Hobbit'. Can you meet tomorrow?",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 3), // 3 hours ago
     seen: true,
-    senderName: "Bob Smith",
+    senderName: "Max Fischer",
     isFromMe: false
   },
   {
@@ -444,7 +444,7 @@ export const mockMessages: Message[] = [
     content: "Great, I'll take it!",
     createdAt: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
     seen: true,
-    senderName: "Bob Smith",
+    senderName: "Max Fischer",
     isFromMe: false
   }
 ];
@@ -453,7 +453,7 @@ export const mockMessages: Message[] = [
 export const mockUserRatings: UserRating[] = [
   {
     id: 1,
-    userId: 1, // Sarah Chen
+    userId: 1, // Anna Müller
     bookId: 999, // Rating for user 1 (from another user's perspective)
     rating: 5,
     reviewText: "Excellent seller! Book was exactly as described and shipping was super fast. Would definitely buy from again!",
@@ -461,7 +461,7 @@ export const mockUserRatings: UserRating[] = [
   },
   {
     id: 2,
-    userId: 2, // Mike Rodriguez 
+    userId: 2, // Max Fischer 
     bookId: 999, // Rating for user 1
     rating: 4,
     reviewText: "Good communication and fair pricing. The book had some wear but was as expected.",
@@ -469,7 +469,7 @@ export const mockUserRatings: UserRating[] = [
   },
   {
     id: 3,
-    userId: 3, // Emma Thompson
+    userId: 3, // Sophia Weber
     bookId: 999, // Rating for user 1  
     rating: 5,
     reviewText: "Amazing seller! Book came in perfect condition and was packaged beautifully. Highly recommended!",
@@ -477,16 +477,16 @@ export const mockUserRatings: UserRating[] = [
   },
   {
     id: 4,
-    userId: 4, // David Kim
-    bookId: 1, // Rating for user 1 (Sarah Chen)
+    userId: 4, // Lukas Schmid
+    bookId: 1, // Rating for user 1 (Anna Müller)
     rating: 5,
-    reviewText: "Sarah is fantastic to work with. Quick responses and the book was in excellent condition!",
+    reviewText: "Anna is fantastic to work with. Quick responses and the book was in excellent condition!",
     reviewDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 5) // 5 days ago
   },
   {
     id: 5,
-    userId: 1, // Sarah Chen
-    bookId: 1, // Rating for user 1 (Sarah Chen) - self rating from buyer perspective
+    userId: 1, // Anna Müller
+    bookId: 1, // Rating for user 1 (Anna Müller) - self rating from buyer perspective
     rating: 4,
     reviewText: "Smooth transaction. Book arrived quickly and was well-packaged.",
     reviewDate: new Date(Date.now() - 1000 * 60 * 60 * 24 * 10) // 10 days ago
