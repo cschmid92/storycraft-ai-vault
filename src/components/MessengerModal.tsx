@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Conversation, Message, BookForSaleStatus } from '../types/entities';
-import { useMessenger } from '../hooks/useMessenger';
+import { ConversationService } from '../services/conversationService';
 import { useBooksForSale } from '../hooks/useBooksForSale';
 import { useUserRatings } from '../hooks/useUserRatings';
 
@@ -20,27 +20,20 @@ interface MessengerModalProps {
 const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerModalProps) => {
   const [selectedConversation, setSelectedConversation] = useState<number | null>(null);
   const [newMessage, setNewMessage] = useState('');
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [showRating, setShowRating] = useState(false);
   const [rating, setRating] = useState(0);
   const [ratingComment, setRatingComment] = useState('');
   
-  const currentUserId = '11111111-1111-1111-1111-111111111111'; // This should come from auth context
-  const { 
-    conversations, 
-    messages: allMessages, 
-    loading, 
-    sendingMessage,
-    loadMessages, 
-    sendMessage, 
-    updateBookStatus,
-    refreshConversations 
-  } = useMessenger(currentUserId);
-  
   const { updateBookForSaleStatus } = useBooksForSale();
   const { rateBook } = useUserRatings();
 
-  // Get messages for selected conversation
-  const messages = selectedConversation ? (allMessages[selectedConversation.toString()] || []) : [];
+  useEffect(() => {
+    if (isOpen) {
+      loadConversations();
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     if (selectedConversationId) {
@@ -50,24 +43,37 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
 
   useEffect(() => {
     if (selectedConversation) {
-      loadMessages(selectedConversation.toString());
+      loadMessages(selectedConversation);
+      ConversationService.markMessagesAsSeen(selectedConversation);
     }
-  }, [selectedConversation, loadMessages]);
+  }, [selectedConversation]);
+
+  const loadConversations = () => {
+    const conversationData = ConversationService.getConversations();
+    setConversations(conversationData);
+  };
+
+  const loadMessages = (conversationId: number) => {
+    const messageData = ConversationService.getMessagesForConversation(conversationId);
+    setMessages(messageData);
+  };
 
   const currentConversation = conversations.find(c => c.id === selectedConversation);
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = () => {
     if (!newMessage.trim() || !selectedConversation) return;
 
-    await sendMessage(selectedConversation.toString(), newMessage.trim());
+    ConversationService.addMessage(selectedConversation, 999, newMessage.trim());
+    loadMessages(selectedConversation);
+    loadConversations(); // Refresh to update last message
     setNewMessage('');
   };
 
-  const handleStatusUpdate = async (status: BookForSaleStatus) => {
+  const handleStatusUpdate = (status: BookForSaleStatus) => {
     if (!selectedConversation || !currentConversation?.bookForSaleId) return;
 
     // Update status in conversation service
-    await updateBookStatus(selectedConversation.toString(), status);
+    ConversationService.updateBookStatus(selectedConversation, status, 999);
     
     // Update book for sale status
     updateBookForSaleStatus(currentConversation.bookForSaleId, status);
@@ -76,14 +82,17 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
     if (status === 'Picked') {
       setShowRating(true);
     }
+    
+    loadMessages(selectedConversation);
+    loadConversations();
   };
 
-  const handleRatingSubmit = async () => {
+  const handleRatingSubmit = () => {
     if (!selectedConversation || !currentConversation?.bookForSale || rating === 0) return;
 
-    // Submit rating message
-    const ratingText = ratingComment.trim() || `Rated ${rating} stars`;
-    await sendMessage(selectedConversation.toString(), ratingText, 'text', { rating, ratedUserId: currentConversation.user2Id });
+    // Submit rating
+    const ratedUserId = currentConversation.user2Id === 999 ? currentConversation.user1Id : currentConversation.user2Id;
+    ConversationService.submitRating(selectedConversation, 999, rating, ratedUserId, ratingComment.trim() || undefined);
     
     // Save rating to user ratings
     if (currentConversation.bookForSale.book) {
@@ -93,6 +102,8 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
     setShowRating(false);
     setRating(0);
     setRatingComment('');
+    loadMessages(selectedConversation);
+    loadConversations();
   };
 
   const formatTime = (date: Date) => {
@@ -110,21 +121,6 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
       return `${diffDays}d ago`;
     }
   };
-
-  if (loading) {
-    return (
-      <Dialog open={isOpen} onOpenChange={onClose}>
-        <DialogContent className="max-w-4xl h-[600px] p-0">
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
-              <p className="text-slate-600">Loading conversations...</p>
-            </div>
-          </div>
-        </DialogContent>
-      </Dialog>
-    );
-  }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -152,7 +148,7 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                     >
                       <div className="flex items-center gap-3">
                         <img
-                          src={conversation.participantAvatar || '/placeholder.svg'}
+                          src={conversation.participantAvatar}
                           alt={conversation.participantName}
                           className="w-10 h-10 rounded-full"
                         />
@@ -197,7 +193,7 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                       >
                         <div className="flex items-center gap-3">
                           <img
-                            src={conversation.participantAvatar || '/placeholder.svg'}
+                            src={conversation.participantAvatar}
                             alt={conversation.participantName}
                             className="w-10 h-10 rounded-full"
                           />
@@ -254,7 +250,7 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 md:gap-3">
                       <img
-                        src={currentConversation?.participantAvatar || '/placeholder.svg'}
+                        src={currentConversation?.participantAvatar}
                         alt={currentConversation?.participantName}
                         className="w-6 h-6 md:w-8 md:h-8 rounded-full"
                       />
@@ -280,7 +276,7 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                       )}
                       
                       {/* Status Update Buttons (only show if user is the buyer) */}
-                      {currentConversation?.user1Id.toString() === currentUserId && (
+                      {currentConversation?.user1Id === 999 && (
                         <div className="flex flex-col md:flex-row gap-1">
                           {currentConversation?.status === 'Available' && (
                             <Button
@@ -449,14 +445,8 @@ const MessengerModal = ({ isOpen, onClose, selectedConversationId }: MessengerMo
                       placeholder="Type a message..."
                       onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
                       className="flex-1 text-sm md:text-base"
-                      disabled={sendingMessage}
                     />
-                    <Button 
-                      onClick={handleSendMessage} 
-                      size="sm" 
-                      className="px-2 md:px-3"
-                      disabled={sendingMessage}
-                    >
+                    <Button onClick={handleSendMessage} size="sm" className="px-2 md:px-3">
                       <Send className="h-4 w-4" />
                     </Button>
                   </div>
