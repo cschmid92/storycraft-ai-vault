@@ -36,6 +36,8 @@ const BooksForSale = () => {
   };
 
   const handleEditBook = (bookForSale: BookForSale) => {
+    console.log("Selected book for edit:", bookForSale);
+    console.log("Current condition:", bookForSale.condition);
     setSelectedBookForEdit(bookForSale);
     setIsEditModalOpen(true);
   };

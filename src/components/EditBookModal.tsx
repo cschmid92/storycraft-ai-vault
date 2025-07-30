@@ -17,11 +17,17 @@ const EditBookModal = ({ isOpen, onClose, onConfirm, bookForSale }: EditBookModa
   const [condition, setCondition] = useState('');
 
   useEffect(() => {
+    console.log("EditBookModal useEffect triggered");
+    console.log("bookForSale:", bookForSale);
+    console.log("isOpen:", isOpen);
     if (bookForSale && isOpen) {
+      console.log("Setting price to:", bookForSale.price.toString());
+      console.log("Setting condition to:", bookForSale.condition);
       setPrice(bookForSale.price.toString());
       setCondition(bookForSale.condition || '');
     } else if (!isOpen) {
       // Reset when modal closes
+      console.log("Resetting form fields");
       setPrice('');
       setCondition('');
     }
@@ -64,6 +70,7 @@ const EditBookModal = ({ isOpen, onClose, onConfirm, bookForSale }: EditBookModa
           <div>
             <h3 className="font-medium text-slate-800">{bookForSale.book?.title}</h3>
             <p className="text-slate-600 text-sm">{bookForSale.book?.author}</p>
+            <p className="text-xs text-blue-600">Current: {JSON.stringify({price: bookForSale.price, condition: bookForSale.condition})}</p>
           </div>
         </div>
         
@@ -106,6 +113,7 @@ const EditBookModal = ({ isOpen, onClose, onConfirm, bookForSale }: EditBookModa
                 <SelectItem value="Excellent">Excellent</SelectItem>
               </SelectContent>
             </Select>
+            <p className="text-xs text-gray-500 mt-1">Current selected: '{condition}'</p>
           </div>
           
           <div className="flex gap-2 pt-2">
