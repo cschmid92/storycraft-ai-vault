@@ -20,6 +20,10 @@ const EditBookModal = ({ isOpen, onClose, onConfirm, bookForSale }: EditBookModa
     if (bookForSale && isOpen) {
       setPrice(bookForSale.price.toString());
       setCondition(bookForSale.condition || '');
+    } else if (!isOpen) {
+      // Reset when modal closes
+      setPrice('');
+      setCondition('');
     }
   }, [bookForSale, isOpen]);
 
@@ -89,10 +93,10 @@ const EditBookModal = ({ isOpen, onClose, onConfirm, bookForSale }: EditBookModa
               Condition
             </label>
             <Select value={condition} onValueChange={setCondition}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white">
                 <SelectValue placeholder="Select book condition" />
               </SelectTrigger>
-              <SelectContent className="bg-white border border-slate-300 z-[90]">
+              <SelectContent className="bg-white border border-slate-300 z-[90] shadow-lg">
                 <SelectItem value="New">New</SelectItem>
                 <SelectItem value="Like New">Like New</SelectItem>
                 <SelectItem value="Very Good">Very Good</SelectItem>
