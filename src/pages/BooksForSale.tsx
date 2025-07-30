@@ -71,7 +71,7 @@ const BooksForSale = () => {
             <div className="bg-white/60 backdrop-blur-md rounded-xl p-4 border border-slate-200">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-slate-600 text-sm">Sold</p>
+                  <p className="text-slate-600 text-sm">Sold & to be picked</p>
                   <p className="text-2xl font-bold text-slate-800">{myBooks.filter(book => book.status === 'Sold').length}</p>
                 </div>
                 <CircleCheck className="h-8 w-8 text-blue-500" />
