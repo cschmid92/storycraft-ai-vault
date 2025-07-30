@@ -65,15 +65,17 @@ const PriceInputModal = ({ isOpen, onClose, onConfirm, bookTitle }: PriceInputMo
           
           <div>
             <Select value={condition} onValueChange={setCondition}>
-              <SelectTrigger>
+              <SelectTrigger className="bg-white">
                 <SelectValue placeholder="Select book condition" />
               </SelectTrigger>
-              <SelectContent className="bg-white border border-slate-300 z-[90]">
-                <SelectItem value="new">New</SelectItem>
-                <SelectItem value="like-new">Like New</SelectItem>
-                <SelectItem value="very-good">Very Good</SelectItem>
-                <SelectItem value="good">Good</SelectItem>
-                <SelectItem value="acceptable">Acceptable</SelectItem>
+              <SelectContent className="bg-white border border-slate-300 z-[90] shadow-lg">
+                <SelectItem value="New">New</SelectItem>
+                <SelectItem value="Like New">Like New</SelectItem>
+                <SelectItem value="Very Good">Very Good</SelectItem>
+                <SelectItem value="Good">Good</SelectItem>
+                <SelectItem value="Fair">Fair</SelectItem>
+                <SelectItem value="Poor">Poor</SelectItem>
+                <SelectItem value="Excellent">Excellent</SelectItem>
               </SelectContent>
             </Select>
           </div>
