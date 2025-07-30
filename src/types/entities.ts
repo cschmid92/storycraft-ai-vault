@@ -114,7 +114,7 @@ export interface BookForSale extends BaseEntity {
 }
 
 // Supporting types
-export type BookCondition = 'New' | 'Like New' | 'Very Good' | 'Good' | 'Fair' | 'Poor' | 'Excellent';
+export type BookCondition = 'New' | 'Like New' | 'Very Good' | 'Good' | 'Fair' | 'Poor';
 
 // Book for sale status type
 export type BookForSaleStatus = 'Available' | 'Sold' | 'Picked';

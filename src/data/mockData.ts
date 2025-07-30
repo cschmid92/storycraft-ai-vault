@@ -249,7 +249,7 @@ export const booksForSale: BookForSale[] = [
     bookId: 4, // Pride and Prejudice
     price: 16.00,
     currency: 'CHF',
-    condition: "Excellent",
+    condition: "Very Good",
     location: "Uptown",
     distance: 9.2,
     status: 'Available' as const,

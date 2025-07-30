@@ -75,7 +75,6 @@ const PriceInputModal = ({ isOpen, onClose, onConfirm, bookTitle }: PriceInputMo
                 <SelectItem value="Good">Good</SelectItem>
                 <SelectItem value="Fair">Fair</SelectItem>
                 <SelectItem value="Poor">Poor</SelectItem>
-                <SelectItem value="Excellent">Excellent</SelectItem>
               </SelectContent>
             </Select>
           </div>

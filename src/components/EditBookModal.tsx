@@ -110,7 +110,6 @@ const EditBookModal = ({ isOpen, onClose, onConfirm, bookForSale }: EditBookModa
                 <SelectItem value="Good">Good</SelectItem>
                 <SelectItem value="Fair">Fair</SelectItem>
                 <SelectItem value="Poor">Poor</SelectItem>
-                <SelectItem value="Excellent">Excellent</SelectItem>
               </SelectContent>
             </Select>
             <p className="text-xs text-gray-500 mt-1">Current selected: '{condition}'</p>
