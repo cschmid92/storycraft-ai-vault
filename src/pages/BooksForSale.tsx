@@ -11,7 +11,19 @@ import { useBooksForSale } from '../hooks/useBooksForSale';
 const BooksForSale = () => {
   const { getMyBooksForSale, updateBookForSaleStatus, updateBookForSale, removeBookForSale } = useBooksForSale();
   const navigate = useNavigate();
-  const myBooks = getMyBooksForSale();
+  const myBooks = getMyBooksForSale().sort((a, b) => {
+    // Sort by status priority: Available (1), Sold (2), Picked (3)
+    const statusPriority = { 'Available': 1, 'Sold': 2, 'Picked': 3 };
+    const statusA = statusPriority[a.status as keyof typeof statusPriority] || 4;
+    const statusB = statusPriority[b.status as keyof typeof statusPriority] || 4;
+    
+    if (statusA !== statusB) {
+      return statusA - statusB;
+    }
+    
+    // If status is the same, sort by ID (creation order)
+    return a.id - b.id;
+  });
   const [selectedBookForEdit, setSelectedBookForEdit] = useState<BookForSale | null>(null);
 
   const handleRemoveFromSale = (saleId: number) => {
