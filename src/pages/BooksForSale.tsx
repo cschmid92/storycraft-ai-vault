@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 import { Book, BookForSale, BookForSaleStatus } from '../types/entities';
 import AppLayout from '../components/layout/AppLayout';
 import { useBooksForSale } from '../hooks/useBooksForSale';
+import EditBookModal from '../components/EditBookModal';
 
 const BooksForSale = () => {
   const { getMyBooksForSale, updateBookForSaleStatus, updateBookForSale, removeBookForSale } = useBooksForSale();
@@ -25,6 +26,7 @@ const BooksForSale = () => {
     return a.id - b.id;
   });
   const [selectedBookForEdit, setSelectedBookForEdit] = useState<BookForSale | null>(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const handleRemoveFromSale = (saleId: number) => {
     const bookForSale = myBooks.find(sale => sale.id === saleId);
@@ -35,7 +37,15 @@ const BooksForSale = () => {
 
   const handleEditBook = (bookForSale: BookForSale) => {
     setSelectedBookForEdit(bookForSale);
-    console.log("Edit book:", bookForSale);
+    setIsEditModalOpen(true);
+  };
+
+  const handleEditConfirm = (price: number, condition: string) => {
+    if (selectedBookForEdit) {
+      updateBookForSale(selectedBookForEdit.id, { price, condition: condition as any });
+      setSelectedBookForEdit(null);
+      setIsEditModalOpen(false);
+    }
   };
 
   const handleChangeStatus = (bookId: number, newStatus: BookForSaleStatus) => {
@@ -287,6 +297,16 @@ const BooksForSale = () => {
           )}
         </div>
       </div>
+
+      <EditBookModal
+        isOpen={isEditModalOpen}
+        onClose={() => {
+          setIsEditModalOpen(false);
+          setSelectedBookForEdit(null);
+        }}
+        onConfirm={handleEditConfirm}
+        bookForSale={selectedBookForEdit}
+      />
     </AppLayout>
   );
 };
