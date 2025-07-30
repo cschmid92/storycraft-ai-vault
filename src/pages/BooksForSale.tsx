@@ -144,7 +144,7 @@ const BooksForSale = () => {
                             <Badge variant="outline">{bookForSale.condition}</Badge>
                           </TableCell>
                           <TableCell>
-                            <span className="font-semibold text-green-600">{bookForSale.currency || 'CHF'} {bookForSale.price}</span>
+                            <span className="font-semibold text-green-600">{bookForSale.currency || 'CHF'} {bookForSale.price.toFixed(2)}</span>
                           </TableCell>
                           <TableCell>
                             {getStatusBadge(status)}
@@ -227,7 +227,7 @@ const BooksForSale = () => {
                           </div>
                         </div>
                         <div className="text-right">
-                          <p className="font-semibold text-green-600">{bookForSale.currency || 'CHF'} {bookForSale.price}</p>
+                          <p className="font-semibold text-green-600">{bookForSale.currency || 'CHF'} {bookForSale.price.toFixed(2)}</p>
                         </div>
                       </div>
                       

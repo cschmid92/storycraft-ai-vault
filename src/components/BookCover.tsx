@@ -19,7 +19,7 @@ const BookCover = ({ cover, title, isOwnedForSale, salePrice }: BookCoverProps) 
         />
         {isOwnedForSale && salePrice && (
           <div className="absolute top-2 left-2 bg-green-500 text-white text-sm font-bold px-3 py-1 rounded-full">
-            CHF {salePrice}
+            CHF {salePrice.toFixed(2)}
           </div>
         )}
       </div>

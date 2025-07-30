@@ -88,7 +88,7 @@ const UsedBookCard = ({ bookForSale, onBookClick, onContactSeller }: UsedBookCar
             onContactSeller(bookForSale);
           }}
         >
-          Contact Seller - {bookForSale.currency} {bookForSale.price}
+          Contact Seller - {bookForSale.currency} {bookForSale.price.toFixed(2)}
         </Button>
       </div>
     </div>
