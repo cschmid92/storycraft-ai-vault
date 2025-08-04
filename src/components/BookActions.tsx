@@ -24,8 +24,8 @@ const BookActions = ({
   const { isBookForSale, addBookForSale, removeBookForSale } = useBooksForSale();
 
   const handleBuyOnline = () => {
-    // Open Amazon search for the book - in a real app, you'd use the book's ISBN or title
-    window.open('https://www.amazon.com/s?k=books', '_blank');
+    // Open Orell Füssli search for the book - in a real app, you'd use the book's ISBN or title
+    window.open('https://www.orellfuessli.ch/', '_blank');
   };
 
   const isForSale = isBookForSale(bookId);
